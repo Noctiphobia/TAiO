@@ -22,7 +22,6 @@ namespace TAiO.Model
 		public static Data Instance => _instance ?? new Data();
 		
 
-		public int Test { get; set; }
 
 		private Data()
 		{
