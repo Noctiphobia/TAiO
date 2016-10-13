@@ -1,0 +1,19 @@
+﻿<controls:MetroWindow x:Class="TAiO.Browser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TAiO"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:viewModel="clr-namespace:TAiO.ViewModel"
+        mc:Ignorable="d"
+        TitleCharacterCasing="Normal"
+        Title="Przeglądarka klocków" Height="800" Width="400" MinWidth="400" MinHeight="800">
+    <Window.DataContext>
+        <viewModel:BrowserViewModel></viewModel:BrowserViewModel>
+    </Window.DataContext>
+    <Grid>
+        
+    </Grid>
+</controls:MetroWindow>
+
