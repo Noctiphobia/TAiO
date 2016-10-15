@@ -9,25 +9,39 @@
         xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Height="200" Width="600" MinWidth="600" MinHeight="200">
+        Height="150" Width="600" MinWidth="600" MinHeight="150">
     <Window.DataContext>
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
-    <Window.Resources>
-        <DataTemplate DataType="{x:Type model:BlockType}">
-            <Grid>
-                <Image />
-                <TextBox Text="{Binding BlockNumber}" />
-            </Grid>
-        </DataTemplate>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition  Height="5*"/>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Command="{Binding ShowBrowserCommand}" >Show Browser Pleaseee</Button>
-        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1"></ListView>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0">📁</Button>
+            <Button Grid.Column="1">◀◀</Button>
+            <Button Grid.Column="2">■</Button>
+            <Button Grid.Column="3">⏸▶</Button>
+            <Button Grid.Column="4">▶▶</Button>
+            <Button Grid.Column="5">◳</Button>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0">Krok:</Label>
+            <TextBox Grid.Column="0"></TextBox>
+        </Grid>
     </Grid>
 </controls:MetroWindow>
 
