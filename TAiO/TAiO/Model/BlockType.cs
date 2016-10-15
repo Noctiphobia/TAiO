@@ -1,50 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using MicroMvvm;
 
 namespace TAiO.Model
 {
-	public class BlockType:ObservableObject
+    /// <summary>
+    /// A class representing a type of block and how many blocks of this type do we have
+    /// </summary>
+	public class BlockType
 	{
-		private int _height;
-		private int _width;
-		private int _blockNumber;
+		public int Height { get; set; }
+		public int Width { get; set; }
+        public int[,] Shape { get; set; }
+		public int BlockNumber { get; set; }
 
-		public int Height
+	    public BlockType(int h, int w, int[,] s)
 		{
-			get { return _height; }
-			set
-			{
-				_height = value;
-				RaisePropertyChanged("Height");
-			}
+	        Height = h;
+	        Width = w;
+	        Shape = s;
+	        BlockNumber = 1;
 		}
 
-		public int Width
-		{
-			get { return _width; }
-			set
-			{
-				_width = value;
-				//OnPropertyChanged("Width");
-			}
-		}
-
-		public int BlockNumber
-		{
-			get { return _blockNumber; }
-			set
-			{
-				_blockNumber = value;
-				RaisePropertyChanged("BlockNumber");
-				if(_blockNumber == 90)
-					MessageBox.Show("Block Number changed!!!");
-			}
-		}
 	}
 }
