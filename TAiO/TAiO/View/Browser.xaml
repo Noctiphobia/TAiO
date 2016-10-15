@@ -6,14 +6,28 @@
         xmlns:local="clr-namespace:TAiO"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:viewModel="clr-namespace:TAiO.ViewModel"
+        xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         TitleCharacterCasing="Normal"
         Title="Przeglądarka klocków" Height="800" Width="400" MinWidth="400" MinHeight="800">
     <Window.DataContext>
         <viewModel:BrowserViewModel></viewModel:BrowserViewModel>
     </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type model:BlockType}">
+            <Grid>
+                <Image />
+                <TextBox Text="{Binding BlockNumber}" />
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition  Height="5*"/>
+        </Grid.RowDefinitions>
+        <Button Content="{Binding BlockType}"></Button>
+        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1"></ListView>
     </Grid>
 </controls:MetroWindow>
 

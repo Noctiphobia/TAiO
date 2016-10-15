@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using TAiO.Model;
 
 namespace TAiO
 {
@@ -24,6 +25,12 @@ namespace TAiO
 		public Browser()
 		{
 			InitializeComponent();
+
+			//TODO: Delete this mockup dummy block types
+			Data.Instance.OriginalBlockTypes.Add(new BlockType() {BlockNumber = 3});
+			Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = 5 });
+			Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = 4 });
+
 		}
 	}
 }
