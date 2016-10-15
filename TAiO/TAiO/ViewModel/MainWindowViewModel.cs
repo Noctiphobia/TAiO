@@ -106,6 +106,10 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand ToggleRunning => new RelayCommand(() =>
 		{
+			if (Stopped)
+			{
+				
+			}
 			Running = !Running;
 		});
 
