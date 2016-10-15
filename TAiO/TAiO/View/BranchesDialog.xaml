@@ -9,12 +9,23 @@
         xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Height="150" Width="600" MinWidth="600" MinHeight="150">
+        ResizeMode="NoResize" SizeToContent="WidthAndHeight">
     <Window.DataContext>
-        <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
+        <viewModel:BranchesDialogViewModel></viewModel:BranchesDialogViewModel>
     </Window.DataContext>
     <Grid>
-      
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Orientation="Horizontal">
+            <Label>Liczba rozgałęzień na krok:</Label>
+            <TextBox Text="{Binding Branches}" Width="40" TextAlignment="Center"></TextBox>
+        </StackPanel>
+        <Button Grid.Row="1" Width="50" Click="Button_Click">Ok</Button>
     </Grid>
 </controls:MetroWindow>
 

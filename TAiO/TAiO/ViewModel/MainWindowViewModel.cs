@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MicroMvvm;
+using Microsoft.Win32;
 
 namespace TAiO.ViewModel
 {
@@ -108,7 +109,11 @@ namespace TAiO.ViewModel
 		{
 			if (Stopped)
 			{
-				
+				BranchesDialog dialog = new BranchesDialog();
+				if (!(dialog.ShowDialog() ?? false))
+				{
+					return;
+				}
 			}
 			Running = !Running;
 		});
@@ -127,6 +132,16 @@ namespace TAiO.ViewModel
 				_browser = new Browser();
 			_browser.Show();
 		});
+
+		public ICommand Load => new RelayCommand(() =>
+		{
+			OpenFileDialog dialog = new OpenFileDialog();
+			dialog.Multiselect = false;
+			if (dialog.ShowDialog() ?? false)
+			{
+				
+			}
+		}, () => Stopped);
 
 
 	}
