@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:TAiO"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:viewModel="clr-namespace:TAiO.ViewModel"
+        xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Height="200" Width="600" MinWidth="600" MinHeight="200">
@@ -13,7 +14,6 @@
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
     <Grid>
-        
     </Grid>
 </controls:MetroWindow>
 
