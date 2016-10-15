@@ -13,7 +13,21 @@
     <Window.DataContext>
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type model:BlockType}">
+            <Grid>
+                <Image />
+                <TextBox Text="{Binding BlockNumber}" />
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition  Height="5*"/>
+        </Grid.RowDefinitions>
+        <Button Command="{Binding ShowBrowserCommand}" >Show Browser Pleaseee</Button>
+        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1"></ListView>
     </Grid>
 </controls:MetroWindow>
 

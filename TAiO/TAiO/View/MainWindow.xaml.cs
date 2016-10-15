@@ -24,11 +24,6 @@ namespace TAiO
 		public MainWindow()
 		{
 			InitializeComponent();
-
-			// TODO: delete logic
-			Browser browser = new Browser();
-			browser.Show();
-
 		}
 	}
 }

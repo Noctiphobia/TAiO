@@ -26,7 +26,6 @@
             <RowDefinition Height="1*"/>
             <RowDefinition  Height="5*"/>
         </Grid.RowDefinitions>
-        <Button Content="{Binding BlockType}"></Button>
         <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1"></ListView>
     </Grid>
 </controls:MetroWindow>

@@ -16,6 +16,8 @@ namespace TAiO.Model
 
 		public bool PreviewGoingOn { get; set; } = true;
 		public ObservableCollection<BlockType> OriginalBlockTypes { get; set; }
+		
+
 
 		/// <summary>
 		/// Jedyna instancja danych w całym programie.
