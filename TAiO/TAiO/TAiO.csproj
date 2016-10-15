@@ -79,8 +79,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\BlockInstance.cs" />
     <Compile Include="Model\BlockType.cs" />
     <Compile Include="Model\Data.cs" />
+    <Compile Include="Model\StepsData.cs" />
+    <Compile Include="ViewModel\BlockTypeViewModel.cs" />
     <Compile Include="ViewModel\BrowserViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
