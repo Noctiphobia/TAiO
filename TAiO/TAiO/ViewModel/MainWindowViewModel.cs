@@ -70,6 +70,9 @@ namespace TAiO.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Czy program jest zresetowany?
+		/// </summary>
 		public bool Stopped
 		{
 			get { return _stopped; }

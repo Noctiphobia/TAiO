@@ -12,7 +12,9 @@
         <viewModel:PreviewViewModel></viewModel:PreviewViewModel>
     </Window.DataContext>
     <Grid>
-        
+        <Border>
+            <Canvas></Canvas>
+        </Border>
     </Grid>
 </controls:MetroWindow>
 
