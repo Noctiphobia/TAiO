@@ -17,13 +17,5 @@ namespace TAiO.ViewModel
 		/// Dane wejściowe i konfiguracja dla dostępu przez XAML.
 		/// </summary>
 		public Data Data => Data.Instance;
-
-		// TODO: Delete this thrash (orphan BlockType)
-		public BlockType BlockType { get; set; }
-
-		public BaseViewModel()
-		{
-			BlockType = new BlockType() {BlockNumber = 100};
-		}
 	}
 }

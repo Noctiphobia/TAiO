@@ -26,11 +26,11 @@ namespace TAiO
 		{
 			InitializeComponent();
 
-			//TODO: Delete this mockup dummy block types
-			Data.Instance.OriginalBlockTypes.Add(new BlockType() {BlockNumber = 3});
-			Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = 5 });
-			Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = 4 });
-
+			Random rand = new Random();
+			for (int i = 0; i < 50; i++)
+			{
+				Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = rand.Next(10, 30) });
+			}
 		}
 	}
 }

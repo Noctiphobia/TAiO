@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using MicroMvvm;
 
@@ -17,6 +18,7 @@ namespace TAiO.ViewModel
 		private bool _running = false;
 		private bool _stopped = true;
 		private string _playPause = "▶";
+		private Browser _browser;
 
 
 		/// <summary>
@@ -104,6 +106,21 @@ namespace TAiO.ViewModel
 			Running = !Running;
 		});
 
+		/// <summary>
+		/// Zatrzymaj wszystko.
+		/// </summary>
 		public ICommand Stop => new RelayCommand(() => { Stopped = true; }, () => !Stopped);
+
+		/// <summary>
+		/// Pokaż przeglądarkę klocków.
+		/// </summary>
+		public ICommand ShowBrowser => new RelayCommand(() =>
+		{
+			if (_browser == null)
+				_browser = new Browser();
+			_browser.Show();
+		});
+
+
 	}
 }
