@@ -29,9 +29,9 @@
         
         <CheckBox IsChecked="{Binding Data.PreviewGoingOn}">Preview going on</CheckBox>
         
-        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1">
+        <ListBox ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1">
             <ListBox.ItemContainerStyle>
-                <Style TargetType="{x:Type ListViewItem}">
+                <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Data.PreviewGoingOn}" Value="False">
                             <Setter Property="IsEnabled" Value="True"/>
@@ -42,7 +42,7 @@
                     </Style.Triggers>
                 </Style>
             </ListBox.ItemContainerStyle>
-        </ListView>
+        </ListBox>
         
     </Grid>
 </controls:MetroWindow>
