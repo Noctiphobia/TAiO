@@ -17,7 +17,7 @@ using MahApps.Metro.Controls;
 namespace TAiO
 {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for Preview.xaml
 	/// </summary>
 	public partial class Preview : MetroWindow
 	{

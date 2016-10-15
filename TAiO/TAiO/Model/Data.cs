@@ -16,7 +16,7 @@ namespace TAiO.Model
 
 		public bool PreviewGoingOn { get; set; } = true;
 		public ObservableCollection<BlockType> OriginalBlockTypes { get; set; }
-
+		public int Branches { get; set; }
 
 
 		/// <summary>
@@ -30,6 +30,7 @@ namespace TAiO.Model
 		{
 			_instance = this;
 			OriginalBlockTypes = new ObservableCollection<BlockType>();
+			Branches = 3;
 		}
 	}
 }

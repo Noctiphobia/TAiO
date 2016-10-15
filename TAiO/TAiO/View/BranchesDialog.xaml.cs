@@ -13,16 +13,15 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
-using TAiO.Model;
 
 namespace TAiO
 {
 	/// <summary>
-	/// Interaction logic for Browser.xaml
+	/// Interaction logic for BranchesDialog.xaml
 	/// </summary>
-	public partial class Browser : MetroWindow
+	public partial class BranchesDialog : MetroWindow
 	{
-		public Browser()
+		public BranchesDialog()
 		{
 			InitializeComponent();
 		}
