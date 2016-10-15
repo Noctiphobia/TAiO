@@ -14,31 +14,113 @@ namespace TAiO.ViewModel
 	/// </summary>
 	public class MainWindowViewModel : BaseViewModel
 	{
-		private ICommand _showBrowserCommand;
+		private int _step = 1;
+		private bool _running = false;
+		private bool _stopped = true;
+		private string _playPause = "▶";
 		private Browser _browser;
 
-		public ICommand ShowBrowserCommand
+
+		/// <summary>
+		/// Krok symulacji.
+		/// </summary>
+		public int Step
 		{
-			get
+			get { return _step; }
+			set
 			{
-				return _showBrowserCommand;
+				_step = value;
+				RaisePropertyChanged(nameof(Step));
+				RaisePropertyChanged(nameof(StepString));
 			}
-			set { _showBrowserCommand = value; }
 		}
 
-
-
-		public MainWindowViewModel()
+		/// <summary>
+		/// Krok symulacji - wersja wpisana przez użytkownika.
+		/// </summary>
+		public string StepString
 		{
-			_showBrowserCommand = new RelayCommand(ShowBrowser);
+			get { return Step.ToString(); }
+			set
+			{
+				int val;
+				if (int.TryParse(value, out val))
+				{
+					Step = val;
+				}
+			}
 		}
 
-		public void ShowBrowser()
+		/// <summary>
+		/// Czy wizualizacja trwa?
+		/// </summary>
+		public bool Running
 		{
-			if(_browser == null)
+			get { return _running;}
+			set
+			{
+				if (_running != value)
+				{
+					_running = value;
+					PlayPause = Running ? "⏸" : "▶";
+					if (Running)
+						Stopped = false;
+					RaisePropertyChanged(nameof(Running));
+				}
+			}
+		}
+
+		public bool Stopped
+		{
+			get { return _stopped; }
+			set
+			{
+				if (_stopped != value)
+				{
+					_stopped = value;
+					Running = !Stopped;
+					RaisePropertyChanged(nameof(Stopped));
+				}
+			}
+		}
+
+		/// <summary>
+		/// ⏸ lub ▶
+		/// </summary>
+		public string PlayPause
+		{
+			get { return _playPause; }
+			set
+			{
+				_playPause = value;
+				RaisePropertyChanged(nameof(PlayPause));
+			}
+		}
+		
+
+		/// <summary>
+		/// Włącz/wyłącz wizualizację.
+		/// </summary>
+		public ICommand ToggleRunning => new RelayCommand(() =>
+		{
+			Running = !Running;
+		});
+
+		/// <summary>
+		/// Zatrzymaj wszystko.
+		/// </summary>
+		public ICommand Stop => new RelayCommand(() => { Stopped = true; }, () => !Stopped);
+
+		/// <summary>
+		/// Pokaż przeglądarkę klocków.
+		/// </summary>
+		public ICommand ShowBrowser => new RelayCommand(() =>
+		{
+			if (_browser == null)
 				_browser = new Browser();
 			_browser.Show();
-		}
+		});
+
 
 	}
 }

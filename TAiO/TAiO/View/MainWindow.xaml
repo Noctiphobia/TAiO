@@ -29,18 +29,21 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0">📁</Button>
             <Button Grid.Column="1">◀◀</Button>
-            <Button Grid.Column="2">■</Button>
-            <Button Grid.Column="3">⏸▶</Button>
+            <Button Grid.Column="2" Command="{Binding Stop}">■</Button>
+            <Button Grid.Column="3" Command="{Binding ToggleRunning}"><TextBlock Text="{Binding PlayPause}"></TextBlock></Button>
             <Button Grid.Column="4">▶▶</Button>
-            <Button Grid.Column="5" Command="{Binding ShowBrowserCommand}">◳</Button>
+            <Button Grid.Column="5" Command="{Binding ShowBrowser}">◳</Button>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0">Krok:</Label>
-            <TextBox Grid.Column="0"></TextBox>
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Label>Krok:</Label>
+                <TextBox Text="{Binding StepString}" Width="40" TextAlignment="Center"></TextBox>
+            </StackPanel>
+            
         </Grid>
     </Grid>
 </controls:MetroWindow>
