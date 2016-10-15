@@ -31,7 +31,7 @@ namespace TAiO.Model
 			set
 			{
 				_width = value;
-				//OnPropertyChanged("Width");
+				RaisePropertyChanged("Width");
 			}
 		}
 
@@ -42,8 +42,6 @@ namespace TAiO.Model
 			{
 				_blockNumber = value;
 				RaisePropertyChanged("BlockNumber");
-				if(_blockNumber == 90)
-					MessageBox.Show("Block Number changed!!!");
 			}
 		}
 	}

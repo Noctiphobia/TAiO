@@ -25,12 +25,6 @@ namespace TAiO
 		public Browser()
 		{
 			InitializeComponent();
-
-			Random rand = new Random();
-			for (int i = 0; i < 50; i++)
-			{
-				Data.Instance.OriginalBlockTypes.Add(new BlockType() { BlockNumber = rand.Next(10, 30) });
-			}
 		}
 	}
 }

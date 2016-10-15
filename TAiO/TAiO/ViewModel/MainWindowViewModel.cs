@@ -35,7 +35,6 @@ namespace TAiO.ViewModel
 
 		public void ShowBrowser()
 		{
-			MessageBox.Show("halooo");
 			if(_browser == null)
 				_browser = new Browser();
 			_browser.Show();
