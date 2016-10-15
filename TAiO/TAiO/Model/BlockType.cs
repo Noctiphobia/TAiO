@@ -8,7 +8,7 @@ using MicroMvvm;
 namespace TAiO.Model
 {
     /// <summary>
-    /// 
+    /// A class representing a type of block and how many blocks of this type do we have
     /// </summary>
 	public class BlockType
 	{

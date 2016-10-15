@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using MicroMvvm;
+using TAiO.Model;
 using Microsoft.Win32;
+using TAiO.Tools;
 
 namespace TAiO.ViewModel
 {
@@ -57,7 +61,7 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public bool Running
 		{
-			get { return _running;}
+			get { return _running; }
 			set
 			{
 				if (_running != value)
@@ -100,7 +104,7 @@ namespace TAiO.ViewModel
 				RaisePropertyChanged(nameof(PlayPause));
 			}
 		}
-		
+
 
 		/// <summary>
 		/// Włącz/wyłącz wizualizację.
@@ -133,16 +137,20 @@ namespace TAiO.ViewModel
 			_browser.Show();
 		});
 
+
 		public ICommand Load => new RelayCommand(() =>
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.Multiselect = false;
 			if (dialog.ShowDialog() ?? false)
 			{
-				
+				List<BlockType> blocks;
+				int width;
+				if (!Parser.ParseFile(dialog.FileName, out blocks, out width))
+				{
+					MessageBox.Show("Dane wejściowe są niepoprawne.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
 			}
 		}, () => Stopped);
-
-
 	}
 }
