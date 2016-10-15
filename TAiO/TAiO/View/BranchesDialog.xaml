@@ -1,4 +1,4 @@
-﻿<controls:MetroWindow x:Class="TAiO.Preview"
+﻿<controls:MetroWindow x:Class="TAiO.BranchesDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,15 +6,15 @@
         xmlns:local="clr-namespace:TAiO"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:viewModel="clr-namespace:TAiO.ViewModel"
+        xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
-        Height="800" Width="400" MinWidth="400" MinHeight="800">
+        WindowStartupLocation="CenterScreen"
+        Height="150" Width="600" MinWidth="600" MinHeight="150">
     <Window.DataContext>
-        <viewModel:PreviewViewModel></viewModel:PreviewViewModel>
+        <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
     <Grid>
-        <Border>
-            <Canvas></Canvas>
-        </Border>
+      
     </Grid>
 </controls:MetroWindow>
 

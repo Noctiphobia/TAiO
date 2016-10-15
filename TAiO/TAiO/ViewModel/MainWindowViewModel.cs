@@ -70,6 +70,9 @@ namespace TAiO.ViewModel
 			}
 		}
 
+		/// <summary>
+		/// Czy program jest zresetowany?
+		/// </summary>
 		public bool Stopped
 		{
 			get { return _stopped; }
@@ -103,6 +106,10 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand ToggleRunning => new RelayCommand(() =>
 		{
+			if (Stopped)
+			{
+				
+			}
 			Running = !Running;
 		});
 
