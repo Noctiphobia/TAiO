@@ -17,7 +17,7 @@
         <DataTemplate DataType="{x:Type model:BlockType}">
             <Grid>
                 <Image />
-                <TextBox Text="{Binding BlockNumber}" />
+                <TextBox Text="{Binding BlockNumber}" IsEnabled="{Binding }" />
             </Grid>
         </DataTemplate>
     </Window.Resources>
@@ -26,7 +26,24 @@
             <RowDefinition Height="1*"/>
             <RowDefinition  Height="5*"/>
         </Grid.RowDefinitions>
-        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1"></ListView>
+        
+        <CheckBox IsChecked="{Binding Data.PreviewGoingOn}">Preview going on</CheckBox>
+        
+        <ListView ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Data.PreviewGoingOn}" Value="False">
+                            <Setter Property="IsEnabled" Value="True"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Data.PreviewGoingOn}" Value="True">
+                            <Setter Property="IsEnabled" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListView>
+        
     </Grid>
 </controls:MetroWindow>
 
