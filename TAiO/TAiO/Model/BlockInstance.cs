@@ -18,5 +18,7 @@ namespace TAiO.Model
 
 		public int PreviousBlockCoord;
 
+	    public int RotationNum;
+
 	}
 }
