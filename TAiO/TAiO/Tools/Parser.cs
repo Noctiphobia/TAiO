@@ -30,9 +30,14 @@ namespace TAiO.Tools
 					return false;
 				int end = i + h;
 				int[,] s = new int[w, h];
-				for (int j = 0; j < h; j++, i++)
-				{
+                if (i + h > lines.Length)
+                    return false;
+                for (int j = 0; j < h; j++)
+                {
+                    i++;
 					words = lines[i].Split(' ');
+				    if (words.Length != w)
+				        return false;
 					for (int k = 0; k < w; k++)
 					{
 						int b;
