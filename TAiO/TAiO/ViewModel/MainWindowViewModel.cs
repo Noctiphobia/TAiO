@@ -135,13 +135,14 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand ShowBrowser => new RelayCommand(() =>
 		{
-			if (_browser == null)
-				_browser = new Browser();
+			_browser = new Browser();
 			_browser.Show();
             //TODO: poprawić
 		});
 
-
+		/// <summary>
+		/// Wczytaj nowy zestaw klocków.
+		/// </summary>
 		public ICommand Load => new RelayCommand(() =>
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
