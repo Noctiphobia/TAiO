@@ -17,7 +17,7 @@ namespace TAiO.ViewModel
 			Random rand = new Random();
 			for (int i = 0; i < 50; i++)
 			{
-				Data.Instance.OriginalBlockTypes.Add(new BlockType(1, 1, new int[1,1]) { BlockNumber = rand.Next(10, 30) });
+				//Data.Instance.OriginalBlockTypes.Add(new BlockType(1, 1, new int[1,1]) { BlockNumber = rand.Next(10, 30) });
 			}
 		}
 	}

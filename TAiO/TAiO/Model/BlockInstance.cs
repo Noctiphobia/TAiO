@@ -9,7 +9,7 @@ namespace TAiO.Model
 	struct BlockInstance
 	{
 
-		public int BlockId; // or BlockType
+		public BlockType Block;
 		public int BlockVersion;
 
 		public int LeftUpperCornerX;

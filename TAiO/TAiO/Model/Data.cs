@@ -15,7 +15,8 @@ namespace TAiO.Model
 		private static Data _instance;
 
 		public bool PreviewGoingOn { get; set; } = true;
-		public ObservableCollection<BlockType> OriginalBlockTypes { get; set; }
+		public List<BlockType> Blocks { get; set; }
+        public int BoardWidth { get; set; }
 		public int Branches { get; set; }
 
 
@@ -29,7 +30,7 @@ namespace TAiO.Model
 		private Data()
 		{
 			_instance = this;
-			OriginalBlockTypes = new ObservableCollection<BlockType>();
+			Blocks = new List<BlockType>();
 			Branches = 3;
 		}
 	}

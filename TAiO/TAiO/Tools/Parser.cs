@@ -7,6 +7,9 @@ using TAiO.Model;
 
 namespace TAiO.Tools
 {
+    /// <summary>
+    /// Klasa służąca do tworzenia pobierania szerokości studni i tworzenia listy klocków na podstawie pliku
+    /// </summary>
 	public class Parser
 	{
 		public static bool ParseFile(string filename, out List<BlockType> blocks, out int width)
