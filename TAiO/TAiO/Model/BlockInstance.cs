@@ -43,5 +43,7 @@ namespace TAiO.Model
 		/// </summary>
 		public int PreviousBlockBoardNumber;
 
+	    public int RotationNum;
+
 	}
 }
