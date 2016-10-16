@@ -118,6 +118,9 @@ namespace TAiO.ViewModel
 				{
 					return;
 				}
+                //TODO: tymczasowe
+                Preview preview = new Preview();
+                preview.Show();
 			}
 			Running = !Running;
 		});
@@ -134,6 +137,7 @@ namespace TAiO.ViewModel
 		{
 			_browser = new Browser();
 			_browser.Show();
+            //TODO: poprawić
 		});
 
 
@@ -148,6 +152,11 @@ namespace TAiO.ViewModel
 				if (!Parser.ParseFile(dialog.FileName, out blocks, out width))
 				{
 					MessageBox.Show("Dane wejściowe są niepoprawne.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+				else
+				{
+				    Data.Instance.Blocks = blocks;
+				    Data.Instance.BoardWidth = width;
 				}
 			}
 		}, () => Stopped);
