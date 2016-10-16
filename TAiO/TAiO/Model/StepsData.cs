@@ -7,9 +7,18 @@ using System.Threading.Tasks;
 
 namespace TAiO.Model
 {
+	/// <summary>
+	/// StepsData contains all data needed to draw all steps of algorithm on all boards
+	/// </summary>
 	class StepsData:IEnumerable<BlockInstance>
 	{
-
+		/// <summary>
+		/// Array of BlockInstances
+		/// first coordinate is a step number
+		/// second coordinate is a board number
+		/// in BlockInstance there's an info about on which board there was a previous block located,
+		/// so we can draw all blocks 
+		/// </summary>
 		public BlockInstance[,] BlockInstances { get; set; }
 		private int startingI;
 		private int startingJ;
@@ -31,7 +40,7 @@ namespace TAiO.Model
 			int j = startingJ;
 			for (int i = startingI; i >= 0; i--)
 			{
-				j = BlockInstances[i, j].PreviousBlockCoord;
+				j = BlockInstances[i, j].PreviousBlockBoardNumber;
 				yield return BlockInstances[i, j];
 			}
 		}
