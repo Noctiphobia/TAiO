@@ -14,6 +14,7 @@ namespace TAiO.ViewModel
 	{
 		public BrowserViewModel()
 		{
+			// TODO: Delete all random trash BlockTypes
 			Random rand = new Random();
 			for (int i = 0; i < 50; i++)
 			{

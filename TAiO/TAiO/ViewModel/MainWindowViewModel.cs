@@ -132,8 +132,7 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand ShowBrowser => new RelayCommand(() =>
 		{
-			if (_browser == null)
-				_browser = new Browser();
+			_browser = new Browser();
 			_browser.Show();
 		});
 
