@@ -140,7 +140,9 @@ namespace TAiO.ViewModel
             //TODO: poprawić
 		});
 
-
+		/// <summary>
+		/// Wczytaj nowy zestaw klocków.
+		/// </summary>
 		public ICommand Load => new RelayCommand(() =>
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
