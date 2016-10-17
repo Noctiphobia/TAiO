@@ -59,8 +59,8 @@ namespace TAiO.Model
 				{
 					Block = next_block,
 					BlockVersion = 0,
-					LeftUpperCornerX = 0,
-					LeftUpperCornerY = 0,
+					X = 0,
+					Y = 0,
 					PreviousBlockBoardNumber = i});
 			}
 
