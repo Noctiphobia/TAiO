@@ -43,6 +43,17 @@ namespace TAiO.ViewModel
 		/// <summary>
 		/// Lista wariantów danego klocka (rotacji)
 		/// </summary>
-		public List<Array2D> Shape => Block.Shape;
+		public List<Array2D> Shape
+        {
+            get
+	        {
+	            var res = new List<Array2D>();
+	            foreach (int[,] s in Block.Shape)
+	            {
+	                res.Add(new Array2D(s));
+	            }
+	            return res;
+	        }
+        }
 	}
 }

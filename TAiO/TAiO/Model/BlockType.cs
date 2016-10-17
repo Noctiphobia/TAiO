@@ -15,34 +15,34 @@ namespace TAiO.Model
 	{
 		public int Height { get; set; }
 		public int Width { get; set; }
-        public List<Array2D> Shape { get; set; }
+        public List<int[,]> Shape { get; set; }
 		public int BlockNumber { get; set; }
 
 	    public BlockType(int w, int h, int[,] s)
 		{
 	        Height = h;
 	        Width = w;
-            Shape = new List<Array2D>();
-	        Shape.Add(new Array2D(s));
+            Shape = new List<int[,]>();
+	        Shape.Add(s);
 	        CreateRotations90();
 	        BlockNumber = 1;
 		}
 
         private void CreateRotations90()
         {
-            int[,] last = Shape[0].Array;
+            int[,] last = Shape[0];
             for (int i = 1; i < 4; i++)
             {
                 last = Rotate90(last);
 	            bool identical = false;
                 for (int j = 0; j < i; j++)
-	                if (CompareArrays(Shape[j].Array, last)) // jeśli są takie same
+	                if (CompareArrays(Shape[j], last)) // jeśli są takie same
 	                {
 		                identical = true;
 		                break;
 	                }
 	            if(!identical)
-					Shape.Add(new Array2D(last));
+					Shape.Add(last);
             }
         }
 
