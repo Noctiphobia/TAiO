@@ -20,6 +20,7 @@ namespace TAiO.ViewModel
 	public class MainWindowViewModel : BaseViewModel
 	{
 		private int _step = 1;
+		private int _delay = 3;
 		private bool _running = false;
 		private bool _stopped = true;
 		private string _playPause = "▶";
@@ -61,6 +62,39 @@ namespace TAiO.ViewModel
 				if (int.TryParse(value, out val))
 				{
 					Step = val;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Opóźnienie między krokami symulacji.
+		/// </summary>
+		public int Delay
+		{
+			get { return _delay; }
+			set
+			{
+				if (value > 0)
+				{
+					_delay = value;
+					RaisePropertyChanged(nameof(Delay));
+					RaisePropertyChanged(nameof(DelayString));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Opóźnienie między krokami symulacji - wersja wpisana przez użytkownika.
+		/// </summary>
+		public string DelayString
+		{
+			get { return Delay.ToString(); }
+			set
+			{
+				int val;
+				if (int.TryParse(value, out val))
+				{
+					Delay = val;
 				}
 			}
 		}

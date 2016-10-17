@@ -9,7 +9,7 @@
         xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Height="150" Width="600" MinWidth="600" MinHeight="150">
+        Height="150" Width="750" MinWidth="750" MinHeight="150">
     <Window.DataContext>
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
@@ -26,13 +26,17 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Command="{Binding Load}">📁</Button>
-            <Button Grid.Column="1">◀◀</Button>
-            <Button Grid.Column="2" Command="{Binding Stop}">■</Button>
-            <Button Grid.Column="3" Command="{Binding ToggleRunning}"><TextBlock Text="{Binding PlayPause}"></TextBlock></Button>
-            <Button Grid.Column="4">▶▶</Button>
-            <Button Grid.Column="5" Command="{Binding ShowBrowser}">🔎</Button>
+            <Button Grid.Column="1">⏮</Button>
+            <Button Grid.Column="2">⏪</Button>
+            <Button Grid.Column="3" Command="{Binding Stop}">■</Button>
+            <Button Grid.Column="4" Command="{Binding ToggleRunning}"><TextBlock Text="{Binding PlayPause}"></TextBlock></Button>
+            <Button Grid.Column="5">⏩</Button>
+            <Button Grid.Column="6">⏭</Button>
+            <Button Grid.Column="7" Command="{Binding ShowBrowser}">🔎</Button>
         </Grid>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -42,8 +46,10 @@
             <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <Label>Krok:</Label>
                 <TextBox Text="{Binding StepString}" Width="40" TextAlignment="Center"></TextBox>
+                <Label>Opóźnienie:</Label>
+                <TextBox Text="{Binding DelayString}" Width="40" TextAlignment="Center"></TextBox>
             </StackPanel>
-            
+
         </Grid>
     </Grid>
 </controls:MetroWindow>
