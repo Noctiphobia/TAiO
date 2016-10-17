@@ -7,6 +7,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:viewModel="clr-namespace:TAiO.ViewModel"
         xmlns:model="clr-namespace:TAiO.Model"
+        xmlns:view="clr-namespace:TAiO.View"
         mc:Ignorable="d"
         TitleCharacterCasing="Normal"
         Title="Przeglądarka klocków" Height="800" Width="400" MinWidth="400" MinHeight="800">
@@ -14,22 +15,21 @@
         <viewModel:BrowserViewModel></viewModel:BrowserViewModel>
     </Window.DataContext>
     <Window.Resources>
-        <DataTemplate DataType="{x:Type model:BlockType}">
+        <DataTemplate DataType="{x:Type viewModel:BlockTypeViewModel}">
             <Grid>
-                <Image />
-                <TextBox Text="{Binding BlockNumber}" IsEnabled="{Binding }" />
+                <view:BoardView 
+                    CurrentStep="1" 
+                    DataSource="{Binding Shape[0]}"/>
+                <TextBox Text="{Binding BlockNumber}" />
             </Grid>
         </DataTemplate>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition  Height="5*"/>
         </Grid.RowDefinitions>
         
-        <CheckBox IsChecked="{Binding Data.PreviewGoingOn}">Preview going on</CheckBox>
-        
-        <ListBox ItemsSource="{Binding Data.OriginalBlockTypes}" Grid.Row="1">
+        <ListBox ItemsSource="{Binding Data.list}" >
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Triggers>

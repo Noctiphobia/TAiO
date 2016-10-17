@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TAiO.Model;
 
 namespace TAiO.View
 {
@@ -25,9 +26,9 @@ namespace TAiO.View
         /// <summary>
         /// Źródło danych kontrolki.
         /// </summary>
-        public int[,] DataSource
+        public Array2D DataSource
         {
-            get { return (int[,])GetValue(DataSourceProperty); }
+            get { return (Array2D)GetValue(DataSourceProperty); }
             set { SetValue(DataSourceProperty, value); }
         }
 
@@ -43,7 +44,7 @@ namespace TAiO.View
         #region Kod do DependencyProperty
         public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
             nameof(DataSource),
-            typeof(int[,]),
+            typeof(Array2D),
             typeof(BoardView),
             new FrameworkPropertyMetadata(null,
                 FrameworkPropertyMetadataOptions.AffectsRender,
@@ -56,12 +57,12 @@ namespace TAiO.View
             nameof(CurrentStep),
             typeof(int),
             typeof(BoardView),
-            new FrameworkPropertyMetadata(null,
-                FrameworkPropertyMetadataOptions.AffectsRender,
-                (d, e) =>
-                {
-                    (d as BoardView)?.Redraw();
-                }));
+			new FrameworkPropertyMetadata((int)0,
+				FrameworkPropertyMetadataOptions.AffectsRender,
+				(d, e) =>
+				{
+					(d as BoardView)?.Redraw();
+				}));
         #endregion
 
         /// <summary>
@@ -69,8 +70,10 @@ namespace TAiO.View
         /// </summary>
         private void Redraw()
         {
-            int width = DataSource.GetLength(0);
-            int height = DataSource.GetLength(1);
+	        if (DataSource == null)
+		        return;
+            int width = DataSource.Width;
+            int height = DataSource.Height;
             Size field = new Size(ActualWidth/width, ActualHeight/height); //rozmiar pojedynczego pola na planszy
 
         }

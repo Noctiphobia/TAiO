@@ -11,7 +11,7 @@ namespace TAiO.ViewModel
 	/// <summary>
 	/// ViewModel dla klasy BlockType, dzięki któremu możemy obserwować zmiany w BlockNumber
 	/// </summary>
-	class BlockTypeViewModel:ObservableObject
+	public class BlockTypeViewModel:ObservableObject
 	{
 		/// <summary>
 		/// Obiekt typu BlockType, w którym zmieniamy BlockNumber (liczbę klocków danego typu rozważanych w algorytmie)
@@ -39,5 +39,10 @@ namespace TAiO.ViewModel
 				RaisePropertyChanged("BlockNumber");
 			}
 		}
+
+		/// <summary>
+		/// Lista wariantów danego klocka (rotacji)
+		/// </summary>
+		public List<Array2D> Shape => Block.Shape;
 	}
 }
