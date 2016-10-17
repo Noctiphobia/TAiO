@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MahApps.Metro.Converters;
 
 namespace TAiO.Model
 {
@@ -29,15 +30,17 @@ namespace TAiO.Model
 
         public bool AddBlock(BlockInstance block)
         {
-           /* if (block.LeftUpperCornerY + (block.Rotation.Num % 2 == 0 ? block.Block.Height : block.Block.Width) > Height)
-                Resize();*/
+            int h = (block.RotationNum%2 == 0 ? block.Block.Height : block.Block.Width),
+                w = (block.RotationNum%2 == 0 ? block.Block.Width : block.Block.Height);
+            if (block.LeftUpperCornerY + h > Height)
+                Resize(2 * Height);
             BlocksNumber++;
-            for (int i = 0; i < block.Block.Height; i++)
-                for (int j = 0; j < block.Block.Width; j++)
+            for (int i = 0; i < h; i++)
+                for (int j = 0; j < w; j++)
                 {
-                    //if ((Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] & block.Block.Shape[i, j]) > 0)
-                    //    return false;
-                   // Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] = block.Block.Shape[i, j] * BlocksNumber;
+                    if ((Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] & block.Block.Shape[block.RotationNum][i, j]) > 0)
+                        return false;
+                    Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] = block.Block.Shape[block.RotationNum][i, j] * BlocksNumber;
                 }
             return true;
         }
