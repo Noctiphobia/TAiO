@@ -10,5 +10,11 @@
 		public int[,] Array { get; set; }
 		public int Width => Array.GetLength(0);
 		public int Height => Array.GetLength(1);
+
+		public int this[int i, int j]
+		{
+			get { return Array[i, j]; }
+			set { Array[i, j] = value; }
+		}
 	}
 }
