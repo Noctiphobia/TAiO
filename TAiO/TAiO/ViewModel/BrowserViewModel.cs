@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +13,27 @@ namespace TAiO.ViewModel
 	/// </summary>
 	public class BrowserViewModel : BaseViewModel
 	{
+		public ObservableCollection<BlockTypeViewModel> BlockTypeViewModels { get; set; }
+
 		public BrowserViewModel()
 		{
-			// TODO: Delete all random trash BlockTypes
-			Random rand = new Random();
-			for (int i = 0; i < 50; i++)
-			{
-				//Data.Instance.OriginalBlockTypes.Add(new BlockType(1, 1, new int[1,1]) { BlockNumber = rand.Next(10, 30) });
-			}
+			RefreshBlockTypeViewModelsList(new List<BlockType>());
 		}
+
+		public BrowserViewModel(List<BlockType> blockTypes)
+		{
+			RefreshBlockTypeViewModelsList(blockTypes);
+		}
+
+		public void RefreshBlockTypeViewModelsList(List<BlockType> blockTypes)
+		{
+			BlockTypeViewModels = new ObservableCollection<BlockTypeViewModel>();
+			foreach (BlockType blockType in blockTypes)
+			{
+				BlockTypeViewModels.Add(new BlockTypeViewModel(blockType));
+			}
+			RaisePropertyChanged(nameof(BlockTypeViewModels));
+		}
+
 	}
 }

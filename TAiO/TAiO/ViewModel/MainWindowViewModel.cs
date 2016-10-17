@@ -135,9 +135,13 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand ShowBrowser => new RelayCommand(() =>
 		{
-			_browser = new Browser();
-			_browser.Show();
-            //TODO: poprawić
+			if (_browser == null || !_browser.IsLoaded)
+			{
+				_browser = new Browser();
+				_browser.Show();
+				RefreshBrowserBlocks();
+			}
+			//TODO: poprawić
 		});
 
 		/// <summary>
@@ -159,8 +163,14 @@ namespace TAiO.ViewModel
 				{
 				    Data.Instance.Blocks = blocks;
 				    Data.Instance.BoardWidth = width;
+					RefreshBrowserBlocks();
 				}
 			}
 		}, () => Stopped);
+
+		private void RefreshBrowserBlocks()
+		{
+			((BrowserViewModel) _browser?.DataContext)?.RefreshBlockTypeViewModelsList(Data.Instance.Blocks);
+		}
 	}
 }

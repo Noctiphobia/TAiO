@@ -26,10 +26,6 @@ namespace TAiO.Model
 		/// </summary>
 		public static Data Instance => _instance ?? new Data();
 		
-		// TODO: Delete this trash :P
-		public static BlockType bt = new BlockType(1, 1, new[,] { { 1 }});
-		public static BlockTypeViewModel btvm = new BlockTypeViewModel(bt);
-		public List<BlockTypeViewModel> list { get; set; } = new List<BlockTypeViewModel>() {btvm};
 
 		private Data()
 		{
