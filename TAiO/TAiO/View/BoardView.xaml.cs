@@ -81,7 +81,7 @@ namespace TAiO.View
             nameof(CurrentStep),
             typeof(int),
             typeof(BoardView),
-			new FrameworkPropertyMetadata((int)0,
+			new FrameworkPropertyMetadata((int)1,
 				FrameworkPropertyMetadataOptions.AffectsRender,
 				(d, e) =>
 				{
@@ -92,7 +92,7 @@ namespace TAiO.View
 			nameof(StepsPerChange),
 			typeof(int),
 			typeof(BoardView),
-			new FrameworkPropertyMetadata((int)0,
+			new FrameworkPropertyMetadata((int)1,
 				FrameworkPropertyMetadataOptions.AffectsRender,
 				(d, e) =>
 				{
