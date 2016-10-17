@@ -38,9 +38,9 @@ namespace TAiO.Model
             for (int i = 0; i < h; i++)
                 for (int j = 0; j < w; j++)
                 {
-                    if ((Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] & block.Block.Shape[block.RotationNum].Array[i, j]) > 0)
+                    if ((Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] & block.Block.Shape[block.RotationNum][i, j]) > 0)
                         return false;
-                    Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] = block.Block.Shape[block.RotationNum].Array[i, j] * BlocksNumber;
+                    Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] = block.Block.Shape[block.RotationNum][i, j] * BlocksNumber;
                 }
             return true;
         }
