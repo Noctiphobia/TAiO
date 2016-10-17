@@ -35,7 +35,7 @@ namespace TAiO.ViewModel
 			get { return Block.BlockNumber; }
 			set
 			{
-				Block.BlockNumber = value; 
+				Block.BlockNumber = value;
 				RaisePropertyChanged("BlockNumber");
 			}
 		}

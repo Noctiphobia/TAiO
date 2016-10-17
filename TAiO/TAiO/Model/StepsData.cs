@@ -19,19 +19,59 @@ namespace TAiO.Model
 		/// in BlockInstance there's an info about on which board there was a previous block located,
 		/// so we can draw all blocks 
 		/// </summary>
-		public BlockInstance[,] BlockInstances { get; set; }
+		public BlockInstance[,] BlockInstances { get; private set; }
+
+		private const int StepNumberCoord = 0;
+		private const int BoardNumberCoord = 1;
+
 		private int startingI;
 		private int startingJ;
-		public int LastStepFinished { get; private set; }
+		private int _lastStepFinished = -1;
+
+		public int LastStepFinished
+		{
+			get
+			{
+				int last;
+				lock (LockObject)
+				{
+					last = _lastStepFinished;
+				}
+				return last;
+			}
+		}
+
+		public object LockObject { get; } = new object();
 
 		public StepsData(int branches, int blocksNumber)
 		{
 			BlockInstances = new BlockInstance[branches, blocksNumber];
 		}
 
+		public void SetNewStepInfo(List<BlockInstance> stepBlockInstances)
+		{
+			if(stepBlockInstances.Count != BlockInstances.GetLength(BoardNumberCoord))
+				throw new ArgumentException("sizes doesn't match");
+			// TODO: create exceptions
+			lock (LockObject)
+			{
+				_lastStepFinished++;
+				for (int i = 0; i < BlockInstances.GetLength(BoardNumberCoord); i++)
+				{
+					BlockInstances[LastStepFinished, i] = stepBlockInstances[i];
+				}
+			}
+		}
 
 		public void SetStartingPoint(int stepNumber, int boardNumber)
 		{
+			int last;
+			lock (LockObject)
+			{
+				last = _lastStepFinished;
+			}
+			if(startingI > last)
+				throw new ArgumentException("You're starting from wrong step number! Please check it before using...");
 			startingI = stepNumber;
 			startingJ = boardNumber;
 		}
