@@ -29,7 +29,7 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         
-        <ListBox ItemsSource="{Binding Data.list}" >
+        <ListBox ItemsSource="{Binding BlockTypeViewModels}" >
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Style.Triggers>

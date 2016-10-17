@@ -28,7 +28,6 @@ namespace TAiO.Model
 		/// 90 or 180 degrees
 		/// </summary>
 		public int BlockVersion { get; set; }
-
 		/// <summary>
 		/// X coordinate of position of left upper corner of that block
 		/// </summary>
@@ -42,8 +41,6 @@ namespace TAiO.Model
 		/// Id number of board of previous block in that path in algorithm
 		/// </summary>
 		public int PreviousBlockBoardNumber { get; set; }
-
-		public int RotationNum { get; set; }
 
 	}
 }

@@ -87,6 +87,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\Algorithm.cs" />
     <Compile Include="Model\BlockInstance.cs" />
     <Compile Include="Model\BlockType.cs" />
     <Compile Include="Model\Board.cs" />
