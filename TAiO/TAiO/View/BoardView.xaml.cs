@@ -53,15 +53,17 @@ namespace TAiO.View
 		/// <summary>
 		/// Szerokość konturu.
 		/// </summary>
-		protected readonly int OutlineWidth = 4;
+		protected readonly int OutlineWidth = 2;
 		/// <summary>
 		/// Kolor konturu.
 		/// </summary>
-	    protected readonly Color OutlineColor = Color.FromArgb(0xFF, 0x54, 0x54, 0x5C);
+	    protected readonly Color OutlineColor = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
 		/// <summary>
 		/// Kolor klocka.
 		/// </summary>
 	    protected readonly Color BlockColor = Color.FromArgb(0xFF, 0x00, 0x7A, 0xCC);
+
+	    protected readonly Color RecentColor = Color.FromArgb(0xFF, 0x00, 0xDD, 0xFF);
 
 		#region Kod do DependencyProperty
 		public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
@@ -87,7 +89,7 @@ namespace TAiO.View
 				}));
 
 		public static readonly DependencyProperty StepsPerChangeProperty = DependencyProperty.Register(
-			nameof(StepsPerChangeProperty),
+			nameof(StepsPerChange),
 			typeof(int),
 			typeof(BoardView),
 			new FrameworkPropertyMetadata((int)0,
@@ -115,16 +117,29 @@ namespace TAiO.View
 		    DrawingArea.Children.Add(line);
 	    }
 
+	    private Color GetBlockColor(int blockNumber)
+	    {
+		    int diff = 1 + CurrentStep - blockNumber;
+		    if (diff > StepsPerChange)
+			    return BlockColor;
+		    return Color.FromArgb(0xFF,
+			    (byte)(BlockColor.R + diff*((double)RecentColor.R - BlockColor.R) / StepsPerChange),
+				(byte)(BlockColor.G + diff*((double)RecentColor.G - BlockColor.G) / StepsPerChange),
+				(byte)(BlockColor.B + diff*((double)RecentColor.B - BlockColor.B) / StepsPerChange)
+				);
+	    }
+
         /// <summary>
         /// Funkcja zajmująca się rysowaniem po planszy. Wywoływana przy każdej zmianie obecnego kroku oraz podmianie całej kolekcji.
         /// </summary>
-        private void Redraw()
+        public void Redraw()
         {
 	        if (DataSource == null)
 		        return;
+			DrawingArea.Children.Clear();
             int width = DataSource.Width;
             int height = DataSource.Height;
-            Size field = new Size(ActualWidth/width, ActualHeight/height); //rozmiar pojedynczego pola na planszy
+            Size field = new Size(DrawingArea.ActualWidth/width, DrawingArea.ActualHeight/height); //rozmiar pojedynczego pola na planszy
 	        for (int j = 0; j < height; ++j)
 	        {
 		        for (int i = 0; i < width; ++i)
@@ -133,31 +148,40 @@ namespace TAiO.View
 			        {
 				        Rectangle rectangle = new Rectangle
 				        {
-					        Width = 0.5*field.Width,
-					        Height = 0.5*field.Height,
-							Fill = new SolidColorBrush(BlockColor),
+					        Width = field.Width + 2,
+					        Height = field.Height,
+							Fill = new SolidColorBrush(GetBlockColor(DataSource[i, j])),
 							Stroke = new SolidColorBrush(),
 							StrokeThickness = 0.0
 				        };
 				        DrawingArea.Children.Add(rectangle);
-				        double xLeft = i * field.Width;
-				        double yTop = (j + 1) * field.Height;
-				        double xRight = (i + 1) * field.Width;
-				        double yBottom = j * field.Height;
-				        Canvas.SetLeft(rectangle, xLeft);
-						Canvas.SetBottom(rectangle, yTop);
-				        if (i == 0 || DataSource[i - 1, j] != DataSource[i, j])	//po lewej jest co innego
-					        DrawLine(xLeft, yTop, xLeft, yBottom);
-				        if (i == DataSource.Width - 1 || DataSource[i + 1, j] != DataSource[i, j])	//po prawej jest co innego
-					        DrawLine(xRight, yTop, xRight, yBottom);
-				        if (j == 0 || DataSource[i, j - 1] != DataSource[i, j]) //na dole jest co innego
-					        DrawLine(xLeft, yBottom, xRight, yBottom);
-				        if (j == DataSource.Height - 1 || DataSource[i, j + 1] != DataSource[i, j]) //na górze jest coś innego
-					        DrawLine(xLeft, yTop, xRight, yTop);
+				        Canvas.SetRight(rectangle, i * field.Width - 1);
+						Canvas.SetTop(rectangle, j * field.Height);
 			        }
 		        }
 	        }
-
+	        for (int j = 0; j < height; ++j)
+	        {
+		        for (int i = 0; i < width; ++i)
+		        {
+			        if (DataSource[i, j] > 0 && DataSource.Array[i, j] <= CurrentStep)
+			        {
+						double xLeft = (width - i) * field.Width;
+						double yTop = (j + 1) * field.Height;
+						double xRight = (width - (i + 1)) * field.Width;
+						double yBottom = j * field.Height;
+						if (i == 0 || DataSource[i - 1, j] != DataSource[i, j]) //po lewej jest co innego
+							DrawLine(xLeft, yTop, xLeft, yBottom);
+						if (i == DataSource.Width - 1 || DataSource[i + 1, j] != DataSource[i, j])  //po prawej jest co innego
+							DrawLine(xRight, yTop, xRight, yBottom);
+						if (j == 0 || DataSource[i, j - 1] != DataSource[i, j]) //na dole jest co innego
+							DrawLine(xLeft, yBottom, xRight, yBottom);
+						if (j == DataSource.Height - 1 || DataSource[i, j + 1] != DataSource[i, j]) //na górze jest coś innego
+							DrawLine(xLeft, yTop, xRight, yTop);
+					}
+		        }
+	        }
+			InvalidateVisual();
         }
 
         public BoardView()

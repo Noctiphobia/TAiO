@@ -32,11 +32,11 @@ namespace TAiO.Model
 		/// <summary>
 		/// X coordinate of position of left upper corner of that block
 		/// </summary>
-		public int LeftUpperCornerX { get; set; }
+		public int X { get; set; }
 		/// <summary>
 		/// Y coordinate of position of left upper corner of that block
 		/// </summary>
-		public int LeftUpperCornerY { get; set; }
+		public int Y { get; set; }
 
 		/// <summary>
 		/// Id number of board of previous block in that path in algorithm

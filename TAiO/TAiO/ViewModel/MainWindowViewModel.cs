@@ -24,7 +24,7 @@ namespace TAiO.ViewModel
 		private bool _stopped = true;
 		private string _playPause = "▶";
 		private Browser _browser;
-
+		private List<Preview> _previews = new List<Preview>();
 
 		/// <summary>
 		/// Krok symulacji.
@@ -34,9 +34,18 @@ namespace TAiO.ViewModel
 			get { return _step; }
 			set
 			{
-				_step = value;
-				RaisePropertyChanged(nameof(Step));
-				RaisePropertyChanged(nameof(StepString));
+				if (value > 0)
+				{
+					_step = value;
+					foreach (var p in _previews)
+					{
+						var vm = p.DataContext as PreviewViewModel;
+						if (vm == null) continue;
+						vm.StepsPerChange = _step;
+					}
+					RaisePropertyChanged(nameof(Step));
+					RaisePropertyChanged(nameof(StepString));
+				}
 			}
 		}
 
@@ -118,9 +127,26 @@ namespace TAiO.ViewModel
 				{
 					return;
 				}
-                //TODO: tymczasowe
-                Preview preview = new Preview();
-                preview.Show();
+				for (int i = 0; i < Data.Branches; ++i)
+				{
+					Preview preview = new Preview();
+					var vm = preview.DataContext as PreviewViewModel;
+					_previews.Add(preview);
+					preview.Show();
+					if (vm == null) continue;
+					vm.StepsPerChange = Step;
+					vm.CurrentStep = 3;
+					vm.DataSource = new Array2D(
+						new[,]
+						{
+								{ 0, 1, 1, 3, 2 },
+								{ 1, 1, 3, 3, 2 },
+								{ 1, 1, 3, 2, 2 },
+								{ 0, 0, 0, 0, 2 },
+								{ 0, 0, 0, 2, 2 },
+								{ 0, 0, 0, 0, 0 }
+						});
+				}
 			}
 			Running = !Running;
 		});
@@ -128,7 +154,13 @@ namespace TAiO.ViewModel
 		/// <summary>
 		/// Zatrzymaj wszystko.
 		/// </summary>
-		public ICommand Stop => new RelayCommand(() => { Stopped = true; }, () => !Stopped);
+		public ICommand Stop => new RelayCommand(() =>
+		{
+			Stopped = true; 
+			foreach (var p in _previews)
+				p.Close();
+			_previews.Clear();
+		}, () => !Stopped);
 
 		/// <summary>
 		/// Pokaż przeglądarkę klocków.

@@ -32,15 +32,15 @@ namespace TAiO.Model
         {
             int h = (block.RotationNum%2 == 0 ? block.Block.Height : block.Block.Width),
                 w = (block.RotationNum%2 == 0 ? block.Block.Width : block.Block.Height);
-            if (block.LeftUpperCornerY + h > Height)
+            if (block.Y + h > Height)
                 Resize(2 * Height);
             BlocksNumber++;
             for (int i = 0; i < h; i++)
                 for (int j = 0; j < w; j++)
                 {
-                    if ((Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] & block.Block.Shape[block.RotationNum][i, j]) > 0)
+                    if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.RotationNum][i, j]) > 0)
                         return false;
-                    Content[i + block.LeftUpperCornerX, j + block.LeftUpperCornerY] = block.Block.Shape[block.RotationNum][i, j] * BlocksNumber;
+                    Content[i + block.X, j + block.Y] = block.Block.Shape[block.RotationNum][i, j] * BlocksNumber;
                 }
             return true;
         }

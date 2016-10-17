@@ -7,8 +7,14 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" >
     <Grid>
-        <Border>
-            <Canvas Name="DrawingArea"></Canvas>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Border Margin="10 10 10 10" Background="{StaticResource BackgroundNormal}" >
+            <Canvas Name="DrawingArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
         </Border>
     </Grid>
 </UserControl>

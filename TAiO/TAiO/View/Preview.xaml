@@ -13,7 +13,14 @@
         <viewModel:PreviewViewModel></viewModel:PreviewViewModel>
     </Window.DataContext>
     <Grid>
-        <view:BoardView></view:BoardView>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <view:BoardView x:Name="DrawingArea" StepsPerChange="{Binding StepsPerChange}" CurrentStep="{Binding CurrentStep}" DataSource="{Binding DataSource}"></view:BoardView>
+
     </Grid>
 </controls:MetroWindow>
 
