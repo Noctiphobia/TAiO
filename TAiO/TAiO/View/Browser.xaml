@@ -17,9 +17,9 @@
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:BlockTypeViewModel}">
             <Grid>
-                <view:BoardView 
+                <!--view:BoardView 
                     CurrentStep="1" 
-                    DataSource="{Binding Shape[0]}"/>
+                    DataSource="{Binding Shape[0]}"/-->
                 <TextBox Text="{Binding BlockNumber}" />
             </Grid>
         </DataTemplate>
