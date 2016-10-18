@@ -45,9 +45,13 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal">
                 <Label>Krok:</Label>
-                <TextBox Text="{Binding StepString}" Width="40" TextAlignment="Center"></TextBox>
+                <TextBox Text="{Binding StepString, UpdateSourceTrigger=PropertyChanged}" 
+                         Width="40" 
+                         TextAlignment="Center">
+                </TextBox>
                 <Label>Opóźnienie:</Label>
-                <TextBox Text="{Binding DelayString}" Width="40" TextAlignment="Center"></TextBox>
+                <TextBox Text="{Binding DelayString, UpdateSourceTrigger=PropertyChanged}" 
+                         Width="40" TextAlignment="Center"></TextBox>
             </StackPanel>
 
         </Grid>

@@ -30,7 +30,7 @@
                     MinWidth="200"
                     DataSource="{Binding Shape[0]}"
                     Grid.Row="0"/>
-                <TextBox Text="{Binding BlockNumber}"
+                <TextBox Text="{Binding BlockNumber, UpdateSourceTrigger=PropertyChanged}"
                          Grid.Row="1"/>
             </Grid>
         </DataTemplate>
