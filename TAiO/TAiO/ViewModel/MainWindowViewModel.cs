@@ -135,6 +135,7 @@ namespace TAiO.ViewModel
 			}
 		}
 
+
 		/// <summary>
 		/// ⏸ lub ▶
 		/// </summary>
@@ -148,6 +149,36 @@ namespace TAiO.ViewModel
 			}
 		}
 
+
+		public ICommand PreviousStep => new RelayCommand(() =>
+		{
+			foreach (var preview in _previews)
+			{
+				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
+				if(vm == null)
+					continue;
+				if (vm.CurrentStep > 0)
+				{
+					if (vm.CurrentStep - vm.StepsPerChange >= 0)
+						vm.CurrentStep = vm.CurrentStep - vm.StepsPerChange;
+					else
+					{
+						vm.CurrentStep = 0;
+					}
+				}
+			}
+		});
+
+		public ICommand NextStep => new RelayCommand(() =>
+		{
+			foreach (var preview in _previews)
+			{
+				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
+				if (vm == null)
+					continue;
+				vm.CurrentStep = vm.CurrentStep + vm.StepsPerChange;
+			}
+		});
 
 		/// <summary>
 		/// Włącz/wyłącz wizualizację.
@@ -169,16 +200,16 @@ namespace TAiO.ViewModel
 					preview.Show();
 					if (vm == null) continue;
 					vm.StepsPerChange = Step;
-					vm.CurrentStep = 3;
+					vm.CurrentStep = 0;
 					vm.DataSource = new Array2D(
 						new[,]
 						{
 								{ 0, 1, 1, 3, 2 },
 								{ 1, 1, 3, 3, 2 },
 								{ 1, 1, 3, 2, 2 },
-								{ 0, 0, 0, 0, 2 },
-								{ 0, 0, 0, 2, 2 },
-								{ 0, 0, 0, 0, 0 }
+								{ 0, 0, 4, 4, 2 },
+								{ 0, 0, 4, 2, 2 },
+								{ 0, 0, 0, 5, 5 }
 						});
 				}
 			}
