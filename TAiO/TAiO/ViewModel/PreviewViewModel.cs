@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using TAiO.Model;
 
 namespace TAiO.ViewModel
@@ -63,5 +64,20 @@ namespace TAiO.ViewModel
 				RaisePropertyChanged(nameof(DataSource));
 			}
 		}
+
+
+
+		public void UpdateDataSource(StepsData data, int boardNumber, int stepNumber, int width, int height)
+		{
+			Board board = new Board(width, height);
+			data.SetStartingPoint(stepNumber, boardNumber);
+			foreach (BlockInstance blockInstance in data)
+			{
+				board.AddBlock(blockInstance);
+			}
+			DataSource = new Array2D(board.Content);
+		}
+
+
 	}
 }

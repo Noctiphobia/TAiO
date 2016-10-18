@@ -10,7 +10,7 @@ namespace TAiO.Model
 	/// <summary>
 	/// StepsData contains all data needed to draw all steps of algorithm on all boards
 	/// </summary>
-	class StepsData:IEnumerable<BlockInstance>
+	public class StepsData:IEnumerable<BlockInstance>
 	{
 		/// <summary>
 		/// Array of BlockInstances
@@ -45,7 +45,7 @@ namespace TAiO.Model
 
 		public StepsData(int branches, int blocksNumber)
 		{
-			BlockInstances = new BlockInstance[branches, blocksNumber];
+			BlockInstances = new BlockInstance[blocksNumber, branches];
 		}
 
 		public void SetNewStepInfo(List<BlockInstance> stepBlockInstances)

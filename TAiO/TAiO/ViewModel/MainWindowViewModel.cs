@@ -161,6 +161,13 @@ namespace TAiO.ViewModel
 				{
 					return;
 				}
+
+				if (Data.Blocks.Count == 0)
+					return;
+				Algorithm a = new Algorithm(Data);
+				a.RunAlgorithm();
+				
+
 				for (int i = 0; i < Data.Branches; ++i)
 				{
 					Preview preview = new Preview();
@@ -170,16 +177,17 @@ namespace TAiO.ViewModel
 					if (vm == null) continue;
 					vm.StepsPerChange = Step;
 					vm.CurrentStep = 3;
-					vm.DataSource = new Array2D(
-						new[,]
-						{
-								{ 0, 1, 1, 3, 2 },
-								{ 1, 1, 3, 3, 2 },
-								{ 1, 1, 3, 2, 2 },
-								{ 0, 0, 0, 0, 2 },
-								{ 0, 0, 0, 2, 2 },
-								{ 0, 0, 0, 0, 0 }
-						});
+					vm.UpdateDataSource(a.StepsData, i, vm.CurrentStep, Data.BoardWidth, Data.BoardWidth);
+					//vm.DataSource = new Array2D(
+					//	new[,]
+					//	{
+					//			{ 0, 1, 1, 3, 2 },
+					//			{ 1, 1, 3, 3, 2 },
+					//			{ 1, 1, 3, 2, 2 },
+					//			{ 0, 0, 0, 0, 2 },
+					//			{ 0, 0, 0, 2, 2 },
+					//			{ 0, 0, 0, 0, 0 }
+					//	});
 				}
 			}
 			Running = !Running;

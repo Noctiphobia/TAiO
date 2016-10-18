@@ -47,8 +47,8 @@ namespace TAiO.Model
 			while (block.Y + h > Height)
 				Resize();
             BlocksNumber++;
-            for (int i = 0; i < h; i++)
-                for (int j = 0; j < w; j++)
+            for (int i = 0; i < w; i++)
+                for (int j = 0; j < h; j++)
                 {
 					if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
                         return false;

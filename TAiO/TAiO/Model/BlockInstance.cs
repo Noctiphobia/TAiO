@@ -15,7 +15,7 @@ namespace TAiO.Model
 	/// 
 	/// BlockInstance correspond with one block added in one specific step on one specific board.
 	/// </summary>
-	struct BlockInstance
+	public struct BlockInstance
 	{
 		/// <summary>
 		/// Type of block
