@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using MicroMvvm;
 using TAiO.Model;
 using Microsoft.Win32;
@@ -26,6 +27,7 @@ namespace TAiO.ViewModel
 		private string _playPause = "▶";
 		private Browser _browser;
 		private List<Preview> _previews = new List<Preview>();
+		private DispatcherTimer _timer = new DispatcherTimer();
 
 		/// <summary>
 		/// Krok symulacji.
@@ -77,6 +79,12 @@ namespace TAiO.ViewModel
 				if (value > 0)
 				{
 					_delay = value;
+					bool started = _timer.IsEnabled;
+					if (started)
+						_timer.Stop();
+					_timer.Interval = TimeSpan.FromSeconds(value);
+					if (started)
+						_timer.Start();
 					RaisePropertyChanged(nameof(Delay));
 					RaisePropertyChanged(nameof(DelayString));
 				}
@@ -110,6 +118,10 @@ namespace TAiO.ViewModel
 				if (_running != value)
 				{
 					_running = value;
+						if (_running)
+							_timer.Start();
+						else
+							_timer.Stop();
 					PlayPause = Running ? "⏸" : "▶";
 					if (Running)
 						Stopped = false;
@@ -177,6 +189,28 @@ namespace TAiO.ViewModel
 				if (vm == null)
 					continue;
 				vm.CurrentStep = vm.CurrentStep + vm.StepsPerChange;
+			}
+		});
+
+		public ICommand FirstStep => new RelayCommand(() =>
+		{
+			foreach (var preview in _previews)
+			{
+				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
+				if (vm == null)
+					continue;
+				vm.CurrentStep = 0;
+			}
+		});
+
+		public ICommand LastStep => new RelayCommand(() =>
+		{
+			foreach (var preview in _previews)
+			{
+				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
+				if (vm == null)
+					continue;
+				vm.CurrentStep = 1000;
 			}
 		});
 
@@ -268,6 +302,12 @@ namespace TAiO.ViewModel
 		private void RefreshBrowserBlocks()
 		{
 			((BrowserViewModel) _browser?.DataContext)?.RefreshBlockTypeViewModelsList(Data.Instance.Blocks);
+		}
+
+		public MainWindowViewModel()
+		{
+			_timer.Tick += (o, e) => { if (NextStep.CanExecute(this)) NextStep.Execute(this); };
+			_timer.Interval = TimeSpan.FromSeconds(3);
 		}
 	}
 }
