@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAiO.View"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" >
-    <Grid>
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid MinHeight="100" MinWidth="100">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
@@ -14,7 +14,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Border Margin="10 10 10 10" Background="{StaticResource BackgroundNormal}" >
-            <Canvas Name="DrawingArea" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
+            <Canvas Name="DrawingArea" MinHeight="80" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
         </Border>
     </Grid>
 </UserControl>

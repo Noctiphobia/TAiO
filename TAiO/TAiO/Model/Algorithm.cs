@@ -22,15 +22,15 @@ namespace TAiO.Model
 		{
 			Data = data;
 			BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
-				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, a.BlockNumber))));
+				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 		}
 
 		public void RunAlgorithm()
 		{
 			Task.Run(() =>
 			{
-				int available_blocks = Data.Blocks.Sum(a => a.BlockNumber);
-				while (StepsData.LastStepFinished < available_blocks)
+				int availableBlocks = Data.Blocks.Sum(a => (int)a.BlockNumber);
+				while (StepsData.LastStepFinished < availableBlocks)
 				{
 					MakeNextStep();
 				}
@@ -40,16 +40,16 @@ namespace TAiO.Model
 		public void MakeNextStep()
 		{
 			// TODO: make it somewhat smarter...
-			BlockType next_block = null;
+			BlockType nextBlock = null;
 			for (int i = 0; i < BlocksOfTypeCount.Count; i++)
 			{
 				if (BlocksOfTypeCount[i].Value != 0)
 				{
-					next_block = BlocksOfTypeCount[i].Key;
-					BlocksOfTypeCount[i] = new KeyValuePair<BlockType, int>(next_block, BlocksOfTypeCount[i].Value - -1);
+					nextBlock = BlocksOfTypeCount[i].Key;
+					BlocksOfTypeCount[i] = new KeyValuePair<BlockType, int>(nextBlock, BlocksOfTypeCount[i].Value - -1);
 				}
 			}
-			if (next_block == null)
+			if (nextBlock == null)
 				return;
 
 			List<BlockInstance> blocks = new List<BlockInstance>(Data.Branches);
@@ -57,7 +57,7 @@ namespace TAiO.Model
 			{
 				blocks.Add(new BlockInstance()
 				{
-					Block = next_block,
+					Block = nextBlock,
 					BlockVersion = 0,
 					X = 0,
 					Y = 0,

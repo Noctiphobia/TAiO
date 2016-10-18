@@ -17,10 +17,21 @@
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModel:BlockTypeViewModel}">
             <Grid>
-                <!--view:BoardView 
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <view:BoardView 
                     CurrentStep="1" 
-                    DataSource="{Binding Shape[0]}"/-->
-                <TextBox Text="{Binding BlockNumber}" />
+                    StepsPerChange="1"
+                    Height="200"
+                    Width="200"
+                    MinHeight="200"
+                    MinWidth="200"
+                    DataSource="{Binding Shape[0]}"
+                    Grid.Row="0"/>
+                <TextBox Text="{Binding BlockNumber}"
+                         Grid.Row="1"/>
             </Grid>
         </DataTemplate>
     </Window.Resources>

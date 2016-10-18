@@ -16,7 +16,7 @@ namespace TAiO.Model
 		public int Height { get; set; }
 		public int Width { get; set; }
         public List<int[,]> Shape { get; set; }
-		public int BlockNumber { get; set; }
+		public uint BlockNumber { get; set; }
 
 	    public BlockType(int w, int h, int[,] s)
 		{

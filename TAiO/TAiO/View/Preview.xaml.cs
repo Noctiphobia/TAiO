@@ -24,6 +24,12 @@ namespace TAiO
 		public Preview()
 		{
 			InitializeComponent();
+			this.SizeChanged += PreviewSizeChanged;
+		}
+
+		private void PreviewSizeChanged(object sender, SizeChangedEventArgs e)
+		{
+			DrawingArea.Redraw();
 		}
 	}
 }

@@ -34,7 +34,7 @@ namespace TAiO.ViewModel
 		
 		/// <summary>
 		/// Obecny krok. 
-		/// </summary>
+		/// </summary>D
 		public int CurrentStep
 		{
 			get

@@ -58,10 +58,13 @@ namespace TAiO.View
 		/// Kolor konturu.
 		/// </summary>
 	    protected readonly Color OutlineColor = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
+
+	    protected readonly Color OutlineColorBright = Colors.GhostWhite;
+	    protected readonly double BrowserMinDimensions = 180;
 		/// <summary>
 		/// Kolor klocka.
 		/// </summary>
-	    protected readonly Color BlockColor = Color.FromArgb(0xFF, 0x00, 0x7A, 0xCC);
+		protected readonly Color BlockColor = Color.FromArgb(0xFF, 0x00, 0x7A, 0xCC);
 
 	    protected readonly Color RecentColor = Color.FromArgb(0xFF, 0x00, 0xDD, 0xFF);
 
@@ -107,7 +110,7 @@ namespace TAiO.View
 	    {
 		    Line line = new Line
 		    {
-			    Stroke = new SolidColorBrush(OutlineColor),
+			    Stroke = new SolidColorBrush(OutlineColorBright),
 			    StrokeThickness = OutlineWidth,
 			    X1 = x1,
 			    Y1 = y1,
@@ -140,26 +143,31 @@ namespace TAiO.View
             int width = DataSource.Width;
             int height = DataSource.Height;
             Size field = new Size(DrawingArea.ActualWidth/width, DrawingArea.ActualHeight/height); //rozmiar pojedynczego pola na planszy
-	        for (int j = 0; j < height; ++j)
+	        if (Math.Abs(field.Width) < 0.0001 || Math.Abs(field.Height) < 0.0001)
 	        {
-		        for (int i = 0; i < width; ++i)
-		        {
-			        if (DataSource[i, j] > 0 && DataSource.Array[i, j] <= CurrentStep)
-			        {
-				        Rectangle rectangle = new Rectangle
-				        {
-					        Width = field.Width + 2,
-					        Height = field.Height,
+				field = new Size(BrowserMinDimensions/width, BrowserMinDimensions/height);
+			}
+
+			for (int j = 0; j < height; ++j)
+	        {
+				for (int i = 0; i < width; ++i)
+				{
+					if (DataSource[i, j] > 0 && DataSource.Array[i, j] <= CurrentStep)
+					{
+						Rectangle rectangle = new Rectangle
+						{
+							Width = field.Width + 2,
+							Height = field.Height,
 							Fill = new SolidColorBrush(GetBlockColor(DataSource[i, j])),
 							Stroke = new SolidColorBrush(),
 							StrokeThickness = 0.0
-				        };
-				        DrawingArea.Children.Add(rectangle);
-				        Canvas.SetRight(rectangle, i * field.Width - 1);
+						};
+						DrawingArea.Children.Add(rectangle);
+						Canvas.SetRight(rectangle, i * field.Width - 1);
 						Canvas.SetTop(rectangle, j * field.Height);
-			        }
-		        }
-	        }
+					}
+				}
+			}
 	        for (int j = 0; j < height; ++j)
 	        {
 		        for (int i = 0; i < width; ++i)

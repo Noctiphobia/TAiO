@@ -30,7 +30,7 @@ namespace TAiO.ViewModel
 		/// Liczba klocków danego typu - interfejs dla widoku
 		/// "set" wywołuje event PropertyChanged
 		/// </summary>
-		public int BlockNumber
+		public uint BlockNumber
 		{
 			get { return Block.BlockNumber; }
 			set
