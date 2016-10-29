@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace TAiO.Model
 {
@@ -28,56 +29,71 @@ namespace TAiO.Model
 
 		public void RunAlgorithm()
 		{
-			//Task.Run(() =>
-			//{
 				int availableBlocks = Data.Blocks.Sum(a => (int)a.BlockNumber);
 				while (StepsData.LastStepFinished < availableBlocks - 1)
 				{
 					MakeNextStep();
 				}
-			//});
 		}
 
 		public void MakeNextStep()
 		{
 			// TODO: make it somewhat smarter...
-			BlockType nextBlock = null;
-			for (int i = 0; i < BlocksOfTypeCount.Count; i++)
-			{
-				if (BlocksOfTypeCount[i].Value != 0)
-				{
-					nextBlock = BlocksOfTypeCount[i].Key;
-					BlocksOfTypeCount[i] = new KeyValuePair<BlockType, int>(nextBlock, BlocksOfTypeCount[i].Value - 1);
-					break;
-				}
-			}
-			if (nextBlock == null)
-				return;
+			//BlockType nextBlock = null;
+			//for (int i = 0; i < BlocksOfTypeCount.Count; i++)
+			//{
+			//	if (BlocksOfTypeCount[i].Value != 0)
+			//	{
+			//		nextBlock = BlocksOfTypeCount[i].Key;
+			//		BlocksOfTypeCount[i] = new KeyValuePair<BlockType, int>(nextBlock, BlocksOfTypeCount[i].Value - 1);
+			//		break;
+			//	}
+			//}
+			//if (nextBlock == null)
+			//	return;
 
-			List<BlockInstance> blocks = new List<BlockInstance>(Data.Branches);
+			//List<BlockInstance> blocks = new List<BlockInstance>(Data.Branches);
 
-			if(CurrentStep > -1)
-				StepsData.SetStartingPoint(CurrentStep, 0);
-			int y = CurrentStep > -1 ? StepsData.Sum(blockInstance => blockInstance.Block.Height) : 0;
+			//if(CurrentStep > -1)
+			//	StepsData.SetStartingPoint(CurrentStep, 0);
+			//int y = CurrentStep > -1 ? StepsData.Sum(blockInstance => blockInstance.Block.Height) : 0;
 
-			for (int i = 0; i < Data.Branches; i++)
-			{
-				blocks.Add(new BlockInstance()
-				{
-					Block = nextBlock,
-					BlockVersion = 0,
-					X = 0,
-					Y = y,
-					PreviousBlockBoardNumber = i});
-				//y += blocks[i].Block.Height;
-			}
+			//for (int i = 0; i < Data.Branches; i++)
+			//{
+			//	blocks.Add(new BlockInstance()
+			//	{
+			//		Block = nextBlock,
+			//		BlockVersion = 0,
+			//		X = 0,
+			//		Y = y,
+			//		PreviousBlockBoardNumber = i});
+			//	//y += blocks[i].Block.Height;
+			//}
 
-			StepsData.SetNewStepInfo(blocks);
+			//StepsData.SetNewStepInfo(blocks);
+		    var tasks = new List<Task<List<PartialSolution>>>();
+            var partialSolutions = new List<List<PartialSolution>>();
+		    foreach (Board board in CurrentStepBoards)
+		    {
+		        //TODO: Ahmed, metoda board.ChooseBlocks ma być wykonywana na osobnych taskach, wyniki wrzucane do partialSolution i po wykonaniu wszystkiego mergowane
+                //TODO: Zamienić lambdę na coś z sensem
+		        var list = board.ChooseBlocks(Data.Blocks, Data.Branches, b => 0);
+                partialSolutions.Add(list);
+		    }
+            MergeSolutions(partialSolutions);
+            //TODO: jakieś ruszenie tego kroku czy coś
+        }
 
-
-		}
-
-
+        /// <summary>
+        /// Wybiera k z k^2 najlepszych rozwiązań
+        /// </summary>
+        /// <param name="solutions">Po k rozwiązań z k gałęzi</param>
+        private void MergeSolutions(List<List<PartialSolution>> solutions)
+	    {
+	        int[] ind = new int[solutions.Count];
+            //for(int i = 0; i < )
+            //TODO: Ola
+	    }
 
 	}
 }

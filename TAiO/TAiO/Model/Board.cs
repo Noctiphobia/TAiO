@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 using MahApps.Metro.Converters;
 
 namespace TAiO.Model
-{
+{   
+    /// <summary>
+    /// Klasa funkcji liczących koszt (im mniejszy, tym lepiej!) danego ułożenia klocków na planszy
+    /// </summary>
+    /// <param name="board">Plansza, zawierająca ułożenie</param>
+    /// <returns>Koszt</returns>
+    public delegate int CostFunction(Board board);
+
     /// <summary>
     /// Klasa reprezentująca studnię, w której układane są klocki
     /// </summary>
-    class Board
+    public class Board
     {
 	    public int Width
 	    {
@@ -24,6 +31,8 @@ namespace TAiO.Model
         public int BlocksNumber { get; set; }
 		private int StepHeight { get; set; } 
 
+
+
         public Board(int w, int h)
         {
 			StepHeight = h / 2;
@@ -36,7 +45,7 @@ namespace TAiO.Model
 			int[,] tmp = new int[Width, Height + StepHeight];
 			for (int i = 0; i < Height; i++)
 			    for (int j = 0; j < Width; j++)
-			        tmp[i, j] = Content[i, j];
+			        tmp[j, i] = Content[j, i];
 		    Content = tmp;
         }
 
@@ -44,7 +53,7 @@ namespace TAiO.Model
         {
 			int h = (block.BlockVersion%2 == 0 ? block.Block.Height : block.Block.Width),
 				w = (block.BlockVersion%2 == 0 ? block.Block.Width : block.Block.Height);
-			while (block.Y + h > Height)
+			while (block.Y + h >= Height)
 				Resize();
             BlocksNumber++;
             for (int i = 0; i < w; i++)
@@ -55,6 +64,21 @@ namespace TAiO.Model
 					Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
                 }
             return true;
+        }
+        /// <summary>
+        /// Wybiera wskazaną liczbę ułożeń 
+        /// </summary>
+        /// <param name="blocks">Lista klocków</param>
+        /// <param name="resultsCount">Ile zwrócić wyników (= liczba rozgałęzień algorytmu)</param>
+        /// <returns></returns>
+        public List<PartialSolution> ChooseBlocks(List<BlockType> blocks, int resultsCount, CostFunction costFunction)
+        {
+            // TODO:
+            // 1. Funkcja wskazująca miejsce do położenia klocka o danym obrocie
+            // 2. Zaimplementowanie funkcji kosztu i policzenie jej dla każdego obrotu każdego klocka
+            // 3. Wybranie i zwrócenie resultsCount ułożeń z najniższą funkcją kosztu
+            // ??? Czy ta funkcja powinna zwracać też zaktualizowaną listę klocków?
+            return new List<PartialSolution>();
         }
     }
 }
