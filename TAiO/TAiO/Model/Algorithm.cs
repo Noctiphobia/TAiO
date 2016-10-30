@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,16 +72,23 @@ namespace TAiO.Model
 			//}
 
 			//StepsData.SetNewStepInfo(blocks);
-		    var tasks = new List<Task<List<PartialSolution>>>();
-            var partialSolutions = new List<List<PartialSolution>>();
+		    var tasks = new Task[CurrentStepBoards.Count];
+			var partialSolutions = new ConcurrentQueue<List<PartialSolution>>();
+			int i = 0;
 		    foreach (Board board in CurrentStepBoards)
 		    {
-		        //TODO: Ahmed, metoda board.ChooseBlocks ma być wykonywana na osobnych taskach, wyniki wrzucane do partialSolution i po wykonaniu wszystkiego mergowane
                 //TODO: Zamienić lambdę na coś z sensem
-		        var list = board.ChooseBlocks(Data.Blocks, Data.Branches, b => 0);
-                partialSolutions.Add(list);
+				tasks[i++] = new Task(() =>
+				{
+					partialSolutions.Enqueue(board.ChooseBlocks(Data.Blocks, Data.Branches, b => 0));
+				});
 		    }
-            MergeSolutions(partialSolutions);
+			foreach (Task t in tasks)
+			{
+				t?.Start();
+			}
+			Task.WaitAll(tasks);
+            MergeSolutions(partialSolutions.ToList()); //TODO: zastanowić się, czy nie zmienić List<List<PartialSolution>> na coś innego
             //TODO: jakieś ruszenie tego kroku czy coś
         }
 
