@@ -12,17 +12,20 @@ namespace TAiO.Model
 	/// Klasa zawierające wszystkie dane dotyczące przebiegu algorytmu
 	/// i zawierająca metody pozwalające na wykonanie go
 	/// </summary>
-	class Algorithm
+	public class Algorithm
 	{
 		public StepsData StepsData { get; private set; }
 		public int CurrentStep => StepsData.LastStepFinished;
 		private Data Data;
+		private CostFunction CostFunction;
 		private List<Board> CurrentStepBoards;
 		private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
 
-		public Algorithm(Data data)
+		public Algorithm(Data data, CostFunction costFunction)
 		{
 			Data = data;
+			CostFunction = costFunction;
+			CurrentStepBoards = new List<Board>();
 			BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
 				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
@@ -76,17 +79,10 @@ namespace TAiO.Model
 			var partialSolutions = new ConcurrentQueue<List<PartialSolution>>();
 			int i = 0;
 		    foreach (Board board in CurrentStepBoards)
-		    {
-                //TODO: Zamienić lambdę na coś z sensem
-				tasks[i++] = new Task(() =>
+				(tasks[i++] = new Task(() =>
 				{
-					partialSolutions.Enqueue(board.ChooseBlocks(Data.Blocks, Data.Branches, b => 0));
-				});
-		    }
-			foreach (Task t in tasks)
-			{
-				t?.Start();
-			}
+					partialSolutions.Enqueue(board.ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
+				})).Start();
 			Task.WaitAll(tasks);
             MergeSolutions(partialSolutions.ToList()); //TODO: zastanowić się, czy nie zmienić List<List<PartialSolution>> na coś innego
             //TODO: jakieś ruszenie tego kroku czy coś
