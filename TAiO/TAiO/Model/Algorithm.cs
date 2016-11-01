@@ -91,8 +91,20 @@ namespace TAiO.Model
         private void MergeSolutions(List<List<PartialSolution>> solutions)
 	    {
 	        int[] ind = new int[solutions.Count];
-            //for(int i = 0; i < )
-            //TODO: Ola
+            for (int i = 0; i < solutions.Count; i++)
+            {
+                int min = Int32.MaxValue, minind = 0;
+                for (int j = 0; j < solutions.Count; j++)
+                {
+                    if (solutions[j][ind[j]].Cost < min)
+                    {
+                        min = solutions[j][ind[j]].Cost;
+                        minind = j;
+                    }
+                }
+                StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[minind][ind[minind]].Move;
+                ind[minind]++;
+            }
 	    }
 
 	}

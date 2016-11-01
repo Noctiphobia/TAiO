@@ -15,7 +15,7 @@ namespace TAiO.Model
     public delegate int CostFunction(Board board);
 
     /// <summary>
-    /// Klasa reprezentująca studnię, w której układane są klocki
+    /// Klasa reprezentująca planszę, na której układane są klocki
     /// </summary>
     public class Board
     {
