@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,17 +12,20 @@ namespace TAiO.Model
 	/// Klasa zawierające wszystkie dane dotyczące przebiegu algorytmu
 	/// i zawierająca metody pozwalające na wykonanie go
 	/// </summary>
-	class Algorithm
+	public class Algorithm
 	{
 		public StepsData StepsData { get; private set; }
 		public int CurrentStep => StepsData.LastStepFinished;
 		private Data Data;
+		private CostFunction CostFunction;
 		private List<Board> CurrentStepBoards;
 		private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
 
-		public Algorithm(Data data)
+		public Algorithm(Data data, CostFunction costFunction)
 		{
 			Data = data;
+			CostFunction = costFunction;
+			CurrentStepBoards = new List<Board>();
 			BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
 				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
@@ -71,16 +75,16 @@ namespace TAiO.Model
 			//}
 
 			//StepsData.SetNewStepInfo(blocks);
-		    var tasks = new List<Task<List<PartialSolution>>>();
-            var partialSolutions = new List<List<PartialSolution>>();
+		    var tasks = new Task[CurrentStepBoards.Count];
+			var partialSolutions = new ConcurrentQueue<List<PartialSolution>>();
+			int i = 0;
 		    foreach (Board board in CurrentStepBoards)
-		    {
-		        //TODO: Ahmed, metoda board.ChooseBlocks ma być wykonywana na osobnych taskach, wyniki wrzucane do partialSolution i po wykonaniu wszystkiego mergowane
-                //TODO: Zamienić lambdę na coś z sensem
-		        var list = board.ChooseBlocks(Data.Blocks, Data.Branches, b => 0);
-                partialSolutions.Add(list);
-		    }
-            MergeSolutions(partialSolutions);
+				(tasks[i++] = new Task(() =>
+				{
+					partialSolutions.Enqueue(board.ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
+				})).Start();
+			Task.WaitAll(tasks);
+            MergeSolutions(partialSolutions.ToList()); //TODO: zastanowić się, czy nie zmienić List<List<PartialSolution>> na coś innego
             //TODO: jakieś ruszenie tego kroku czy coś
         }
 
