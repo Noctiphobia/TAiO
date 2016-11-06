@@ -76,15 +76,14 @@ namespace TAiO.Model
 
 			//StepsData.SetNewStepInfo(blocks);
 		    var tasks = new Task[CurrentStepBoards.Count];
-			var partialSolutions = new ConcurrentQueue<List<PartialSolution>>();
-			int i = 0;
-		    foreach (Board board in CurrentStepBoards)
-				(tasks[i++] = new Task(() =>
-				{
-					partialSolutions.Enqueue(board.ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
-				})).Start();
+			var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Count);
+
+			for (int i = 0; i < CurrentStepBoards.Count; i++)
+				(tasks[i] =
+					new Task(() => { partialSolutions[i] = (CurrentStepBoards[i].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction)); })).Start();
+			
 			Task.WaitAll(tasks);
-            MergeSolutions(partialSolutions.ToList()); //TODO: zastanowić się, czy nie zmienić List<List<PartialSolution>> na coś innego
+            MergeSolutions(partialSolutions);
             //TODO: jakieś ruszenie tego kroku czy coś
         }
 
