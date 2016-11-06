@@ -66,11 +66,11 @@ namespace TAiO.Model
             return true;
         }
         /// <summary>
-        /// Wybiera wskazaną liczbę ułożeń 
+        /// Wybiera wskazaną liczbę ułożeń z najmniejszymi wartościami funkcji kosztu
         /// </summary>
         /// <param name="blocks">Lista klocków</param>
         /// <param name="resultsCount">Ile zwrócić wyników (= liczba rozgałęzień algorytmu)</param>
-        /// <returns></returns>
+        /// <returns>Listę posortowanych rosnąco po funkcji kosztu rozwiązań</returns>
         public List<PartialSolution> ChooseBlocks(List<BlockType> blocks, int resultsCount, CostFunction costFunction)
         {
             // TODO:

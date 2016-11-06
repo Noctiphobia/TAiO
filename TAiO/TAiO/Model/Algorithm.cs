@@ -86,7 +86,8 @@ namespace TAiO.Model
 			Task.WaitAll(tasks);
             MergeSolutions(partialSolutions.ToList()); //TODO: zastanowić się, czy nie zmienić List<List<PartialSolution>> na coś innego
             //TODO: jakieś ruszenie tego kroku czy coś
-        }
+		    // StepsData.LastStepFinished++; - dodać setter?
+		}
 
         /// <summary>
         /// Wybiera k z k^2 najlepszych rozwiązań
