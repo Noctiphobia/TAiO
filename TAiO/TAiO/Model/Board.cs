@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
 using MahApps.Metro.Converters;
 
 namespace TAiO.Model
@@ -65,6 +66,39 @@ namespace TAiO.Model
                 }
             return true;
         }
+
+        /// <summary>
+        /// Wybiera pierwsze miejsce, w którym można położyć klocek
+        /// </summary>
+        /// <param name="block">Klocek do położenia</param>
+        /// <param name="rotation">Wersja klocka</param>
+        /// <returns>Obiekt klasy, zawierający informację o umieszczeniu klocka</returns>
+        private BlockInstance FindPlaceForBlock(BlockType block, int rotation)
+        {
+            BlockInstance resultBlock = new BlockInstance {Block = block, BlockVersion = rotation};
+            int[,] blockTab = block.Shape[rotation];
+            int blockWidth = blockTab.GetLength(0), blockHeight = blockTab.GetLength(1);
+            for (int i = 0; i < Height; i++)
+                for (int j = 0; j < Width - blockWidth; j++)
+                {
+                    int maxHeight = Math.Min(blockHeight, Height - i);
+                    bool isGood = true;
+                    for (int k = 0; k < maxHeight && isGood; k++)
+                        for (int m = 0; m < blockWidth && isGood; m++)
+                            if (blockTab[m, k] > 0 && Content[j + m, i + k] > 0)
+                                isGood = false;
+                    if (isGood)
+                    {
+                        resultBlock.X = j;
+                        resultBlock.Y = i;
+                        return resultBlock;
+                    }
+                }
+            resultBlock.X = 0;
+            resultBlock.Y = Height;
+            return resultBlock;
+        }
+
         /// <summary>
         /// Wybiera wskazaną liczbę ułożeń z najmniejszymi wartościami funkcji kosztu
         /// </summary>
@@ -75,6 +109,7 @@ namespace TAiO.Model
         {
             // TODO:
             // 1. Funkcja wskazująca miejsce do położenia klocka o danym obrocie
+            // UPDATE: Funkcja zwraca BlockInstance, ale NIE ZAPISUJE W TAM INFORMACJI O POPRZEDNIM KLOCKU. Ustawiać tu lub zmienić funkcję.
             // 2. Zaimplementowanie funkcji kosztu i policzenie jej dla każdego obrotu każdego klocka
             // 3. Wybranie i zwrócenie resultsCount ułożeń z najniższą funkcją kosztu
             // ??? Czy ta funkcja powinna zwracać też zaktualizowaną listę klocków?
