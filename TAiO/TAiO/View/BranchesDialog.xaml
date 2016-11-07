@@ -31,7 +31,7 @@
             <Label>Liczba rozgałęzień na krok:</Label>
             <TextBox Text="{Binding Branches}" Width="40" TextAlignment="Center"></TextBox>
         </StackPanel>
-        <Button Grid.Row="3" Width="50" Click="Button_Click">Ok</Button>
+        <Button Grid.Row="3" Width="50" Click="Button_Click" IsEnabled="{Binding IsCostFunctionSelected}">Ok</Button>
     </Grid>
 </controls:MetroWindow>
 

@@ -23,9 +23,13 @@ namespace TAiO.ViewModel
 			{
 				_costFunction = value;
 				RaisePropertyChanged(nameof(CostFunction));
+				RaisePropertyChanged(nameof(IsCostFunctionSelected));
 			}
 		}
-
+		/// <summary>
+		/// Czy została wybrana funkcja kosztu?
+		/// </summary>
+		public bool IsCostFunctionSelected => CostFunction != null;
 		public int Branches
 		{
 			get { return Data.Branches; }
