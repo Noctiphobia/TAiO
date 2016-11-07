@@ -229,7 +229,7 @@ namespace TAiO.ViewModel
 
 				if (Data.Blocks.Count == 0)
 					return;
-				Algorithm a = new Algorithm(Data);
+				Algorithm a = new Algorithm(Data, null);
 				a.RunAlgorithm();
 				
 

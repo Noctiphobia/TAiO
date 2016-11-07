@@ -19,13 +19,19 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0" Orientation="Horizontal">
+        <Label>Funkcja kosztu:</Label>
+        <ComboBox Grid.Row="1"
+                  ItemsSource="{Binding Source={x:Static model:CostFunctionFactory.AvailableFunctions}}" DisplayMemberPath="Name" SelectedValuePath="Function"
+                  SelectedValue="{Binding CostFunction}"></ComboBox>
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
             <Label>Liczba rozgałęzień na krok:</Label>
             <TextBox Text="{Binding Branches}" Width="40" TextAlignment="Center"></TextBox>
         </StackPanel>
-        <Button Grid.Row="1" Width="50" Click="Button_Click">Ok</Button>
+        <Button Grid.Row="3" Width="50" Click="Button_Click">Ok</Button>
     </Grid>
 </controls:MetroWindow>
 
