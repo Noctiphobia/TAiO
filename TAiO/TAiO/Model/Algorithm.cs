@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,14 +19,18 @@ namespace TAiO.Model
 		public int CurrentStep => StepsData.LastStepFinished;
 		private Data Data;
 		private CostFunction CostFunction;
-		private List<Board> CurrentStepBoards;
+		//private List<Board> CurrentStepBoards;
+		private Board[] CurrentStepBoards;
+		private List<List<BlockType>> CurrentStepBoardsBlocks;
 		private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
+
 
 		public Algorithm(Data data, CostFunction costFunction)
 		{
 			Data = data;
 			CostFunction = costFunction;
-			CurrentStepBoards = new List<Board>();
+			//CurrentStepBoards = new List<Board>();
+			CurrentStepBoards = new Board[Data.Branches];
 			BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
 				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
@@ -42,53 +47,81 @@ namespace TAiO.Model
 
 		public void MakeNextStep()
 		{
-			// TODO: make it somewhat smarter...
-			//BlockType nextBlock = null;
-			//for (int i = 0; i < BlocksOfTypeCount.Count; i++)
+
+		    var tasks = new Task[CurrentStepBoards.Length];
+			//var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Length);
+			var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
+			//var partsDone = new bool[CurrentStepBoards.Length];
+			//for (int i = 0; i < partsDone.Length; i++)
 			//{
-			//	if (BlocksOfTypeCount[i].Value != 0)
-			//	{
-			//		nextBlock = BlocksOfTypeCount[i].Key;
-			//		BlocksOfTypeCount[i] = new KeyValuePair<BlockType, int>(nextBlock, BlocksOfTypeCount[i].Value - 1);
-			//		break;
-			//	}
-			//}
-			//if (nextBlock == null)
-			//	return;
-
-			//List<BlockInstance> blocks = new List<BlockInstance>(Data.Branches);
-
-			//if(CurrentStep > -1)
-			//	StepsData.SetStartingPoint(CurrentStep, 0);
-			//int y = CurrentStep > -1 ? StepsData.Sum(blockInstance => blockInstance.Block.Height) : 0;
-
-			//for (int i = 0; i < Data.Branches; i++)
-			//{
-			//	blocks.Add(new BlockInstance()
-			//	{
-			//		Block = nextBlock,
-			//		BlockVersion = 0,
-			//		X = 0,
-			//		Y = y,
-			//		PreviousBlockBoardNumber = i});
-			//	//y += blocks[i].Block.Height;
+			//	partsDone[i] = false;
 			//}
 
-			//StepsData.SetNewStepInfo(blocks);
-		    var tasks = new Task[CurrentStepBoards.Count];
-			var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Count);
+			CreateNewStepBoards(100);
+			//TODO: heigth of boards
 
-			for (int i = 0; i < CurrentStepBoards.Count; i++)
+
+			for (int i = 0; i < CurrentStepBoards.Length; i++)
 			{
 				int j = i;
 				(tasks[j] =
-					new Task(() => { partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction)); })).Start();
+					new Task(() =>
+					{
+						partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
+						//partsDone[j] = true;
+
+					})).Start();
 			}
 
 			Task.WaitAll(tasks);
-            MergeSolutions(partialSolutions);
-            //TODO: jakieś ruszenie tego kroku czy coś
-        }
+
+			//TODO: change MergeSolutions
+
+			//if (!partsDone.All(t => t))
+			//{
+			//	throw new Exception("PLEASE MAKE IT RUUUUUUUN!");
+			//}
+
+			MergeSolutions(partialSolutions.ToList());
+			StepsData.SetLastStepFinished(CurrentStep + 1);
+		}
+
+		public void CreateNewStepBoards(int h)
+		{
+			int currentStep = CurrentStep;
+			if (currentStep < 0)
+			{
+				for (int i = 0; i < Data.Branches; i++)
+				{
+					CreateNewBoardFrom(currentStep, i, h);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < Data.Branches; i++)
+				{
+					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
+					{
+						CreateNewBoardFrom(currentStep, i, h);
+					}
+				}
+			}
+		}
+
+		private void CreateNewBoardFrom(int step, int i, int h)
+		{
+			Board board = new Board(Data.BoardWidth, h);
+			if (step >= 0)
+			{
+				StepsData.SetStartingPoint(step, i);
+				foreach (BlockInstance blockInstance in StepsData)
+				{
+					board.AddBlock(blockInstance);
+				}
+			}
+			CurrentStepBoards[i] = board;
+		}
+
 
         /// <summary>
         /// Wybiera k z k^2 najlepszych rozwiązań
@@ -96,7 +129,9 @@ namespace TAiO.Model
         /// <param name="solutions">Po k rozwiązań z k gałęzi</param>
         private void MergeSolutions(List<List<PartialSolution>> solutions)
 	    {
-	        int[] ind = new int[solutions.Count];
+			if(solutions.Count == 0)
+				throw new ArgumentNullException("no solutions for us? :( ");
+			int[] ind = new int[solutions.Count];
             for (int i = 0; i < solutions.Count; i++)
             {
                 int min = Int32.MaxValue, minind = 0;
