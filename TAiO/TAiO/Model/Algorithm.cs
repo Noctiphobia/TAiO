@@ -79,14 +79,16 @@ namespace TAiO.Model
 			var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Count);
 
 			for (int i = 0; i < CurrentStepBoards.Count; i++)
-				(tasks[i] =
-					new Task(() => { partialSolutions[i] = (CurrentStepBoards[i].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction)); })).Start();
-			
+			{
+				int j = i;
+				(tasks[j] =
+					new Task(() => { partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction)); })).Start();
+			}
+
 			Task.WaitAll(tasks);
             MergeSolutions(partialSolutions);
             //TODO: jakieś ruszenie tego kroku czy coś
-		    // StepsData.LastStepFinished++; - dodać setter?
-		}
+        }
 
         /// <summary>
         /// Wybiera k z k^2 najlepszych rozwiązań
