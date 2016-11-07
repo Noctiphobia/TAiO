@@ -8,12 +8,6 @@ using MahApps.Metro.Converters;
 
 namespace TAiO.Model
 {   
-    /// <summary>
-    /// Klasa funkcji liczących koszt (im mniejszy, tym lepiej!) danego ułożenia klocków na planszy
-    /// </summary>
-    /// <param name="board">Plansza, zawierająca ułożenie</param>
-    /// <returns>Koszt</returns>
-    public delegate int CostFunction(Board board);
 
     /// <summary>
     /// Klasa reprezentująca planszę, na której układane są klocki
