@@ -21,12 +21,12 @@ namespace TAiO.Model
 		/// </summary>
 		public BlockInstance[,] BlockInstances { get; private set; }
 
-		private const int StepNumberCoord = 0;
-		private const int BoardNumberCoord = 1;
+		protected const int StepNumberCoord = 0;
+		protected const int BoardNumberCoord = 1;
 
-		private int startingI;
-		private int startingJ;
-		private int _lastStepFinished = -1;
+		protected int startingI;
+		protected int startingJ;
+		protected int _lastStepFinished = -1;
 
 		public int LastStepFinished
 		{
@@ -46,6 +46,15 @@ namespace TAiO.Model
 		public StepsData(int branches, int blocksNumber)
 		{
 			BlockInstances = new BlockInstance[blocksNumber, branches];
+		}
+
+		public void SetLastStepFinished(int step)
+		{
+			lock (LockObject)
+			{
+				_lastStepFinished = step;
+			}
+
 		}
 
 		public void SetNewStepInfo(List<BlockInstance> stepBlockInstances)
