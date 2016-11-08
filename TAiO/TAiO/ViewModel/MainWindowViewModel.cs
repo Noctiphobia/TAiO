@@ -226,10 +226,10 @@ namespace TAiO.ViewModel
 				{
 					return;
 				}
-
+				BranchesDialogViewModel bvm = dialog.DataContext as BranchesDialogViewModel;
 				if (Data.Blocks.Count == 0)
 					return;
-				Algorithm a = new Algorithm(Data, null);
+				Algorithm a = new Algorithm(Data, bvm?.CostFunction);
 				a.RunAlgorithm();
 				
 

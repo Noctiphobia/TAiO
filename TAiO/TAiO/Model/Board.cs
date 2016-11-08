@@ -24,9 +24,13 @@ namespace TAiO.Model
         }
         public int[,] Content { get; set; }
         public int BlocksNumber { get; set; }
-		private int StepHeight { get; set; } 
+		private int StepHeight { get; set; }
 
-
+	    public int this[int x, int y]
+	    {
+		    get { return Content[x, y]; }
+		    set { Content[x, y] = value; }
+	    }
 
         public Board(int w, int h)
         {
