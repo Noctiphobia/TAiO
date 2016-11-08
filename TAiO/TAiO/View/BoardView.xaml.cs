@@ -54,12 +54,22 @@ namespace TAiO.View
 		/// Szerokość konturu.
 		/// </summary>
 		protected readonly int OutlineWidth = 2;
-		/// <summary>
-		/// Kolor konturu.
-		/// </summary>
-	    protected readonly Color OutlineColor = Color.FromArgb(0xFF, 0x00, 0x00, 0x00);
 
-	    protected readonly Color OutlineColorBright = Colors.GhostWhite;
+		/// <summary>
+		/// Szerokość siatki.
+		/// </summary>
+	    protected readonly double GridWidth = 1;
+
+	    /// <summary>
+	    /// Kolor konturu.
+	    /// </summary>
+	    protected readonly Color OutlineColor = Colors.GhostWhite;
+
+		/// <summary>
+		/// Kolor siatki.
+		/// </summary>
+	    protected readonly Color GridColor = Colors.DarkGray;
+
 	    protected readonly double BrowserMinDimensions = 180;
 		/// <summary>
 		/// Kolor klocka.
@@ -106,12 +116,12 @@ namespace TAiO.View
 		/// <summary>
 		/// Funkcja rysująca linię.
 		/// </summary>
-		private void DrawLine(double x1, double y1, double x2, double y2)
+		private void DrawLine(double x1, double y1, double x2, double y2, Color color, double width)
 	    {
 		    Line line = new Line
 		    {
-			    Stroke = new SolidColorBrush(OutlineColorBright),
-			    StrokeThickness = OutlineWidth,
+			    Stroke = new SolidColorBrush(color),
+			    StrokeThickness = width,
 			    X1 = x1,
 			    Y1 = y1,
 			    X2 = x2,
@@ -142,11 +152,15 @@ namespace TAiO.View
 			DrawingArea.Children.Clear();
             int width = DataSource.Width;
             int height = DataSource.Height;
-            Size field = new Size(DrawingArea.ActualWidth/width, DrawingArea.ActualHeight/height); //rozmiar pojedynczego pola na planszy
+            Size field = new Size(DrawingArea.ActualWidth/width, DrawingArea.ActualHeight/width); //rozmiar pojedynczego pola na planszy
 	        if (Math.Abs(field.Width) < 0.0001 || Math.Abs(field.Height) < 0.0001)
-	        {
-				field = new Size(BrowserMinDimensions/width, BrowserMinDimensions/height);
-			}
+				field = new Size(BrowserMinDimensions/width, BrowserMinDimensions/width);
+
+			for (int i = 1; i < width; ++i)
+				DrawLine(i * field.Width, 0, i * field.Width, height * field.Height, GridColor, GridWidth);
+			for (int i = 1; i < height; ++i)
+				DrawLine(0, i * field.Height, width * field.Width, i * field.Height, GridColor, GridWidth);
+
 
 			for (int j = 0; j < height; ++j)
 	        {
@@ -179,13 +193,13 @@ namespace TAiO.View
 						double xRight = (width - (i + 1)) * field.Width;
 						double yBottom = j * field.Height;
 						if (i == 0 || DataSource[i - 1, j] != DataSource[i, j]) //po lewej jest co innego
-							DrawLine(xLeft, yTop, xLeft, yBottom);
+							DrawLine(xLeft, yTop, xLeft, yBottom, OutlineColor, OutlineWidth);
 						if (i == DataSource.Width - 1 || DataSource[i + 1, j] != DataSource[i, j])  //po prawej jest co innego
-							DrawLine(xRight, yTop, xRight, yBottom);
+							DrawLine(xRight, yTop, xRight, yBottom, OutlineColor, OutlineWidth);
 						if (j == 0 || DataSource[i, j - 1] != DataSource[i, j]) //na dole jest co innego
-							DrawLine(xLeft, yBottom, xRight, yBottom);
+							DrawLine(xLeft, yBottom, xRight, yBottom, OutlineColor, OutlineWidth);
 						if (j == DataSource.Height - 1 || DataSource[i, j + 1] != DataSource[i, j]) //na górze jest coś innego
-							DrawLine(xLeft, yTop, xRight, yTop);
+							DrawLine(xLeft, yTop, xRight, yTop, OutlineColor, OutlineWidth);
 					}
 		        }
 	        }
