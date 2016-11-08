@@ -50,6 +50,11 @@ namespace TAiO.Model
 		    Content = tmp;
         }
 
+        /// <summary>
+        /// Funkcja dodająca klocek na planszę
+        /// </summary>
+        /// <param name="block">Informacje o klocku i gdzie ma zostać położony</param>
+        /// <returns>True jeśli się udało, false wpp</returns>
         public bool AddBlock(BlockInstance block)
         {
 			int h = (block.BlockVersion%2 == 0 ? block.Block.Height : block.Block.Width),
