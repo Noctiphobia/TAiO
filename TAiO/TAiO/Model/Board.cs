@@ -35,6 +35,16 @@ namespace TAiO.Model
             BlocksNumber = 0;
         }
 
+	    public Board Copy()
+	    {
+		    return new Board(Width, Height)
+		    {
+			    Content = (int[,]) this.Content.Clone(),
+			    BlocksNumber = this.BlocksNumber,
+			    StepHeight = this.StepHeight
+		    };
+	    }
+
 		private void Resize()
         {
 			int[,] tmp = new int[Width, Height + StepHeight];
@@ -60,6 +70,25 @@ namespace TAiO.Model
                 }
             return true;
         }
+
+	    public bool DeleteBlock(BlockInstance block)
+	    {
+			int h = (block.BlockVersion % 2 == 0 ? block.Block.Height : block.Block.Width),
+				w = (block.BlockVersion % 2 == 0 ? block.Block.Width : block.Block.Height);
+			BlocksNumber--;
+			for (int i = 0; i < w; i++)
+				for (int j = 0; j < h; j++)
+				{
+					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
+					//	return false;
+					//Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
+
+					Content[i + block.X, j + block.Y] = 0;
+
+				}
+			return true;
+		}
+
 
         /// <summary>
         /// Wybiera pierwsze miejsce, w którym można położyć klocek
@@ -107,7 +136,49 @@ namespace TAiO.Model
             // 2. Zaimplementowanie funkcji kosztu i policzenie jej dla każdego obrotu każdego klocka
             // 3. Wybranie i zwrócenie resultsCount ułożeń z najniższą funkcją kosztu
             // ??? Czy ta funkcja powinna zwracać też zaktualizowaną listę klocków?
-            return new List<PartialSolution>();
+
+	        var solutions = new List<PartialSolution>();
+	        int k = 0;
+	        int min = Int32.MaxValue;
+
+	        Board board = this.Copy();
+
+	        foreach (BlockType blockType in blocks)
+	        {
+		        for (int i = 0; i < blockType.Shape.Count; i++)
+		        {
+			        BlockInstance bi = FindPlaceForBlock(blockType, i);
+			        board.AddBlock(bi);
+			        int cost = costFunction(board);
+
+					board.DeleteBlock(bi);
+
+					if (k < resultsCount)
+					{
+						solutions.Add(new PartialSolution() { Cost = cost, Move = bi });
+						k++;
+					}
+					else if (cost < min)
+			        {
+				        
+					    for (int j = 0; j < solutions.Count; j++) // podmiana
+					    {
+						    if (solutions[j].Cost > cost)
+						    {
+							    solutions[j].Cost = cost;
+							    solutions[j].Move = bi;
+						    }
+						    if (solutions[j].Cost < min)
+						    {
+							    min = solutions[j].Cost;
+						    }
+					    }
+				        
+			        }
+		        }
+	        }
+			solutions.Sort(new PartialSolutionsComparer());
+            return solutions;
         }
     }
 }

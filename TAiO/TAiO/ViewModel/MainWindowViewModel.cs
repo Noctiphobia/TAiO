@@ -229,7 +229,7 @@ namespace TAiO.ViewModel
 
 				if (Data.Blocks.Count == 0)
 					return;
-				Algorithm a = new Algorithm(Data, null);
+				Algorithm a = new Algorithm(Data, (dialog.DataContext as BranchesDialogViewModel)?.CostFunction);
 				a.RunAlgorithm();
 				
 
@@ -241,7 +241,7 @@ namespace TAiO.ViewModel
 					preview.Show();
 					if (vm == null) continue;
 					vm.StepsPerChange = Step;
-					vm.CurrentStep = 3;
+					vm.CurrentStep = a.CurrentStep;
 					vm.UpdateDataSource(a.StepsData, i, vm.CurrentStep, Data.BoardWidth, Data.BoardWidth);
 					//vm.DataSource = new Array2D(
 					//	new[,]

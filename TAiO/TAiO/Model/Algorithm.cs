@@ -57,7 +57,7 @@ namespace TAiO.Model
 			//	partsDone[i] = false;
 			//}
 
-			CreateNewStepBoards(100);
+			UpdateStepBoards(Data.BoardWidth);
 			//TODO: heigth of boards
 
 
@@ -68,7 +68,12 @@ namespace TAiO.Model
 					new Task(() =>
 					{
 						partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
-						//partsDone[j] = true;
+						foreach (PartialSolution ps in partialSolutions[j])
+						{
+							BlockInstance bi = ps.Move;
+							bi.PreviousBlockBoardNumber = j;
+							ps.Move = bi;
+						}
 
 					})).Start();
 			}
@@ -86,6 +91,20 @@ namespace TAiO.Model
 			StepsData.SetLastStepFinished(CurrentStep + 1);
 		}
 
+
+		public void UpdateStepBoards(int h)
+		{
+			CreateNewStepBoards(h);
+			//foreach(BlockInstance bi in StepsData.BlockInstances)
+			if (CurrentStep < 0)
+				return;
+			for (int i = 0; i < Data.Branches; i++)
+			{
+				CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]);
+			}
+		}
+
+
 		public void CreateNewStepBoards(int h)
 		{
 			int currentStep = CurrentStep;
@@ -93,7 +112,8 @@ namespace TAiO.Model
 			{
 				for (int i = 0; i < Data.Branches; i++)
 				{
-					CreateNewBoardFrom(currentStep, i, h);
+					//CreateNewBoardFrom(currentStep, i, h);
+					CurrentStepBoards[i] = new Board(h, h);
 				}
 			}
 			else
@@ -102,24 +122,27 @@ namespace TAiO.Model
 				{
 					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
 					{
-						CreateNewBoardFrom(currentStep, i, h);
+						//CreateNewBoardFrom(currentStep, i, h);
+						CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i]
+							.PreviousBlockBoardNumber].Copy();
 					}
 				}
 			}
 		}
 
+
 		private void CreateNewBoardFrom(int step, int i, int h)
 		{
-			Board board = new Board(Data.BoardWidth, h);
-			if (step >= 0)
-			{
-				StepsData.SetStartingPoint(step, i);
-				foreach (BlockInstance blockInstance in StepsData)
-				{
-					board.AddBlock(blockInstance);
-				}
-			}
-			CurrentStepBoards[i] = board;
+			//Board board = new Board(Data.BoardWidth, h);
+			//if (step >= 0)
+			//{
+			//	StepsData.SetStartingPoint(step, i);
+			//	foreach (BlockInstance blockInstance in StepsData)
+			//	{
+			//		board.AddBlock(blockInstance);
+			//	}
+			//}
+			CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[step, i].PreviousBlockBoardNumber].Copy();
 		}
 
 

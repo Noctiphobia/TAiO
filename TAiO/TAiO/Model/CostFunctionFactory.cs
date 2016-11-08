@@ -19,8 +19,11 @@ namespace TAiO.Model
 		/// </summary>
 		public static List<NamedFunction> AvailableFunctions { get; } = new List<NamedFunction>
 		{
-			
+			new NamedFunction(SimpleCostFunction, "Trivial Cost")
 		};
+
+
+		public static int SimpleCostFunction(Board board) => 1;
 
 
 
