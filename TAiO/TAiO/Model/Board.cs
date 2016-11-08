@@ -24,9 +24,13 @@ namespace TAiO.Model
         }
         public int[,] Content { get; set; }
         public int BlocksNumber { get; set; }
-		private int StepHeight { get; set; } 
+		private int StepHeight { get; set; }
 
-
+	    public int this[int x, int y]
+	    {
+		    get { return Content[x, y]; }
+		    set { Content[x, y] = value; }
+	    }
 
         public Board(int w, int h)
         {
@@ -54,6 +58,11 @@ namespace TAiO.Model
 		    Content = tmp;
         }
 
+        /// <summary>
+        /// Funkcja dodająca klocek na planszę
+        /// </summary>
+        /// <param name="block">Informacje o klocku i gdzie ma zostać położony</param>
+        /// <returns>True jeśli się udało, false wpp</returns>
         public bool AddBlock(BlockInstance block)
         {
 			int h = (block.BlockVersion%2 == 0 ? block.Block.Height : block.Block.Width),

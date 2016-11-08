@@ -23,12 +23,12 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Label>Funkcja kosztu:</Label>
-        <ComboBox Grid.Row="1"
+        <TextBlock Margin="5 5 5 1 " >Funkcja kosztu:</TextBlock>
+        <ComboBox Grid.Row="1" Margin="5 0 5 5"
                   ItemsSource="{Binding Source={x:Static model:CostFunctionFactory.AvailableFunctions}}" DisplayMemberPath="Name" SelectedValuePath="Function"
                   SelectedValue="{Binding CostFunction}"></ComboBox>
         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
-            <Label>Liczba rozgałęzień na krok:</Label>
+            <TextBlock>Liczba rozgałęzień na krok:</TextBlock>
             <TextBox Text="{Binding Branches}" Width="40" TextAlignment="Center"></TextBox>
         </StackPanel>
         <Button Grid.Row="3" Width="50" Click="Button_Click" IsEnabled="{Binding IsCostFunctionSelected}">Ok</Button>
