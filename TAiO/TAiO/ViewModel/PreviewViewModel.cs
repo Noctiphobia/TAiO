@@ -73,6 +73,7 @@ namespace TAiO.ViewModel
 			data.SetStartingPoint(stepNumber, boardNumber);
 			foreach (BlockInstance blockInstance in data)
 			{
+				
 				board.AddBlock(blockInstance);
 			}
 			DataSource = new Array2D(board.Content);
