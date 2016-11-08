@@ -96,6 +96,7 @@
     <Compile Include="Model\CostFunctionFactory.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\PartialSolution.cs" />
+    <Compile Include="Model\PartialSolutionsComparer.cs" />
     <Compile Include="Model\StepsData.cs" />
     <Compile Include="Tools\Parser.cs" />
     <Compile Include="ViewModel\BlockTypeViewModel.cs" />
