@@ -22,7 +22,9 @@ namespace TAiO.Model
 		//private List<Board> CurrentStepBoards;
 		private Board[] CurrentStepBoards;
 		private List<List<BlockType>> CurrentStepBoardsBlocks;
-		private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
+		//private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
+		private SortedList<BlockType, int> AvailableBlocksSorted;
+		
 
 
 		public Algorithm(Data data, CostFunction costFunction)
@@ -31,8 +33,16 @@ namespace TAiO.Model
 			CostFunction = costFunction;
 			//CurrentStepBoards = new List<Board>();
 			CurrentStepBoards = new Board[Data.Branches];
-			BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
-				(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
+			//BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
+			//	(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
+			if (Data.Blocks != null)
+			{
+				AvailableBlocksSorted = new SortedList<BlockType, int>(Data.Blocks.Count);
+				foreach (BlockType block in Data.Blocks)
+				{
+					AvailableBlocksSorted.Add(block, (int)block.BlockNumber);
+				}
+			}
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
 		}
 
@@ -48,9 +58,6 @@ namespace TAiO.Model
 		public void MakeNextStep()
 		{
 
-		    var tasks = new Task[CurrentStepBoards.Length];
-			//var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Length);
-			var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
 			//var partsDone = new bool[CurrentStepBoards.Length];
 			//for (int i = 0; i < partsDone.Length; i++)
 			//{
@@ -60,34 +67,48 @@ namespace TAiO.Model
 			UpdateStepBoards(Data.BoardWidth);
 			//TODO: heigth of boards
 
-
-			for (int i = 0; i < CurrentStepBoards.Length; i++)
+			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
 			{
-				int j = i;
-				(tasks[j] =
-					new Task(() =>
-					{
-						partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Blocks, Data.Branches, CostFunction));
-						foreach (PartialSolution ps in partialSolutions[j])
-						{
-							BlockInstance bi = ps.Move;
-							bi.PreviousBlockBoardNumber = j;
-							ps.Move = bi;
-						}
+				List<PartialSolution> solutions = (CurrentStepBoards[0].ChooseBlocks(Data.Branches, CostFunction));
+				DivideSolutionsBetweenBoards(solutions);
+			}
+			else
+			{
 
-					})).Start();
+				var tasks = new Task[CurrentStepBoards.Length];
+				//var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Length);
+				var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
+
+
+				for (int i = 0; i < CurrentStepBoards.Length; i++)
+				{
+					int j = i;
+					(tasks[j] =
+						new Task(() =>
+						{
+							partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Branches, CostFunction));
+							foreach (PartialSolution ps in partialSolutions[j])
+							{
+								BlockInstance bi = ps.Move;
+								bi.PreviousBlockBoardNumber = j;
+								ps.Move = bi;
+							}
+
+						})).Start();
+				}
+
+				Task.WaitAll(tasks);
+
+				//TODO: change MergeSolutions
+
+				//if (!partsDone.All(t => t))
+				//{
+				//	throw new Exception("PLEASE MAKE IT RUUUUUUUN!");
+				//}
+			
+				MergeSolutions(partialSolutions.ToList());
 			}
 
-			Task.WaitAll(tasks);
-
-			//TODO: change MergeSolutions
-
-			//if (!partsDone.All(t => t))
-			//{
-			//	throw new Exception("PLEASE MAKE IT RUUUUUUUN!");
-			//}
-
-			MergeSolutions(partialSolutions.ToList());
 			StepsData.SetLastStepFinished(CurrentStep + 1);
 		}
 
@@ -101,6 +122,7 @@ namespace TAiO.Model
 			for (int i = 0; i < Data.Branches; i++)
 			{
 				CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]);
+
 			}
 		}
 
@@ -113,18 +135,18 @@ namespace TAiO.Model
 				for (int i = 0; i < Data.Branches; i++)
 				{
 					//CreateNewBoardFrom(currentStep, i, h);
-					CurrentStepBoards[i] = new Board(h, h);
+					CurrentStepBoards[i] = new Board(h, h, new SortedList<BlockType, int>(AvailableBlocksSorted));
 				}
 			}
-			else
+			else if (currentStep > 0)
 			{
 				for (int i = 0; i < Data.Branches; i++)
 				{
 					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
 					{
 						//CreateNewBoardFrom(currentStep, i, h);
-						CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i]
-							.PreviousBlockBoardNumber].Copy();
+						CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber]
+							 .Copy();
 					}
 				}
 			}
@@ -142,7 +164,16 @@ namespace TAiO.Model
 			//		board.AddBlock(blockInstance);
 			//	}
 			//}
-			CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[step, i].PreviousBlockBoardNumber].Copy();
+			CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[step, i]
+				.PreviousBlockBoardNumber].Copy();
+		}
+
+		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
+		{
+			for (int i = 0; i < CurrentStepBoards.Length; i++)
+			{
+				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[i].Move;
+			}
 		}
 
 

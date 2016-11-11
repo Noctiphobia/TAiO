@@ -25,29 +25,38 @@ namespace TAiO.Model
         public int[,] Content { get; set; }
         public int BlocksNumber { get; set; }
 		private int StepHeight { get; set; }
+		private bool KeepTrackOfBlocks { get; set; }
+	    //private List<KeyValuePair<BlockType, int>> AvailableBlocks2;
+		//private Dictionary<> AvailableBlocks;
+	    private SortedList<BlockType, int> AvailableBlocks;
 
-	    public int this[int x, int y]
+
+		public int this[int x, int y]
 	    {
 		    get { return Content[x, y]; }
 		    set { Content[x, y] = value; }
 	    }
 
-        public Board(int w, int h)
+        public Board(int w, int h, SortedList<BlockType, int> availableBlocks, bool keepTrackOfBlocks = true)
         {
 			StepHeight = h / 2;
 			Content = new int[w, h];
             BlocksNumber = 0;
+	        AvailableBlocks = availableBlocks;
+	        KeepTrackOfBlocks = keepTrackOfBlocks;
         }
 
-	    public Board Copy()
+	    public Board Copy(bool keepTrackOfBlocks = true)
 	    {
-		    return new Board(Width, Height)
-		    {
+		    return new Board(Width, Height, keepTrackOfBlocks ? new SortedList<BlockType, int>(AvailableBlocks) : null, keepTrackOfBlocks)
+		    { 
 			    Content = (int[,]) this.Content.Clone(),
 			    BlocksNumber = this.BlocksNumber,
 			    StepHeight = this.StepHeight
 		    };
 	    }
+
+
 
 		private void Resize()
         {
@@ -67,6 +76,10 @@ namespace TAiO.Model
         {
 			int h = (block.BlockVersion%2 == 0 ? block.Block.Height : block.Block.Width),
 				w = (block.BlockVersion%2 == 0 ? block.Block.Width : block.Block.Height);
+			
+
+
+
 			while (block.Y + h >= Height)
 				Resize();
             BlocksNumber++;
@@ -77,7 +90,14 @@ namespace TAiO.Model
                         return false;
 					Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
                 }
-            return true;
+	        if (!KeepTrackOfBlocks)
+				return true;
+	        if (AvailableBlocks.ContainsKey(block.Block) && AvailableBlocks[block.Block] > 0)
+	        {
+		        AvailableBlocks[block.Block] = AvailableBlocks[block.Block] - 1;
+		        return true;
+	        }
+            return false;
         }
 
 	    public bool DeleteBlock(BlockInstance block)
@@ -95,6 +115,13 @@ namespace TAiO.Model
 					Content[i + block.X, j + block.Y] = 0;
 
 				}
+			if (!KeepTrackOfBlocks)
+				return true;
+			if (AvailableBlocks.ContainsKey(block.Block))
+			{
+				AvailableBlocks[block.Block]++;
+				return true;
+			}
 			return true;
 		}
 
@@ -137,7 +164,7 @@ namespace TAiO.Model
         /// <param name="blocks">Lista klocków</param>
         /// <param name="resultsCount">Ile zwrócić wyników (= liczba rozgałęzień algorytmu)</param>
         /// <returns>Listę posortowanych rosnąco po funkcji kosztu rozwiązań</returns>
-        public List<PartialSolution> ChooseBlocks(List<BlockType> blocks, int resultsCount, CostFunction costFunction)
+        public List<PartialSolution> ChooseBlocks(int resultsCount, CostFunction costFunction)
         {
             // TODO:
             // 1. Funkcja wskazująca miejsce do położenia klocka o danym obrocie
@@ -150,17 +177,20 @@ namespace TAiO.Model
 	        int k = 0;
 	        int min = Int32.MaxValue;
 
-	        Board board = this.Copy();
+	        Board board = this.Copy(false);
 
-	        foreach (BlockType blockType in blocks)
+	        foreach (var blockType in this.AvailableBlocks)
 	        {
-		        for (int i = 0; i < blockType.Shape.Count; i++)
+		        if (blockType.Value < 1)
+			        continue;
+		        for (int i = 0; i < blockType.Key.Shape.Count; i++)
 		        {
-			        BlockInstance bi = FindPlaceForBlock(blockType, i);
+			        BlockInstance bi = FindPlaceForBlock(blockType.Key, i);
 			        board.AddBlock(bi);
 			        int cost = costFunction(board);
 
 					board.DeleteBlock(bi);
+					
 
 					if (k < resultsCount)
 					{
@@ -168,12 +198,13 @@ namespace TAiO.Model
 						k++;
 					}
 					else if (cost < min)
-			        {
-				        
+					{
+						bool done = false;
 					    for (int j = 0; j < solutions.Count; j++) // podmiana
 					    {
-						    if (solutions[j].Cost > cost)
+						    if (solutions[j].Cost > cost && !done)
 						    {
+							    done = true;
 							    solutions[j].Cost = cost;
 							    solutions[j].Move = bi;
 						    }
@@ -187,7 +218,7 @@ namespace TAiO.Model
 		        }
 	        }
 			solutions.Sort(new PartialSolutionsComparer());
-            return solutions;
+			return solutions;
         }
     }
 }

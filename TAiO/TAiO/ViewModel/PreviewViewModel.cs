@@ -69,7 +69,7 @@ namespace TAiO.ViewModel
 
 		public void UpdateDataSource(StepsData data, int boardNumber, int stepNumber, int width, int height)
 		{
-			Board board = new Board(width, height);
+			Board board = new Board(width, height, new SortedList<BlockType, int>());
 			data.SetStartingPoint(stepNumber, boardNumber);
 			foreach (BlockInstance blockInstance in data)
 			{

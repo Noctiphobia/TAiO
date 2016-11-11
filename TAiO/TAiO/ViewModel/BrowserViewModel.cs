@@ -15,6 +15,9 @@ namespace TAiO.ViewModel
 	{
 		public ObservableCollection<BlockTypeViewModel> BlockTypeViewModels { get; set; }
 
+		public List<BlockType> AvailableBlocks
+			=> BlockTypeViewModels.Select(a => a.Block).ToList();
+
 		public BrowserViewModel()
 		{
 			RefreshBlockTypeViewModelsList(new List<BlockType>());

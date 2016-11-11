@@ -17,7 +17,10 @@ namespace TAiO.Model
 
 		public bool PreviewGoingOn { get; set; } = true;
 		public List<BlockType> Blocks { get; set; }
-        public int BoardWidth { get; set; }
+		//public List<KeyValuePair<BlockType, int>> AvailableBlocks { get; set; }
+
+
+		public int BoardWidth { get; set; }
 		public int Branches { get; set; }
 
 

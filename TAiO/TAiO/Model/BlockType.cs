@@ -11,20 +11,26 @@ namespace TAiO.Model
     /// <summary>
     /// A class representing a type of block and how many blocks of this type do we have
     /// </summary>
-	public class BlockType
-	{
+	public class BlockType:IComparable
+    {
+
+	    private static int NextId = 0;
+
+		public int Id { get; private set; }
+
 		public int Height { get; set; }
 		public int Width { get; set; }
         public List<int[,]> Shape { get; set; }
 		public uint BlockNumber { get; set; }
 
 	    public BlockType(int w, int h, int[,] s)
-		{
+	    {
+		    Id = NextId;
+		    NextId++;
 	        Height = h;
 	        Width = w;
-            Shape = new List<int[,]>();
-	        Shape.Add(s);
-	        CreateRotations90();
+		    Shape = new List<int[,]> {s};
+		    CreateRotations90();
 	        BlockNumber = 1;
 		}
 
@@ -55,7 +61,12 @@ namespace TAiO.Model
             return res;
         }
 
-        private bool CompareArrays(int[,] t1, int[,] t2)
+	    public override string ToString()
+	    {
+		    return "BT: Id = " + this.Id;
+	    }
+
+	    private bool CompareArrays(int[,] t1, int[,] t2)
         {
             if (t1.GetLength(0) != t2.GetLength(0) ||
                 t1.GetLength(1) != t2.GetLength(1))
@@ -66,5 +77,41 @@ namespace TAiO.Model
                         return false;
             return true;
         }
-    }
+
+
+
+	    public int CompareTo(object obj)
+	    {
+			//return this.Id.CompareTo(obj as )
+		    BlockType bt = obj as BlockType;
+		    if (bt == null)
+		    {
+			    return 1;
+		    }
+		    return this.Id.CompareTo(bt.Id);
+
+
+		    if (ReferenceEquals(this, obj))
+		    {
+			    return 0;
+		    }
+		    int a;
+		    if ((a = this.GetHashCode().CompareTo(obj.GetHashCode())) != 0)
+		    {
+			    return a;
+		    }
+		    BlockType b = (BlockType) obj;
+		    if ((a = this.Height.CompareTo(b.Height)) != 0)
+		    {
+			    return a;
+		    }
+			if ((a = this.Width.CompareTo(b.Width)) != 0)
+			{
+				return a;
+			}
+			//return this.Shape.
+		    return 0;
+
+	    }
+	}
 }

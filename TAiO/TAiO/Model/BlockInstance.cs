@@ -42,5 +42,10 @@ namespace TAiO.Model
 		/// </summary>
 		public int PreviousBlockBoardNumber { get; set; }
 
+
+		public override string ToString()
+		{
+			return Block.ToString() + ", version: " + BlockVersion + ", prev = " + PreviousBlockBoardNumber;
+		}
 	}
 }

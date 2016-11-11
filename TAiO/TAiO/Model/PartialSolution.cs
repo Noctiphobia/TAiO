@@ -20,5 +20,11 @@ namespace TAiO.Model
         /// Wartość funkcji jakości położenie klocka
         /// </summary>
         public int Cost { get; set; }
+
+
+	    public override string ToString()
+	    {
+		    return "Move: " + Move.ToString() + ", Cost: " + Cost;
+	    }
     }
 }

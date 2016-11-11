@@ -28,6 +28,7 @@ namespace TAiO.ViewModel
 		private Browser _browser;
 		private List<Preview> _previews = new List<Preview>();
 		private DispatcherTimer _timer = new DispatcherTimer();
+		private Algorithm LastAlgorithm = null;
 
 		/// <summary>
 		/// Krok symulacji.
@@ -229,9 +230,11 @@ namespace TAiO.ViewModel
 
 				if (Data.Blocks.Count == 0)
 					return;
+
 				Algorithm a = new Algorithm(Data, (dialog.DataContext as BranchesDialogViewModel)?.CostFunction);
+
 				a.RunAlgorithm();
-				
+				LastAlgorithm = a;
 
 				for (int i = 0; i < Data.Branches; ++i)
 				{
@@ -280,7 +283,6 @@ namespace TAiO.ViewModel
 				_browser.Show();
 				RefreshBrowserBlocks();
 			}
-			//TODO: poprawić
 		});
 
 		/// <summary>
