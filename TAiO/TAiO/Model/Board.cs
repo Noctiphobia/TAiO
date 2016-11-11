@@ -86,8 +86,12 @@ namespace TAiO.Model
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
                 {
-					if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
-                        return false;
+					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
+                    //    return false;
+	                if (Content[i + block.X, j + block.Y] > 0)
+		                return false;
+					if(block.Block.Shape[block.BlockVersion][i, j] == 0)
+						continue;
 					Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
                 }
 	        if (!KeepTrackOfBlocks)
