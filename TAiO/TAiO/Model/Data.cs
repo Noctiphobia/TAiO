@@ -24,6 +24,10 @@ namespace TAiO.Model
 		public int Branches { get; set; }
 
 
+		public uint RandomBlocksNumber { get; set; } = 20;
+		public uint DifferentBlocksNumber { get; set; } = 20;
+
+
 		/// <summary>
 		/// Jedyna instancja danych w całym programie.
 		/// </summary>
