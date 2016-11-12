@@ -14,7 +14,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         
-        <Border Margin="10 10 10 10" Background="{StaticResource BackgroundNormal}" >
+        <Border Margin="0" Background="{StaticResource BackgroundNormal}">
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <Canvas Name="DrawingArea" MinHeight="80" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
             </ScrollViewer>

@@ -14,7 +14,7 @@
     <Window.DataContext>
         <viewModel:PreviewViewModel></viewModel:PreviewViewModel>
     </Window.DataContext>
-    <Grid>
+    <Grid Margin =" 10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>

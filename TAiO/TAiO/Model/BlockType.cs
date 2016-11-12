@@ -50,6 +50,14 @@ namespace TAiO.Model
 	            if(!identical)
 					Shape.Add(last);
             }
+	        if (Height > Width)		//zamieniamy, żeby zawsze był szerszy
+	        {
+		        int tmp = Height;
+		        Height = Width;
+		        Width = tmp;
+				Shape.Add(Shape[0]);
+				Shape.RemoveAt(0);
+	        }
         }
 
         private int[,] Rotate90(int[,] t)

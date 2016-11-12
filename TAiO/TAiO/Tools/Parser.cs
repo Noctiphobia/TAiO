@@ -46,7 +46,7 @@ namespace TAiO.Tools
 						int b;
 						if (!int.TryParse(words[k], out b))
 							return false;
-						s[k, j] = b;
+						s[k, h - j - 1] = b;
 					}
 				}
 				BlockType block = new BlockType(w, h, s);

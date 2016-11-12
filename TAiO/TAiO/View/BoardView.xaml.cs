@@ -152,14 +152,18 @@ namespace TAiO.View
 			DrawingArea.Children.Clear();
             int width = DataSource.Width;
             int height = DataSource.Height;
-            Size field = new Size(DrawingArea.ActualWidth/width, DrawingArea.ActualHeight/width); //rozmiar pojedynczego pola na planszy
+	        double size = ((double.IsNaN(ActualWidth) || Math.Abs(ActualWidth) < 0.0001) ? Width : ActualWidth)/width;
+	        double realheight = ((double.IsNaN(ActualHeight) || Math.Abs(ActualHeight) < 0.0001) ? Height : ActualHeight);
+			double h = realheight / size;
+			Size field = new Size(size,size); //rozmiar pojedynczego pola na planszy
+	        Size area = new Size(width*field.Width, height*field.Height);
 	        if (Math.Abs(field.Width) < 0.0001 || Math.Abs(field.Height) < 0.0001)
 				field = new Size(BrowserMinDimensions/width, BrowserMinDimensions/width);
 
 			for (int i = 1; i < width; ++i)
-				DrawLine(i * field.Width, 0, i * field.Width, height * field.Height, GridColor, GridWidth);
-			for (int i = 1; i < height; ++i)
-				DrawLine(0, i * field.Height, width * field.Width, i * field.Height, GridColor, GridWidth);
+				DrawLine(i * field.Width, 0, i * field.Width, 50 * height * field.Height, GridColor, GridWidth);
+			for (int i = 1; i < h; ++i)
+				DrawLine(0, realheight - i * field.Height, width * field.Width, realheight - i * field.Height, GridColor, GridWidth);
 
 
 			for (int j = 0; j < height; ++j)
@@ -171,14 +175,14 @@ namespace TAiO.View
 						Rectangle rectangle = new Rectangle
 						{
 							Width = field.Width + 2,
-							Height = field.Height,
+							Height = field.Height + 1,
 							Fill = new SolidColorBrush(GetBlockColor(DataSource[i, j])),
 							Stroke = new SolidColorBrush(),
 							StrokeThickness = 0.0
 						};
 						DrawingArea.Children.Add(rectangle);
-						Canvas.SetRight(rectangle, i * field.Width - 1);
-						Canvas.SetTop(rectangle, j * field.Height);
+						Canvas.SetLeft(rectangle, i * field.Width - 1);
+						Canvas.SetBottom(rectangle, j * field.Height - 0.5);
 					}
 				}
 			}
@@ -188,10 +192,10 @@ namespace TAiO.View
 		        {
 			        if (DataSource[i, j] > 0 && DataSource.Array[i, j] <= CurrentStep)
 			        {
-						double xLeft = (width - i) * field.Width;
-						double yTop = (j + 1) * field.Height;
-						double xRight = (width - (i + 1)) * field.Width;
-						double yBottom = j * field.Height;
+						double xLeft = i * field.Width;
+						double yTop = realheight - (j + 1) * field.Height;
+						double xRight = (i + 1) * field.Width;
+						double yBottom = realheight - j * field.Height;
 						if (i == 0 || DataSource[i - 1, j] != DataSource[i, j]) //po lewej jest co innego
 							DrawLine(xLeft, yTop, xLeft, yBottom, OutlineColor, OutlineWidth);
 						if (i == DataSource.Width - 1 || DataSource[i + 1, j] != DataSource[i, j])  //po prawej jest co innego
