@@ -9,7 +9,7 @@
         xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Height="150" Width="750" MinWidth="750" MinHeight="150">
+        Height="195" Width="750" MinWidth="750" MinHeight="195">
     <Window.DataContext>
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>
@@ -17,6 +17,7 @@
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="45"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -52,9 +53,13 @@
                 <Label>Opóźnienie:</Label>
                 <TextBox Text="{Binding Delay, UpdateSourceTrigger=PropertyChanged}" 
                          Width="40" TextAlignment="Center"></TextBox>
-            </StackPanel>
+                <Label>Szerokość planszy:</Label>
+                <TextBox Text="{Binding BoardWidth, UpdateSourceTrigger=PropertyChanged}" 
+                         Width="40" TextAlignment="Center"></TextBox>
 
+            </StackPanel>
         </Grid>
+        <Label Grid.Row="2" Content="{Binding Status}"></Label>
     </Grid>
 </controls:MetroWindow>
 

@@ -116,8 +116,8 @@ namespace TAiO.Model
 					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
 					//	return false;
 					//Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
-
-					Content[i + block.X, j + block.Y] = 0;
+					if(block.Block.Shape[block.BlockVersion][i, j] > 0)
+						Content[i + block.X, j + block.Y] = 0;
 
 				}
 			if (!KeepTrackOfBlocks)
@@ -155,7 +155,33 @@ namespace TAiO.Model
                     {
                         resultBlock.X = j;
                         resultBlock.Y = i;
-                        return resultBlock;
+
+						//TODO: delete this! (ale to after cały debugging, bo się może przydać; to jest kod z AddBlock bez dodawania blocka)
+						// trying to add to board
+						
+						//int h = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Height : resultBlock.Block.Width),
+						//w = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Width : resultBlock.Block.Height);
+						//while (resultBlock.Y + h >= Height)
+						//	Resize();
+						//try
+						//{
+
+						//for (int ii = 0; ii < w; ii++)
+						//	for (int jj = 0; jj < h; jj++)
+						//	{
+						//		if (resultBlock.Block.Shape[resultBlock.BlockVersion][ii, jj] == 0)
+						//			continue;
+						//		if (Content[ii + resultBlock.X, jj + resultBlock.Y] > 0)
+						//			throw new ArgumentException("to tu!");
+						//	}
+
+						//}
+						//catch (Exception e)
+						//{
+						//	int a = 6;
+
+						//}
+						return resultBlock;
                     }
                 }
             resultBlock.X = 0;

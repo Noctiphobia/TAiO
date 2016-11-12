@@ -45,7 +45,7 @@ namespace TAiO.Model
 
 		public override string ToString()
 		{
-			return Block.ToString() + ", version: " + BlockVersion + ", prev = " + PreviousBlockBoardNumber;
+			return Block.ToString() + ", vers: " + BlockVersion + ", prev = " + PreviousBlockBoardNumber + ", ("+ X + ", " + Y+")";
 		}
 	}
 }
