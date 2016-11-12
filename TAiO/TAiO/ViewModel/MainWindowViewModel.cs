@@ -20,8 +20,10 @@ namespace TAiO.ViewModel
 	/// </summary>
 	public class MainWindowViewModel : BaseViewModel
 	{
+		private string _status;
 		private int _step = 1;
 		private int _delay = 3;
+		private uint _boardWidth = 0;
 		private bool _running = false;
 		private bool _stopped = true;
 		private string _playPause = "▶";
@@ -29,6 +31,18 @@ namespace TAiO.ViewModel
 		private List<Preview> _previews = new List<Preview>();
 		private DispatcherTimer _timer = new DispatcherTimer();
 		private Algorithm LastAlgorithm = null;
+		
+
+
+		public string Status
+		{
+			get { return _status; }
+			set
+			{
+				_status = value;
+				RaisePropertyChanged(nameof(Status));
+			}
+		}
 
 		/// <summary>
 		/// Krok symulacji.
@@ -108,6 +122,17 @@ namespace TAiO.ViewModel
 			}
 		}
 
+		public uint BoardWidth
+		{
+			get { return _boardWidth; }
+			set
+			{
+				_boardWidth = value;
+				Data.Instance.BoardWidth = (int)value;
+				RaisePropertyChanged(nameof(BoardWidth));
+			}
+		}
+
 		/// <summary>
 		/// Czy wizualizacja trwa?
 		/// </summary>
@@ -165,6 +190,7 @@ namespace TAiO.ViewModel
 
 		public ICommand PreviousStep => new RelayCommand(() =>
 		{
+			int currentStep = 0;
 			foreach (var preview in _previews)
 			{
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
@@ -178,19 +204,24 @@ namespace TAiO.ViewModel
 					{
 						vm.CurrentStep = 0;
 					}
+					currentStep = vm.CurrentStep;
 				}
 			}
+			Status = StatusFactory.PausedAlgorithm(currentStep);
 		});
 
 		public ICommand NextStep => new RelayCommand(() =>
 		{
+			int currentStep = 0;
 			foreach (var preview in _previews)
 			{
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
 				if (vm == null)
 					continue;
 				vm.CurrentStep = vm.CurrentStep + vm.StepsPerChange;
+				currentStep = vm.CurrentStep;
 			}
+			Status = StatusFactory.PausedAlgorithm(currentStep);
 		});
 
 		public ICommand FirstStep => new RelayCommand(() =>
@@ -202,17 +233,20 @@ namespace TAiO.ViewModel
 					continue;
 				vm.CurrentStep = 0;
 			}
+			Status = StatusFactory.PausedAlgorithm(0);
 		});
 
 		public ICommand LastStep => new RelayCommand(() =>
 		{
+			int currentStep = LastAlgorithm?.CurrentStep ?? 1000;
 			foreach (var preview in _previews)
 			{
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
 				if (vm == null)
 					continue;
-				vm.CurrentStep = 1000;
+				vm.CurrentStep = currentStep;
 			}
+			Status = StatusFactory.PausedAlgorithm(currentStep);
 		});
 
 		/// <summary>
@@ -257,6 +291,7 @@ namespace TAiO.ViewModel
 					//			{ 0, 0, 0, 0, 0 }
 					//	});
 				}
+				Status = StatusFactory.RunningAlgorithm((int)Data.Blocks.Sum(b => b.BlockNumber), Data.Branches);
 			}
 			Running = !Running;
 		});
@@ -270,6 +305,7 @@ namespace TAiO.ViewModel
 			foreach (var p in _previews)
 				p.Close();
 			_previews.Clear();
+			Status = StatusFactory.StoppedAlgorithm();
 		}, () => !Stopped);
 
 		/// <summary>
@@ -304,6 +340,8 @@ namespace TAiO.ViewModel
 				{
 				    Data.Instance.Blocks = blocks;
 				    Data.Instance.BoardWidth = width;
+					BoardWidth = (uint)width;
+					Status = StatusFactory.LoadedBlocks(blocks.Count, dialog.FileName);
 					RefreshBrowserBlocks();
 				}
 			}
@@ -318,6 +356,7 @@ namespace TAiO.ViewModel
 		{
 			_timer.Tick += (o, e) => { if (NextStep.CanExecute(this)) NextStep.Execute(this); };
 			_timer.Interval = TimeSpan.FromSeconds(3);
+			Status = StatusFactory.BeforeLoad();
 		}
 	}
 }

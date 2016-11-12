@@ -116,8 +116,8 @@ namespace TAiO.Model
 					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
 					//	return false;
 					//Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
-
-					Content[i + block.X, j + block.Y] = 0;
+					if(block.Block.Shape[block.BlockVersion][i, j] > 0)
+						Content[i + block.X, j + block.Y] = 0;
 
 				}
 			if (!KeepTrackOfBlocks)
@@ -155,7 +155,33 @@ namespace TAiO.Model
                     {
                         resultBlock.X = j;
                         resultBlock.Y = i;
-                        return resultBlock;
+
+						//TODO: delete this! (ale to after cały debugging, bo się może przydać; to jest kod z AddBlock bez dodawania blocka)
+						// trying to add to board
+						
+						//int h = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Height : resultBlock.Block.Width),
+						//w = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Width : resultBlock.Block.Height);
+						//while (resultBlock.Y + h >= Height)
+						//	Resize();
+						//try
+						//{
+
+						//for (int ii = 0; ii < w; ii++)
+						//	for (int jj = 0; jj < h; jj++)
+						//	{
+						//		if (resultBlock.Block.Shape[resultBlock.BlockVersion][ii, jj] == 0)
+						//			continue;
+						//		if (Content[ii + resultBlock.X, jj + resultBlock.Y] > 0)
+						//			throw new ArgumentException("to tu!");
+						//	}
+
+						//}
+						//catch (Exception e)
+						//{
+						//	int a = 6;
+
+						//}
+						return resultBlock;
                     }
                 }
             resultBlock.X = 0;
@@ -171,16 +197,9 @@ namespace TAiO.Model
         /// <returns>Listę posortowanych rosnąco po funkcji kosztu rozwiązań</returns>
         public List<PartialSolution> ChooseBlocks(int resultsCount, CostFunction costFunction)
         {
-            // TODO:
-            // 1. Funkcja wskazująca miejsce do położenia klocka o danym obrocie
-            // UPDATE: Funkcja zwraca BlockInstance, ale NIE ZAPISUJE W TAM INFORMACJI O POPRZEDNIM KLOCKU. Ustawiać tu lub zmienić funkcję.
-            // 2. Zaimplementowanie funkcji kosztu i policzenie jej dla każdego obrotu każdego klocka
-            // 3. Wybranie i zwrócenie resultsCount ułożeń z najniższą funkcją kosztu
-            // ??? Czy ta funkcja powinna zwracać też zaktualizowaną listę klocków?
-
-	        var solutions = new List<PartialSolution>();
+            var solutions = new List<PartialSolution>();
 	        int k = 0;
-	        int min = Int32.MaxValue;
+	        int max = 0;
 
 	        Board board = this.Copy(false);
 
@@ -193,29 +212,27 @@ namespace TAiO.Model
 			        BlockInstance bi = FindPlaceForBlock(blockType.Key, i);
 			        board.AddBlock(bi);
 			        int cost = costFunction(board);
-
 					board.DeleteBlock(bi);
 					
-
 					if (k < resultsCount)
 					{
 						solutions.Add(new PartialSolution() { Cost = cost, Move = bi });
 						k++;
 					}
-					else if (cost < min)
+					else if (cost < max)
 					{
 						bool done = false;
 					    for (int j = 0; j < solutions.Count; j++) // podmiana
 					    {
-						    if (solutions[j].Cost > cost && !done)
+						    if (solutions[j].Cost > max)
+						    {
+							    max = solutions[j].Cost;
+						    }
+						    if (solutions[j].Cost == max && !done)
 						    {
 							    done = true;
 							    solutions[j].Cost = cost;
 							    solutions[j].Move = bi;
-						    }
-						    if (solutions[j].Cost < min)
-						    {
-							    min = solutions[j].Cost;
 						    }
 					    }
 				        

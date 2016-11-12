@@ -17,6 +17,7 @@ namespace TAiO.Model
 	    private static int NextId = 0;
 
 		public int Id { get; private set; }
+	    public readonly int FullSquares;
 
 		public int Height { get; set; }
 		public int Width { get; set; }
@@ -32,7 +33,8 @@ namespace TAiO.Model
 		    Shape = new List<int[,]> {s};
 		    CreateRotations90();
 	        BlockNumber = 1;
-		}
+		    FullSquares = Shape.Select(a => a.Cast<int>().Sum()).Sum();
+	    }
 
         private void CreateRotations90()
         {
