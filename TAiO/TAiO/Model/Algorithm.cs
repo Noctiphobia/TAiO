@@ -136,6 +136,7 @@ namespace TAiO.Model
 		public void CreateNewStepBoards(int width, int height)
 		{
 			int currentStep = CurrentStep;
+            Board[] OldStepBoards;
 			if (currentStep < 0)
 			{
 				for (int i = 0; i < Data.Branches; i++)
