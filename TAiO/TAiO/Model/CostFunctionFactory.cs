@@ -85,7 +85,7 @@ namespace TAiO.Model
 				if (fullsquares == 0)
 					return 0;
 				return cost/fullsquares; // fullsquares > 0
-			}, "Najmniej dziur II"), //koszt = liczba_dziur/zapełnione_pola - bezużyteczna, ale tworzy fajny ażurowy wzorek :)
+			}, "Najładniejsze puste pola"), //koszt = liczba_dziur/zapełnione_pola - bezużyteczna, ale tworzy fajny ażurowy wzorek :)
 		};
 
 
