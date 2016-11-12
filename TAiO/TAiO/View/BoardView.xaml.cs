@@ -51,6 +51,15 @@ namespace TAiO.View
 		}
 
 		/// <summary>
+		/// Widoczność paska przewijania.
+		/// </summary>
+	    public ScrollBarVisibility ScrollBarVisibility
+	    {
+			get { return (ScrollBarVisibility)GetValue(ScrollBarVisibilityProperty); }
+			set { SetValue(ScrollBarVisibilityProperty, value); }
+		}
+
+		/// <summary>
 		/// Szerokość konturu.
 		/// </summary>
 		protected readonly int OutlineWidth = 2;
@@ -111,6 +120,17 @@ namespace TAiO.View
 				{
 					(d as BoardView)?.Redraw();
 				}));
+
+		public static readonly DependencyProperty ScrollBarVisibilityProperty = DependencyProperty.Register(
+			nameof(ScrollBarVisibility),
+			typeof(ScrollBarVisibility),
+			typeof(BoardView),
+			new FrameworkPropertyMetadata(ScrollBarVisibility.Auto,
+				FrameworkPropertyMetadataOptions.AffectsRender,
+				(d, e) =>
+				{
+					(d as BoardView)?.Redraw();
+				}));
 		#endregion
 
 		/// <summary>
@@ -152,9 +172,13 @@ namespace TAiO.View
 			DrawingArea.Children.Clear();
             int width = DataSource.Width;
             int height = DataSource.Height;
-	        double size = ((double.IsNaN(ActualWidth) || Math.Abs(ActualWidth) < 0.0001) ? Width : ActualWidth)/width;
-	        double realheight = ((double.IsNaN(ActualHeight) || Math.Abs(ActualHeight) < 0.0001) ? Height : ActualHeight);
+	        double realwidth = ((double.IsNaN(ActualWidth) || Math.Abs(ActualWidth) < 0.0001) ? Width : ActualWidth);
+	        if (ScrollBarVisibility != ScrollBarVisibility.Disabled)
+		        realwidth -= SystemParameters.VerticalScrollBarWidth;
+			double size = realwidth / width;
+	        double realheight = Math.Max(((double.IsNaN(ActualHeight) || Math.Abs(ActualHeight) < 0.0001) ? Height : ActualHeight), size * height);
 			double h = realheight / size;
+	        DrawingArea.RequiredHeight = size*height;
 			Size field = new Size(size,size); //rozmiar pojedynczego pola na planszy
 	        Size area = new Size(width*field.Width, height*field.Height);
 	        if (Math.Abs(field.Width) < 0.0001 || Math.Abs(field.Height) < 0.0001)
@@ -164,7 +188,7 @@ namespace TAiO.View
 				DrawLine(i * field.Width, 0, i * field.Width, 50 * height * field.Height, GridColor, GridWidth);
 			for (int i = 1; i < h; ++i)
 				DrawLine(0, realheight - i * field.Height, width * field.Width, realheight - i * field.Height, GridColor, GridWidth);
-
+			
 
 			for (int j = 0; j < height; ++j)
 	        {
@@ -208,11 +232,14 @@ namespace TAiO.View
 		        }
 	        }
 			InvalidateVisual();
+			InvalidateMeasure();
         }
 
         public BoardView()
         {
             InitializeComponent();
+			ScrollViewer.ScrollToBottom();
+	        DrawingArea.RequiredHeight = 0;
         }
     }
 }

@@ -107,6 +107,7 @@
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\BranchesDialogViewModel.cs" />
     <Compile Include="ViewModel\PreviewViewModel.cs" />
+    <Compile Include="View\AutoCanvas.cs" />
     <Compile Include="View\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
