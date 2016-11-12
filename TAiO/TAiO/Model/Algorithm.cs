@@ -40,7 +40,8 @@ namespace TAiO.Model
 				AvailableBlocksSorted = new SortedList<BlockType, int>(Data.Blocks.Count);
 				foreach (BlockType block in Data.Blocks)
 				{
-					AvailableBlocksSorted.Add(block, (int)block.BlockNumber);
+					if(block.BlockNumber > 0)
+						AvailableBlocksSorted.Add(block, (int)block.BlockNumber);
 				}
 			}
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
@@ -64,7 +65,7 @@ namespace TAiO.Model
 			//	partsDone[i] = false;
 			//}
 
-			UpdateStepBoards(Data.BoardWidth);
+			UpdateStepBoards(Data.BoardWidth, Data.BoardWidth);
 			//TODO: heigth of boards
 
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
@@ -113,21 +114,26 @@ namespace TAiO.Model
 		}
 
 
-		public void UpdateStepBoards(int h)
+		public void UpdateStepBoards(int width, int height)
 		{
-			CreateNewStepBoards(h);
+			CreateNewStepBoards(width, height);
 			//foreach(BlockInstance bi in StepsData.BlockInstances)
 			if (CurrentStep < 0)
 				return;
 			for (int i = 0; i < Data.Branches; i++)
 			{
-				CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]);
+				if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
+				{
+					throw new ArgumentException("Cannot add block!");
+					// TODO: delete or add exceptions
+					// and try/catch...
+				}
 
 			}
 		}
 
 
-		public void CreateNewStepBoards(int h)
+		public void CreateNewStepBoards(int width, int height)
 		{
 			int currentStep = CurrentStep;
 			if (currentStep < 0)
@@ -135,7 +141,7 @@ namespace TAiO.Model
 				for (int i = 0; i < Data.Branches; i++)
 				{
 					//CreateNewBoardFrom(currentStep, i, h);
-					CurrentStepBoards[i] = new Board(h, h, new SortedList<BlockType, int>(AvailableBlocksSorted));
+					CurrentStepBoards[i] = new Board(width, height, new SortedList<BlockType, int>(AvailableBlocksSorted));
 				}
 			}
 			else if (currentStep > 0)
@@ -170,6 +176,8 @@ namespace TAiO.Model
 
 		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
 		{
+			if (solutions.Count < CurrentStepBoards.Length)
+				throw new ArgumentException("Too little solutions");
 			for (int i = 0; i < CurrentStepBoards.Length; i++)
 			{
 				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[i].Move;

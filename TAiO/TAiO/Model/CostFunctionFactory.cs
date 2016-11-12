@@ -51,7 +51,41 @@ namespace TAiO.Model
 							cost = y;
 
 				return cost;
-			}, "Najmniejsza wysokość")
+			}, "Najmniejsza wysokość"),
+			new NamedFunction((b) =>
+			{
+				int cost = 0;
+				//znalezienie najwyższego punktu w każdej kolumnie
+				int[] maxHeights = new int[b.Width];
+				for (int x = 0; x < b.Width; ++x)
+					for (int y = b.Height - 1; y > 0; --y)
+						if (b[x, y] > 0)
+						{
+							maxHeights[x] = y;
+							break;
+						}
+				int fullsquares = 0;
+				for (int x = 0; x < b.Width; x++)
+				{
+					for (int y = 0; y < b.Height; y++)
+					{
+						if (b[x, y] > 0)
+							fullsquares++;
+					}
+				}
+
+				for (int x = 0; x < b.Width; ++x)
+				{
+					for (int y = 0; y < maxHeights[x]; ++y)
+					{
+						if (b[x, y] == 0) cost++;
+					}
+				}
+				//return cost - fullsquares;
+				if (fullsquares == 0)
+					return 0;
+				return cost/fullsquares; // fullsquares > 0
+			}, "Najmniej dziur II"), //koszt = liczba_dziur/zapełnione_pola - bezużyteczna, ale tworzy fajny ażurowy wzorek :)
 		};
 
 

@@ -78,7 +78,7 @@ namespace TAiO.ViewModel
 			{
 				if (!board.AddBlock(blockInstance))
 				{
-					//throw new ArgumentException("Co jest nie tak z tymi funkcjami?!");
+					 throw new ArgumentException("Co jest nie tak z tymi funkcjami?!");
 				}
 			}
 			DataSource = new Array2D(board.Content);
