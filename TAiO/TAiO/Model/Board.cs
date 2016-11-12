@@ -171,16 +171,9 @@ namespace TAiO.Model
         /// <returns>Listę posortowanych rosnąco po funkcji kosztu rozwiązań</returns>
         public List<PartialSolution> ChooseBlocks(int resultsCount, CostFunction costFunction)
         {
-            // TODO:
-            // 1. Funkcja wskazująca miejsce do położenia klocka o danym obrocie
-            // UPDATE: Funkcja zwraca BlockInstance, ale NIE ZAPISUJE W TAM INFORMACJI O POPRZEDNIM KLOCKU. Ustawiać tu lub zmienić funkcję.
-            // 2. Zaimplementowanie funkcji kosztu i policzenie jej dla każdego obrotu każdego klocka
-            // 3. Wybranie i zwrócenie resultsCount ułożeń z najniższą funkcją kosztu
-            // ??? Czy ta funkcja powinna zwracać też zaktualizowaną listę klocków?
-
-	        var solutions = new List<PartialSolution>();
+            var solutions = new List<PartialSolution>();
 	        int k = 0;
-	        int min = Int32.MaxValue;
+	        int max = 0;
 
 	        Board board = this.Copy(false);
 
@@ -193,29 +186,27 @@ namespace TAiO.Model
 			        BlockInstance bi = FindPlaceForBlock(blockType.Key, i);
 			        board.AddBlock(bi);
 			        int cost = costFunction(board);
-
 					board.DeleteBlock(bi);
 					
-
 					if (k < resultsCount)
 					{
 						solutions.Add(new PartialSolution() { Cost = cost, Move = bi });
 						k++;
 					}
-					else if (cost < min)
+					else if (cost < max)
 					{
 						bool done = false;
 					    for (int j = 0; j < solutions.Count; j++) // podmiana
 					    {
-						    if (solutions[j].Cost > cost && !done)
+						    if (solutions[j].Cost > max)
+						    {
+							    max = solutions[j].Cost;
+						    }
+						    if (solutions[j].Cost == max && !done)
 						    {
 							    done = true;
 							    solutions[j].Cost = cost;
 							    solutions[j].Move = bi;
-						    }
-						    if (solutions[j].Cost < min)
-						    {
-							    min = solutions[j].Cost;
 						    }
 					    }
 				        
