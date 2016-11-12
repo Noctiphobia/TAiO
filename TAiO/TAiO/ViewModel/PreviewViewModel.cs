@@ -69,18 +69,7 @@ namespace TAiO.ViewModel
 
 		public void UpdateDataSource(StepsData data, int boardNumber, int stepNumber, int width, int height)
 		{
-			Board board = new Board(width, height, new SortedList<BlockType, int>(), false);
-			data.SetStartingPoint(stepNumber, boardNumber);
-			List<BlockInstance> bis = new List<BlockInstance>(data);
-			//bis.AddRange(data);
-			bis.Reverse();
-			foreach (BlockInstance blockInstance in bis)
-			{
-				if (!board.AddBlock(blockInstance))
-				{
-					 throw new ArgumentException("Co jest nie tak z tymi funkcjami?!");
-				}
-			}
+			Board board = Board.CreateFromStepsData(data, stepNumber, boardNumber, width, height);
 			DataSource = new Array2D(board.Content);
 		}
 

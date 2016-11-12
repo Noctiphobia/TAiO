@@ -65,7 +65,7 @@ namespace TAiO.Model
 			//	partsDone[i] = false;
 			//}
 
-			UpdateStepBoards(Data.BoardWidth, Data.BoardWidth);
+			UpdateStepBoardsNew(Data.BoardWidth, Data.BoardWidth);
 			//TODO: heigth of boards
 
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
@@ -114,6 +114,54 @@ namespace TAiO.Model
 		}
 
 
+		public void UpdateStepBoardsNew(int width, int height)
+		{
+			if (CurrentStep < 0) // only creating new boards
+			{
+				for (int i = 0; i < Data.Branches; i++)
+				{
+					CurrentStepBoards[i] = new Board(width, height, new SortedList<BlockType, int>(AvailableBlocksSorted));
+				}
+			}
+			else if (CurrentStep == 0) // only adding new blocks
+			{
+				for (int i = 0; i < Data.Branches; i++)
+				{
+					if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
+					{
+						throw new ArgumentException("Cannot add block!");
+						// TODO: delete or add exceptions
+						// and try/catch...
+					}
+				}
+			}
+			else // creating new or only adding new blocks
+			{
+				for (int i = 0; i < Data.Branches; i++)
+				{
+					if (StepsData.BlockInstances[CurrentStep, i].PreviousBlockBoardNumber != i) // if we have to copy the board
+					{
+						CurrentStepBoards[i] = Board.CreateFromStepsData(StepsData, CurrentStep, i,
+							CurrentStepBoards[i].Width, CurrentStepBoards[i].Height, true,
+							new SortedList<BlockType, int>(AvailableBlocksSorted));
+					}
+					else
+					{
+						if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i])) // if we can only add new block
+						{
+							throw new ArgumentException("Cannot add block!");
+							// TODO: delete or add exceptions
+							// and try/catch...
+						}
+					}
+				}
+
+
+
+			}
+		}
+
+
 		public void UpdateStepBoards(int width, int height)
 		{
 			CreateNewStepBoards(width, height);
@@ -151,8 +199,11 @@ namespace TAiO.Model
 					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
 					{
 						//CreateNewBoardFrom(currentStep, i, h);
-						CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber]
-							 .Copy();
+						//CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber]
+						//	 .Copy();
+						// we have to 
+						CurrentStepBoards[i] = Board.CreateFromStepsData(StepsData, currentStep, i, 
+							CurrentStepBoards[i].Width, CurrentStepBoards[i].Height, true, new SortedList<BlockType, int>(AvailableBlocksSorted));
 					}
 				}
 			}

@@ -56,6 +56,22 @@ namespace TAiO.Model
 		    };
 	    }
 
+	    public static Board CreateFromStepsData(StepsData data, int stepNumber, int boardNumber, int width, int height, bool keepTrackOfBlocks = false, SortedList<BlockType, int> availableBlockSortedList = null)
+	    {
+			Board board = new Board(width, height, availableBlockSortedList, keepTrackOfBlocks);
+			data.SetStartingPoint(stepNumber, boardNumber);
+			List<BlockInstance> bis = new List<BlockInstance>(data);
+			bis.Reverse();
+		    foreach (var blockInstance in bis)
+		    {
+			    if (!board.AddBlock(blockInstance))
+			    {
+				    throw new ArgumentException("Co jest nie tak z tymi funkcjami?!");
+			    }
+		    }
+		    return board;
+	    }
+
 
 
 		private void Resize()
@@ -218,6 +234,8 @@ namespace TAiO.Model
 					{
 						solutions.Add(new PartialSolution() { Cost = cost, Move = bi });
 						k++;
+						if (cost > max)
+							max = cost;
 					}
 					else if (cost < max)
 					{
