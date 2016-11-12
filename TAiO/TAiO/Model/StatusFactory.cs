@@ -8,19 +8,19 @@ namespace TAiO.Model
 {
 	public static class StatusFactory
 	{
-		public static string BeforeLoad() => "Please load blocks before starting any algorithm";
+		public static string BeforeLoad() => "Wczytaj klocki przed uruchomieniem algorytmu.";
 
 		public static string LoadedBlocks(int blocksNumber, string file) =>
-			"Loaded " + blocksNumber + " blocks from file " + file;
+			"Wczytano " + blocksNumber + " klocków z pliku " + file + ".";
 
 		public static string RunningAlgorithm(int blockNumber, int branches) =>
-			"Algorithm with " + branches + " branches and " + blockNumber + " blocks is now running";
+			"Uruchomiono algorytm dla " + branches + " gałęzi i " + blockNumber + " klocków" + ".";
 
 		public static string PausedAlgorithm(int step) =>
-			"Algorithm is on step: " + step;
+			"Obecny krok: " + step + ".";
 
 		public static string StoppedAlgorithm() =>
-			"Algorithm stopped. Adjust settings and start again";
+			"Algorytm został zatrzymany.";
 
 	}
 }

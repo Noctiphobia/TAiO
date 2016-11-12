@@ -13,12 +13,12 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <Border Margin="0" Background="{StaticResource BackgroundNormal}">
-            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                <Canvas Name="DrawingArea" MinHeight="80" MinWidth="80" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
-            </ScrollViewer>
-        </Border>
-       
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" x:Name="ScrollViewer"
+                      VerticalScrollBarVisibility="{Binding Path=ScrollBarVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:BoardView}}">
+            <Border Margin="0" >
+                <local:AutoCanvas x:Name="DrawingArea" Background="{StaticResource BackgroundNormal}"></local:AutoCanvas>
+            </Border>
+        </ScrollViewer>
+
     </Grid>
 </UserControl>

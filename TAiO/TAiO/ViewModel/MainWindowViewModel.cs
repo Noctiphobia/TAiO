@@ -208,6 +208,12 @@ namespace TAiO.ViewModel
 				}
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
+		}, () =>
+		{
+			if (_previews.Count == 0)
+				return false;
+			PreviewViewModel vm = _previews[0].DataContext as PreviewViewModel;
+			return vm?.CurrentStep > 0;
 		});
 
 		public ICommand NextStep => new RelayCommand(() =>
@@ -222,6 +228,14 @@ namespace TAiO.ViewModel
 				currentStep = vm.CurrentStep;
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
+		}, () =>
+		{
+			if (_previews.Count == 0)
+				return false;
+			PreviewViewModel vm = _previews[0].DataContext as PreviewViewModel;
+			if (vm == null)
+				return false;
+			return vm.CurrentStep < (LastAlgorithm?.CurrentStep ?? -1) + 1;	
 		});
 
 		public ICommand FirstStep => new RelayCommand(() =>
@@ -234,11 +248,11 @@ namespace TAiO.ViewModel
 				vm.CurrentStep = 0;
 			}
 			Status = StatusFactory.PausedAlgorithm(0);
-		});
+		}, () => _previews.Count > 0);
 
 		public ICommand LastStep => new RelayCommand(() =>
 		{
-			int currentStep = LastAlgorithm?.CurrentStep ?? 1000;
+			int currentStep = LastAlgorithm?.CurrentStep + 1 ?? 0;
 			foreach (var preview in _previews)
 			{
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
@@ -247,7 +261,7 @@ namespace TAiO.ViewModel
 				vm.CurrentStep = currentStep;
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
-		});
+		}, () => _previews.Count > 0);
 
 		/// <summary>
 		/// Włącz/wyłącz wizualizację.
@@ -273,13 +287,20 @@ namespace TAiO.ViewModel
 				for (int i = 0; i < Data.Branches; ++i)
 				{
 					Preview preview = new Preview();
+					preview.Closed += (o, e) =>
+					{
+						if (_previews.Count>0)
+							_previews.Remove(preview);
+						if (_previews.Count == 0)
+							Stop.Execute(this);
+					};
 					var vm = preview.DataContext as PreviewViewModel;
 					_previews.Add(preview);
 					preview.Show();
 					if (vm == null) continue;
 					vm.StepsPerChange = Step;
-					vm.CurrentStep = a.CurrentStep;
-					vm.UpdateDataSource(a.StepsData, i, vm.CurrentStep, Data.BoardWidth, Data.BoardWidth);
+					vm.CurrentStep = 0;
+					vm.UpdateDataSource(a.StepsData, i, a.CurrentStep, Data.BoardWidth, Data.BoardWidth);
 					//vm.DataSource = new Array2D(
 					//	new[,]
 					//	{
@@ -302,9 +323,8 @@ namespace TAiO.ViewModel
 		public ICommand Stop => new RelayCommand(() =>
 		{
 			Stopped = true; 
-			foreach (var p in _previews)
-				p.Close();
-			_previews.Clear();
+			while (_previews.Count>0)
+				_previews[0].Close();
 			Status = StatusFactory.StoppedAlgorithm();
 		}, () => !Stopped);
 
@@ -326,8 +346,7 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public ICommand Load => new RelayCommand(() =>
 		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.Multiselect = false;
+			OpenFileDialog dialog = new OpenFileDialog {Multiselect = false};
 			if (dialog.ShowDialog() ?? false)
 			{
 				List<BlockType> blocks;

@@ -11,7 +11,7 @@ namespace TAiO.Model
 	/// <summary>
 	/// Klasa zawierająca wszystkie wykorzystane funkcje kosztu wraz z łatwym dostępem do ich listy.
 	/// </summary>
-	public class CostFunctionFactory
+	public static class CostFunctionFactory
 	{
 		
 		/// <summary>
@@ -87,9 +87,5 @@ namespace TAiO.Model
 				return cost/fullsquares; // fullsquares > 0
 			}, "Najładniejsze puste pola"), //koszt = liczba_dziur/zapełnione_pola - bezużyteczna, ale tworzy fajny ażurowy wzorek :)
 		};
-
-
-
-		private CostFunctionFactory() { }
 	}
 }
