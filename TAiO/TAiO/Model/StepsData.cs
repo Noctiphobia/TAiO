@@ -79,10 +79,11 @@ namespace TAiO.Model
 			{
 				last = _lastStepFinished;
 			}
-			if(startingI > last)
-				throw new ArgumentException("You're starting from wrong step number! Please check it before using...");
 			startingI = stepNumber;
 			startingJ = boardNumber;
+
+			if (startingI > last)
+				throw new ArgumentException("You're starting from wrong step number! Please check it before using...");
 		}
 		public IEnumerator<BlockInstance> GetEnumerator()
 		{

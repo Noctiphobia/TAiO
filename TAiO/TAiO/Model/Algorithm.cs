@@ -19,6 +19,7 @@ namespace TAiO.Model
 		public int CurrentStep => StepsData.LastStepFinished;
 		private Data Data;
 		private CostFunction CostFunction;
+		private PlacementFunction PlacementFunction;
 		//private List<Board> CurrentStepBoards;
 		private Board[] CurrentStepBoards;
 		private List<List<BlockType>> CurrentStepBoardsBlocks;
@@ -27,14 +28,12 @@ namespace TAiO.Model
 		
 
 
-		public Algorithm(Data data, CostFunction costFunction)
+		public Algorithm(Data data, CostFunction costFunction, PlacementFunction placementFunction)
 		{
 			Data = data;
 			CostFunction = costFunction;
-			//CurrentStepBoards = new List<Board>();
+			PlacementFunction = placementFunction;
 			CurrentStepBoards = new Board[Data.Branches];
-			//BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
-			//	(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 			if (Data.Blocks != null)
 			{
 				AvailableBlocksSorted = new SortedList<BlockType, int>(Data.Blocks.Count);
@@ -59,25 +58,17 @@ namespace TAiO.Model
 		public void MakeNextStep()
 		{
 
-			//var partsDone = new bool[CurrentStepBoards.Length];
-			//for (int i = 0; i < partsDone.Length; i++)
-			//{
-			//	partsDone[i] = false;
-			//}
-
 			UpdateStepBoardsNew(Data.BoardWidth, Data.BoardWidth);
-			//TODO: heigth of boards
 
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
 			{
-				List<PartialSolution> solutions = (CurrentStepBoards[0].ChooseBlocks(Data.Branches, CostFunction));
+				List<PartialSolution> solutions = (CurrentStepBoards[0].ChooseBlocks(Data.Branches, CostFunction, PlacementFunction));
 				DivideSolutionsBetweenBoards(solutions);
 			}
 			else
 			{
 
 				var tasks = new Task[CurrentStepBoards.Length];
-				//var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Length);
 				var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
 
 
@@ -87,7 +78,7 @@ namespace TAiO.Model
 					(tasks[j] =
 						new Task(() =>
 						{
-							partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Branches, CostFunction));
+							partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Branches, CostFunction, PlacementFunction));
 							foreach (PartialSolution ps in partialSolutions[j])
 							{
 								BlockInstance bi = ps.Move;
@@ -102,11 +93,6 @@ namespace TAiO.Model
 
 				//TODO: change MergeSolutions
 
-				//if (!partsDone.All(t => t))
-				//{
-				//	throw new Exception("PLEASE MAKE IT RUUUUUUUN!");
-				//}
-			
 				MergeSolutions(partialSolutions.ToList());
 			}
 
@@ -180,7 +166,6 @@ namespace TAiO.Model
 		public void CreateNewStepBoards(int width, int height)
 		{
 			int currentStep = CurrentStep;
-            Board[] OldStepBoards;
 			if (currentStep < 0)
 			{
 				for (int i = 0; i < Data.Branches; i++)
@@ -224,11 +209,15 @@ namespace TAiO.Model
 
 		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
 		{
-			if (solutions.Count < CurrentStepBoards.Length)
+			if (solutions.Count < 1)
 				throw new ArgumentException("Too little solutions");
+			int j = 0;
 			for (int i = 0; i < CurrentStepBoards.Length; i++)
 			{
-				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[i].Move;
+				if (j == solutions.Count)
+					j = 0;
+				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[j].Move;
+				j++;
 			}
 		}
 

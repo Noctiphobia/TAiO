@@ -31,7 +31,7 @@ namespace TAiO.Tests
 			Data.Branches = 2;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 			
 			a.RunAlgorithm();
 		}
@@ -44,7 +44,7 @@ namespace TAiO.Tests
 			int width;
 			Parser.ParseFile("60.blocks", out blocks, out width);
 
-			int blocksNumber = 5;
+			int blocksNumber = 10;
 			if (blocks.Count == 0)
 				Assert.Fail("0 blocks");
 			blocks[0].BlockNumber = (uint)blocksNumber;
@@ -58,7 +58,7 @@ namespace TAiO.Tests
 			Data.Branches = 3;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 
 			a.RunAlgorithm();
 		}
@@ -85,7 +85,7 @@ namespace TAiO.Tests
 			Data.Branches = 3;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 
 			a.RunAlgorithm();
 		}
