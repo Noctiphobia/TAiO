@@ -88,10 +88,12 @@ namespace TAiO.Model
 		public IEnumerator<BlockInstance> GetEnumerator()
 		{
 			int j = startingJ;
+			int prevBoard;
 			for (int i = startingI; i >= 0; i--)
 			{
-				j = BlockInstances[i, j].PreviousBlockBoardNumber;
+				prevBoard = BlockInstances[i, j].PreviousBlockBoardNumber;
 				yield return BlockInstances[i, j];
+				j = prevBoard;
 			}
 		}
 

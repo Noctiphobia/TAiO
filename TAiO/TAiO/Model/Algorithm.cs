@@ -113,7 +113,7 @@ namespace TAiO.Model
 				{
 					if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
 					{
-						throw new ArgumentException("Cannot add block!");
+						throw new ArgumentException("Cannot add block! (UpdateStepBoardsNow())");
 						// TODO: delete or add exceptions
 						// and try/catch...
 					}
@@ -133,7 +133,7 @@ namespace TAiO.Model
 					{
 						if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i])) // if we can only add new block
 						{
-							throw new ArgumentException("Cannot add block!");
+							throw new ArgumentException("Cannot add block! (UpdateStepBoardsNow())");
 							// TODO: delete or add exceptions
 							// and try/catch...
 						}
@@ -149,14 +149,13 @@ namespace TAiO.Model
 		public void UpdateStepBoards(int width, int height)
 		{
 			CreateNewStepBoards(width, height);
-			//foreach(BlockInstance bi in StepsData.BlockInstances)
 			if (CurrentStep < 0)
 				return;
 			for (int i = 0; i < Data.Branches; i++)
 			{
 				if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
 				{
-					throw new ArgumentException("Cannot add block!");
+					throw new ArgumentException("Cannot add block! (UpdateStepBoards())");
 					// TODO: delete or add exceptions
 					// and try/catch...
 				}
@@ -173,7 +172,6 @@ namespace TAiO.Model
 			{
 				for (int i = 0; i < Data.Branches; i++)
 				{
-					//CreateNewBoardFrom(currentStep, i, h);
 					CurrentStepBoards[i] = new Board(width, height, new SortedList<BlockType, int>(AvailableBlocksSorted));
 				}
 			}
@@ -183,37 +181,18 @@ namespace TAiO.Model
 				{
 					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
 					{
-						//CreateNewBoardFrom(currentStep, i, h);
-						//CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber]
-						//	 .Copy();
-						// we have to 
 						CurrentStepBoards[i] = Board.CreateFromStepsData(StepsData, currentStep, i, 
 							CurrentStepBoards[i].Width, CurrentStepBoards[i].Height, true, new SortedList<BlockType, int>(AvailableBlocksSorted));
 					}
 				}
 			}
 		}
-
-
-		private void CreateNewBoardFrom(int step, int i, int h)
-		{
-			//Board board = new Board(Data.BoardWidth, h);
-			//if (step >= 0)
-			//{
-			//	StepsData.SetStartingPoint(step, i);
-			//	foreach (BlockInstance blockInstance in StepsData)
-			//	{
-			//		board.AddBlock(blockInstance);
-			//	}
-			//}
-			CurrentStepBoards[i] = CurrentStepBoards[StepsData.BlockInstances[step, i]
-				.PreviousBlockBoardNumber].Copy();
-		}
+		
 
 		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
 		{
 			if (solutions.Count < 1)
-				throw new ArgumentException("Too little solutions");
+				throw new ArgumentException("Too little solutions (DivideSolutionsBetweenBoards())");
 			int j = 0;
 			for (int i = 0; i < CurrentStepBoards.Length; i++)
 			{

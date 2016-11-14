@@ -66,7 +66,7 @@ namespace TAiO.Model
 		    {
 			    if (!board.AddBlock(blockInstance))
 			    {
-				    throw new ArgumentException("Co jest nie tak z tymi funkcjami?!");
+				    throw new ArgumentException("Co jest nie tak z tymi funkcjami?! (CreateFromStepsData) ");
 			    }
 		    }
 		    return board;
