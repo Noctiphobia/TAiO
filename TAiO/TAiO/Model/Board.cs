@@ -202,5 +202,26 @@ namespace TAiO.Model
 			solutions.Sort(new PartialSolutionsComparer());
 			return solutions;
         }
+
+	    protected bool Equals(Board other)
+	    {
+		    if (BlocksNumber != other.BlocksNumber || Width != other.Width || Height != other.Height)
+			    return false;
+			for (int i=0; i<Width; ++i)
+				for (int j=0; j<Height; ++j)
+					if (Content[i, j] != other.Content[i, j])
+						return false;
+		    return true;
+	    }
+
+	    public override int GetHashCode()
+	    {
+		    unchecked
+		    {
+			    var hashCode = Content?.GetHashCode() ?? 0;
+			    hashCode = (hashCode*397) ^ BlocksNumber;
+			    return hashCode;
+		    }
+	    }
     }
 }

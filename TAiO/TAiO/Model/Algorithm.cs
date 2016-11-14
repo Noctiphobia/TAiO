@@ -67,15 +67,34 @@ namespace TAiO.Model
 			}
 			else
 			{
+				var correctIndices = new List<int>();
 
-				var tasks = new Task[CurrentStepBoards.Length];
-				var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
-
-
-				for (int i = 0; i < CurrentStepBoards.Length; i++)
+				for (int i = 0; i < Data.Branches; ++i)												//odrzucanie zduplikowanych bloków
 				{
-					int j = i;
-					(tasks[j] =
+					bool take = true;
+					for (int j = 0; j < i; ++j)
+					{
+						if (StepsData.BlockInstances[StepsData.LastStepFinished, j].Equals(			//wstępne odsiewanie przez ostatni ruch
+							StepsData.BlockInstances[StepsData.LastStepFinished, i]))
+						{
+							if (CurrentStepBoards[j].Equals(CurrentStepBoards[i]))					//dokładne porównanie tablic
+							{
+								take = false;
+								break;
+							}
+						}
+					}
+					if (take) 
+						correctIndices.Add(i);
+				}
+
+				var tasks = new Task[correctIndices.Count];
+				var partialSolutions = new List<PartialSolution>[tasks.Length];
+
+				for (int i = 0; i < correctIndices.Count; i++)
+				{
+					int j = correctIndices[i];
+					(tasks[i] =
 						new Task(() =>
 						{
 							partialSolutions[j] = (CurrentStepBoards[j].ChooseBlocks(Data.Branches, CostFunction, PlacementFunction));
@@ -235,18 +254,27 @@ namespace TAiO.Model
 			if(solutions.Count == 0)
 				throw new ArgumentNullException("no solutions for us? :( ");
 			int[] ind = new int[solutions.Count];
-            for (int i = 0; i < solutions.Count; i++)
+            for (int i = 0; i < Data.Branches; i++)
             {
-                int min = Int32.MaxValue, minind = 0;
+                int min = Int32.MaxValue, minind = -1;
                 for (int j = 0; j < solutions.Count; j++)
                 {
-                    if (solutions[j][ind[j]].Cost < min)
+                    if (ind[j]<solutions[j].Count && solutions[j][ind[j]].Cost < min)
                     {
                         min = solutions[j][ind[j]].Cost;
                         minind = j;
                     }
                 }
-                StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[minind][ind[minind]].Move;
+	            if (minind == -1)	//jeśli zabrakło nam danych
+	            {
+		            for (; i < Data.Branches; ++i)	//dopełniamy pozostałe najlepszym rozwiązaniem i kończymy
+		            {
+			            StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] =
+				            StepsData.BlockInstances[StepsData.LastStepFinished + 1, 0];
+		            }
+		            break;
+	            }
+	            StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[minind][ind[minind]].Move;
                 ind[minind]++;
             }
 	    }
