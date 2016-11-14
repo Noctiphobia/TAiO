@@ -73,6 +73,12 @@ namespace TAiO.ViewModel
 			DataSource = new Array2D(board.Content);
 		}
 
+		public void SetCurrentStep(StepsData data, int boardNumber, int stepNumber, int width, int height)
+		{
+			CurrentStep = stepNumber;
+			if(data != null && stepNumber <= data.LastStepFinished)
+				UpdateDataSource(data, boardNumber, stepNumber, width, height);
+		}
 
 	}
 }

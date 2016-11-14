@@ -31,10 +31,7 @@ namespace TAiO.Model
 		{
 			Data = data;
 			CostFunction = costFunction;
-			//CurrentStepBoards = new List<Board>();
 			CurrentStepBoards = new Board[Data.Branches];
-			//BlocksOfTypeCount = new List<KeyValuePair<BlockType, int>>
-			//	(Data.Blocks.ConvertAll((a => new KeyValuePair<BlockType, int>(a, (int)a.BlockNumber))));
 			if (Data.Blocks != null)
 			{
 				AvailableBlocksSorted = new SortedList<BlockType, int>(Data.Blocks.Count);
@@ -59,14 +56,7 @@ namespace TAiO.Model
 		public void MakeNextStep()
 		{
 
-			//var partsDone = new bool[CurrentStepBoards.Length];
-			//for (int i = 0; i < partsDone.Length; i++)
-			//{
-			//	partsDone[i] = false;
-			//}
-
 			UpdateStepBoardsNew(Data.BoardWidth, Data.BoardWidth);
-			//TODO: heigth of boards
 
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
 			{
@@ -77,7 +67,6 @@ namespace TAiO.Model
 			{
 
 				var tasks = new Task[CurrentStepBoards.Length];
-				//var partialSolutions = new List<List<PartialSolution>>(CurrentStepBoards.Length);
 				var partialSolutions = new List<PartialSolution>[CurrentStepBoards.Length];
 
 
@@ -102,11 +91,6 @@ namespace TAiO.Model
 
 				//TODO: change MergeSolutions
 
-				//if (!partsDone.All(t => t))
-				//{
-				//	throw new Exception("PLEASE MAKE IT RUUUUUUUN!");
-				//}
-			
 				MergeSolutions(partialSolutions.ToList());
 			}
 
@@ -228,11 +212,15 @@ namespace TAiO.Model
 
 		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
 		{
-			if (solutions.Count < CurrentStepBoards.Length)
+			if (solutions.Count < 1)
 				throw new ArgumentException("Too little solutions");
+			int j = 0;
 			for (int i = 0; i < CurrentStepBoards.Length; i++)
 			{
-				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[i].Move;
+				if (j == solutions.Count)
+					j = 0;
+				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[j].Move;
+				j++;
 			}
 		}
 

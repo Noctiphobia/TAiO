@@ -191,20 +191,24 @@ namespace TAiO.ViewModel
 		public ICommand PreviousStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
-			foreach (var preview in _previews)
+			for (int i = 0; i < _previews.Count; i++)
 			{
+				var preview = _previews[i];
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
-				if(vm == null)
+				if (vm == null)
 					continue;
 				if (vm.CurrentStep > 0)
 				{
 					if (vm.CurrentStep - vm.StepsPerChange >= 0)
-						vm.CurrentStep = vm.CurrentStep - vm.StepsPerChange;
+						currentStep = vm.CurrentStep - vm.StepsPerChange;
+					//vm.CurrentStep = vm.CurrentStep - vm.StepsPerChange;
 					else
 					{
-						vm.CurrentStep = 0;
+						currentStep = 0;
+						//vm.CurrentStep = 0;
 					}
-					currentStep = vm.CurrentStep;
+					//currentStep = vm.CurrentStep;
+					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 				}
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
@@ -219,13 +223,15 @@ namespace TAiO.ViewModel
 		public ICommand NextStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
-			foreach (var preview in _previews)
+			for (int i = 0; i < _previews.Count; i++)
 			{
+				var preview = _previews[i];
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
 				if (vm == null)
 					continue;
-				vm.CurrentStep = vm.CurrentStep + vm.StepsPerChange;
-				currentStep = vm.CurrentStep;
+				currentStep = vm.CurrentStep + vm.StepsPerChange;
+				//currentStep = vm.CurrentStep;
+				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
 		}, () =>
@@ -240,12 +246,14 @@ namespace TAiO.ViewModel
 
 		public ICommand FirstStep => new RelayCommand(() =>
 		{
-			foreach (var preview in _previews)
+			for (int i = 0; i < _previews.Count; i++)
 			{
+				var preview = _previews[i];
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
 				if (vm == null)
 					continue;
-				vm.CurrentStep = 0;
+				//vm.CurrentStep = 0;
+				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
 			}
 			Status = StatusFactory.PausedAlgorithm(0);
 		}, () => _previews.Count > 0);
@@ -253,12 +261,14 @@ namespace TAiO.ViewModel
 		public ICommand LastStep => new RelayCommand(() =>
 		{
 			int currentStep = LastAlgorithm?.CurrentStep + 1 ?? 0;
-			foreach (var preview in _previews)
+			for (int i = 0; i < _previews.Count; i++)
 			{
+				var preview = _previews[i];
 				PreviewViewModel vm = preview.DataContext as PreviewViewModel;
 				if (vm == null)
 					continue;
-				vm.CurrentStep = currentStep;
+				//vm.CurrentStep = currentStep;
+				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
 		}, () => _previews.Count > 0);
@@ -281,7 +291,19 @@ namespace TAiO.ViewModel
 
 				Algorithm a = new Algorithm(Data, (dialog.DataContext as BranchesDialogViewModel)?.CostFunction);
 
-				a.RunAlgorithm();
+				bool success = true;
+				try
+				{
+					a.RunAlgorithm();
+				}
+				catch (Exception e)
+				{
+					MessageBox.Show(e.GetType().ToString() + ": " + e.Message);
+					success = false;
+				}
+				if (!success)
+					return;
+
 				LastAlgorithm = a;
 
 				for (int i = 0; i < Data.Branches; ++i)
@@ -298,9 +320,12 @@ namespace TAiO.ViewModel
 					_previews.Add(preview);
 					preview.Show();
 					if (vm == null) continue;
+
 					vm.StepsPerChange = Step;
-					vm.CurrentStep = 0;
-					vm.UpdateDataSource(a.StepsData, i, a.CurrentStep, Data.BoardWidth, Data.BoardWidth);
+
+					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
+					//vm.CurrentStep = 0;
+					//vm.UpdateDataSource(a.StepsData, i, a.CurrentStep, Data.BoardWidth, Data.BoardWidth);
 					//vm.DataSource = new Array2D(
 					//	new[,]
 					//	{

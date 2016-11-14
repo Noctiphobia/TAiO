@@ -44,7 +44,7 @@ namespace TAiO.Tests
 			int width;
 			Parser.ParseFile("60.blocks", out blocks, out width);
 
-			int blocksNumber = 5;
+			int blocksNumber = 10;
 			if (blocks.Count == 0)
 				Assert.Fail("0 blocks");
 			blocks[0].BlockNumber = (uint)blocksNumber;
