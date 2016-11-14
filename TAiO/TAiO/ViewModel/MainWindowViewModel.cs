@@ -289,7 +289,7 @@ namespace TAiO.ViewModel
 				if (Data.Blocks.Count == 0)
 					return;
 
-				Algorithm a = new Algorithm(Data, (dialog.DataContext as BranchesDialogViewModel)?.CostFunction);
+				Algorithm a = new Algorithm(Data, (dialog.DataContext as BranchesDialogViewModel)?.CostFunction, PlacementFunctionFactory.AvailableFunctions[0].Function);
 
 				bool success = true;
 				try

@@ -31,7 +31,7 @@ namespace TAiO.Tests
 			Data.Branches = 2;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 			
 			a.RunAlgorithm();
 		}
@@ -58,7 +58,7 @@ namespace TAiO.Tests
 			Data.Branches = 3;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 
 			a.RunAlgorithm();
 		}
@@ -85,7 +85,7 @@ namespace TAiO.Tests
 			Data.Branches = 3;
 
 			Algorithm a = new Algorithm(Data, CostFunctionFactory.AvailableFunctions.
-				Find(b => b.Name == "Najmniej dziur").Function);
+				Find(b => b.Name == "Najmniej dziur").Function, PlacementFunctionFactory.AvailableFunctions[0].Function);
 
 			a.RunAlgorithm();
 		}

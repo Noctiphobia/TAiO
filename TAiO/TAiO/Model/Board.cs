@@ -146,72 +146,14 @@ namespace TAiO.Model
 			return true;
 		}
 
-
-        /// <summary>
-        /// Wybiera pierwsze miejsce, w którym można położyć klocek
-        /// </summary>
-        /// <param name="block">Klocek do położenia</param>
-        /// <param name="rotation">Wersja klocka</param>
-        /// <returns>Obiekt klasy, zawierający informację o umieszczeniu klocka</returns>
-        private BlockInstance FindPlaceForBlock(BlockType block, int rotation)
-        {
-            BlockInstance resultBlock = new BlockInstance {Block = block, BlockVersion = rotation};
-            int[,] blockTab = block.Shape[rotation];
-            int blockWidth = blockTab.GetLength(0), blockHeight = blockTab.GetLength(1);
-            for (int i = 0; i < Height; i++)
-                for (int j = 0; j < Width - blockWidth; j++)
-                {
-                    int maxHeight = Math.Min(blockHeight, Height - i);
-                    bool isGood = true;
-                    for (int k = 0; k < maxHeight && isGood; k++)
-                        for (int m = 0; m < blockWidth && isGood; m++)
-                            if (blockTab[m, k] > 0 && Content[j + m, i + k] > 0)
-                                isGood = false;
-                    if (isGood)
-                    {
-                        resultBlock.X = j;
-                        resultBlock.Y = i;
-
-						//TODO: delete this! (ale to after cały debugging, bo się może przydać; to jest kod z AddBlock bez dodawania blocka)
-						// trying to add to board
-						
-						//int h = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Height : resultBlock.Block.Width),
-						//w = (resultBlock.BlockVersion % 2 == 0 ? resultBlock.Block.Width : resultBlock.Block.Height);
-						//while (resultBlock.Y + h >= Height)
-						//	Resize();
-						//try
-						//{
-
-						//for (int ii = 0; ii < w; ii++)
-						//	for (int jj = 0; jj < h; jj++)
-						//	{
-						//		if (resultBlock.Block.Shape[resultBlock.BlockVersion][ii, jj] == 0)
-						//			continue;
-						//		if (Content[ii + resultBlock.X, jj + resultBlock.Y] > 0)
-						//			throw new ArgumentException("to tu!");
-						//	}
-
-						//}
-						//catch (Exception e)
-						//{
-						//	int a = 6;
-
-						//}
-						return resultBlock;
-                    }
-                }
-            resultBlock.X = 0;
-            resultBlock.Y = Height;
-            return resultBlock;
-        }
-
         /// <summary>
         /// Wybiera wskazaną liczbę ułożeń z najmniejszymi wartościami funkcji kosztu
         /// </summary>
-        /// <param name="blocks">Lista klocków</param>
         /// <param name="resultsCount">Ile zwrócić wyników (= liczba rozgałęzień algorytmu)</param>
+        /// <param name="costFunction">Funkcja kosztu</param>
+        /// <param name="placementFunction">Funkcja położenia</param>
         /// <returns>Listę posortowanych rosnąco po funkcji kosztu rozwiązań</returns>
-        public List<PartialSolution> ChooseBlocks(int resultsCount, CostFunction costFunction)
+        public List<PartialSolution> ChooseBlocks(int resultsCount, CostFunction costFunction, PlacementFunction placementFunction)
         {
             var solutions = new List<PartialSolution>();
 	        int k = 0;
@@ -225,7 +167,7 @@ namespace TAiO.Model
 			        continue;
 		        for (int i = 0; i < blockType.Key.Shape.Count; i++)
 		        {
-			        BlockInstance bi = FindPlaceForBlock(blockType.Key, i);
+			        BlockInstance bi = placementFunction(this, blockType.Key, i);
 			        board.AddBlock(bi);
 			        int cost = costFunction(board);
 					board.DeleteBlock(bi);
@@ -260,5 +202,26 @@ namespace TAiO.Model
 			solutions.Sort(new PartialSolutionsComparer());
 			return solutions;
         }
+
+	    protected bool Equals(Board other)
+	    {
+		    if (BlocksNumber != other.BlocksNumber || Width != other.Width || Height != other.Height)
+			    return false;
+			for (int i=0; i<Width; ++i)
+				for (int j=0; j<Height; ++j)
+					if (Content[i, j] != other.Content[i, j])
+						return false;
+		    return true;
+	    }
+
+	    public override int GetHashCode()
+	    {
+		    unchecked
+		    {
+			    var hashCode = Content?.GetHashCode() ?? 0;
+			    hashCode = (hashCode*397) ^ BlocksNumber;
+			    return hashCode;
+		    }
+	    }
     }
 }

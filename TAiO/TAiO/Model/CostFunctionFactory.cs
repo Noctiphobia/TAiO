@@ -17,9 +17,9 @@ namespace TAiO.Model
 		/// <summary>
 		/// Wszystkie dostępne funkcje.
 		/// </summary>
-		public static List<NamedFunction> AvailableFunctions { get; } = new List<NamedFunction>
+		public static List<NamedCostFunction> AvailableFunctions { get; } = new List<NamedCostFunction>
 		{
-			new NamedFunction((b) =>
+			new NamedCostFunction((b) =>
 			{
 				int cost = 0;
 				//znalezienie najwyższego punktu w każdej kolumnie
@@ -42,7 +42,7 @@ namespace TAiO.Model
 				}
 				return cost;
 			}, "Najmniej dziur"), //dziura = wszystko, co jest puste i ma nad sobą klocka
-			new NamedFunction((b) =>
+			new NamedCostFunction((b) =>
 			{
 				int cost = 0;
 				for (int x = 0; x < b.Width; ++x)
@@ -52,7 +52,7 @@ namespace TAiO.Model
 
 				return cost;
 			}, "Najmniejsza wysokość"),
-			new NamedFunction((b) =>
+			new NamedCostFunction((b) =>
 			{
 				int cost = 0;
 				//znalezienie najwyższego punktu w każdej kolumnie
