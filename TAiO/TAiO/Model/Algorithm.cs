@@ -155,9 +155,6 @@ namespace TAiO.Model
 						}
 					}
 				}
-
-
-
 			}
 		}
 
@@ -176,7 +173,6 @@ namespace TAiO.Model
 					// TODO: delete or add exceptions
 					// and try/catch...
 				}
-
 			}
 		}
 
