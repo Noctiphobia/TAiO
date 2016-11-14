@@ -16,12 +16,12 @@ namespace TAiO.Model
 	/// <summary>
 	/// Klasa zawierająca funkcję kosztu i jej nazwę.
 	/// </summary>
-	public class NamedFunction
+	public class NamedCostFunction
 	{
 		public CostFunction Function { get; set; }
 		public string Name { get; set; }
 
-		public NamedFunction(CostFunction function, String name)
+		public NamedCostFunction(CostFunction function, string name)
 		{
 			Function = function;
 			Name = name;
