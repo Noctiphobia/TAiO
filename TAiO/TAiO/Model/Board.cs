@@ -205,10 +205,11 @@ namespace TAiO.Model
 
 	    protected bool Equals(Board other)
 	    {
-		    if (BlocksNumber != other.BlocksNumber || Width != other.Width || Height != other.Height)
+		    if (BlocksNumber != other.BlocksNumber || Width != other.Width)
 			    return false;
+		    int h = Math.Min(Height, other.Height);
 			for (int i=0; i<Width; ++i)
-				for (int j=0; j<Height; ++j)
+				for (int j=0; j<h; ++j)
 					if (Content[i, j] != other.Content[i, j])
 						return false;
 		    return true;
@@ -222,6 +223,20 @@ namespace TAiO.Model
 			    hashCode = (hashCode*397) ^ BlocksNumber;
 			    return hashCode;
 		    }
+	    }
+
+	    public override string ToString()
+	    {
+		    StringBuilder sb = new StringBuilder();
+		    for (int j = 0; j < Height; ++j)
+		    {
+			    for (int i = 0; i < Width; ++i)
+			    {
+				    sb.Append(Content[i, j]);
+			    }
+			    sb.Append('\n');
+		    }
+		    return sb.ToString();
 	    }
     }
 }
