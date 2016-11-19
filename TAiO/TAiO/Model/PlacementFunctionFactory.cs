@@ -19,7 +19,7 @@ namespace TAiO.Model
 				int[,] blockTab = block.Shape[rotation];
 				int blockWidth = blockTab.GetLength(0), blockHeight = blockTab.GetLength(1);
 				for (int i = 0; i < board.Height; i++)
-					for (int j = 0; j < board.Width - blockWidth; j++)
+					for (int j = 0; j < board.Width - blockWidth + 1; j++)
 					{
 						int maxHeight = Math.Min(blockHeight, board.Height - i);
 						bool isGood = true;
