@@ -298,8 +298,8 @@ namespace TAiO.ViewModel
 				}
 				catch (Exception e)
 				{
-					MessageBox.Show(e.GetType().ToString() + ": " + e.Message);
-					success = false;
+                    MessageBox.Show(e.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    success = false;
 				}
 				if (!success)
 					return;
