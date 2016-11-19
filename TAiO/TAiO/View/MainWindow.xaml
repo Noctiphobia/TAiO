@@ -8,8 +8,8 @@
         xmlns:viewModel="clr-namespace:TAiO.ViewModel"
         xmlns:model="clr-namespace:TAiO.Model"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Height="195" Width="750" MinWidth="750" MinHeight="195">
+        WindowStartupLocation="Manual"
+        Height="195" Width="750" MinWidth="750" MinHeight="195" MaxHeight="195" Loaded="MetroWindow_Loaded">
     <Window.DataContext>
         <viewModel:MainWindowViewModel></viewModel:MainWindowViewModel>
     </Window.DataContext>

@@ -25,5 +25,12 @@ namespace TAiO
 		{
 			InitializeComponent();
 		}
+
+		private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+		{
+			var area = SystemParameters.WorkArea;
+			Left = area.Right/2 - Width/2;
+			Top = area.Bottom - Height;
+		}
 	}
 }

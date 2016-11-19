@@ -16,6 +16,7 @@ namespace TAiO.ViewModel
 		private int _stepsPerChange;
 		private int _currentStep;
 		private Array2D _dataSource;
+		private int _height;
 
 		/// <summary>
 		/// Kroki na jedną zmianę.
@@ -45,6 +46,7 @@ namespace TAiO.ViewModel
 			set
 			{
 				_currentStep = value;
+				CalculateHeight();
 				RaisePropertyChanged(nameof(CurrentStep));
 			}
 		}
@@ -61,11 +63,29 @@ namespace TAiO.ViewModel
 			set
 			{
 				_dataSource = value;
+				CalculateHeight();
 				RaisePropertyChanged(nameof(DataSource));
 			}
 		}
 
+		/// <summary>
+		/// Obecna wysokość planszy.
+		/// </summary>
+		public int Height
+		{
+			get { return _height; }
+			set
+			{
+				_height = value;
+				RaisePropertyChanged(nameof(Height));
+				RaisePropertyChanged(nameof(HeightString));
+			}
+		}
 
+		/// <summary>
+		/// Napis o wysokości.
+		/// </summary>
+		public string HeightString => $"Wysokość: {Height}";
 
 		public void UpdateDataSource(StepsData data, int boardNumber, int stepNumber, int width, int height)
 		{
@@ -78,6 +98,28 @@ namespace TAiO.ViewModel
 			CurrentStep = stepNumber;
 			if(data != null && stepNumber <= data.LastStepFinished)
 				UpdateDataSource(data, boardNumber, stepNumber, width, height);
+		}
+
+		public void CalculateHeight()
+		{
+			if (DataSource == null)
+			{
+				Height = 0;
+				return;
+			}
+			int height = 0;
+			for (int i = 0; i<DataSource.Width; ++i)
+			{
+				for (int j=DataSource.Height - 1; j>=0; --j)
+					if (DataSource[i, j] != 0 && DataSource[i, j] <= CurrentStep)
+					{
+						if (j + 1 > height)
+							height = j + 1;
+						break;
+					}
+			}
+
+			Height = height;
 		}
 
 	}

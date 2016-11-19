@@ -305,10 +305,18 @@ namespace TAiO.ViewModel
 					return;
 
 				LastAlgorithm = a;
-
+				Rect area = SystemParameters.WorkArea;
+				double width = area.Width/Data.Branches;
+				double height = area.Height - 195;
 				for (int i = 0; i < Data.Branches; ++i)
 				{
-					Preview preview = new Preview();
+					Preview preview = new Preview
+					{
+						Width = width,
+						Height = height,
+						Left = area.Left + i*width,
+						Top = area.Top
+					};
 					preview.Closed += (o, e) =>
 					{
 						if (_previews.Count>0)
