@@ -165,9 +165,13 @@ namespace TAiO.Model
 	        {
 		        if (blockType.Value < 1)
 			        continue;
+	            bool blockPlaced = false;
 		        for (int i = 0; i < blockType.Key.Shape.Count; i++)
 		        {
 			        BlockInstance bi = placementFunction(this, blockType.Key, i);
+		            if (bi.Block == null)
+		                continue;
+		            blockPlaced = true;
 			        board.AddBlock(bi);
 			        int cost = costFunction(board);
 					board.DeleteBlock(bi);
@@ -198,7 +202,10 @@ namespace TAiO.Model
 				        
 			        }
 		        }
+	            if (!blockPlaced)
+	                throw new ArgumentException("Jeden z klocków jest szerszy niż plansza.");
 	        }
+
 			solutions.Sort(new PartialSolutionsComparer());
 			return solutions;
         }

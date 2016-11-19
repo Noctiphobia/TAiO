@@ -298,7 +298,7 @@ namespace TAiO.ViewModel
 				}
 				catch (Exception e)
 				{
-                    MessageBox.Show("Dane wejściowe są niepoprawne.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(e.Message, "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
                     success = false;
 				}
 				if (!success)

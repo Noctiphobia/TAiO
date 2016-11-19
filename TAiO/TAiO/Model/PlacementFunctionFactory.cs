@@ -34,6 +34,8 @@ namespace TAiO.Model
 							return resultBlock;
 						}
 					}
+			    if (block.Width > board.Width)
+			        return new BlockInstance {Block = null};
 				resultBlock.X = 0;
 				resultBlock.Y = board.Height;
 				return resultBlock;
