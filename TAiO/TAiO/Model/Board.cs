@@ -39,7 +39,7 @@ namespace TAiO.Model
 
         public Board(int w, int h, SortedList<BlockType, int> availableBlocks, bool keepTrackOfBlocks = true)
         {
-			StepHeight = h / 2;
+			StepHeight = Math.Max(h / 2, 4);
 			Content = new int[w, h];
             BlocksNumber = 0;
 	        AvailableBlocks = availableBlocks;
