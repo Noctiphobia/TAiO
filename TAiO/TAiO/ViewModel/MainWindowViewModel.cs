@@ -280,6 +280,11 @@ namespace TAiO.ViewModel
 		{
 			if (Stopped)
 			{
+				if (Data.Blocks == null || Data.Blocks.Count == 0)
+				{
+					MessageBox.Show("Przed rozpoczęciem algorytmu załaduj klocki.", "Błąd");
+					return;
+				}
 				BranchesDialog dialog = new BranchesDialog();
 				if (!(dialog.ShowDialog() ?? false))
 				{
@@ -330,20 +335,7 @@ namespace TAiO.ViewModel
 					if (vm == null) continue;
 
 					vm.StepsPerChange = Step;
-
 					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
-					//vm.CurrentStep = 0;
-					//vm.UpdateDataSource(a.StepsData, i, a.CurrentStep, Data.BoardWidth, Data.BoardWidth);
-					//vm.DataSource = new Array2D(
-					//	new[,]
-					//	{
-					//			{ 0, 1, 1, 3, 2 },
-					//			{ 1, 1, 3, 3, 2 },
-					//			{ 1, 1, 3, 2, 2 },
-					//			{ 0, 0, 0, 0, 2 },
-					//			{ 0, 0, 0, 2, 2 },
-					//			{ 0, 0, 0, 0, 0 }
-					//	});
 				}
 				Status = StatusFactory.RunningAlgorithm((int)Data.Blocks.Sum(b => b.BlockNumber), Data.Branches);
 			}

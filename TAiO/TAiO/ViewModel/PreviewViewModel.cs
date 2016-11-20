@@ -87,17 +87,17 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public string HeightString => $"Wysokość: {Height}";
 
-		public void UpdateDataSource(StepsData data, int boardNumber, int stepNumber, int width, int height)
+		public void UpdateDataSource(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
-			Board board = Board.CreateFromStepsData(data, stepNumber, boardNumber, width, height);
+			Board board = Board.CreateFromStepsData(data, viewstepNumber - 1, boardNumber, width, height);
 			DataSource = new Array2D(board.Content);
 		}
 
-		public void SetCurrentStep(StepsData data, int boardNumber, int stepNumber, int width, int height)
+		public void SetCurrentStep(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
-			CurrentStep = stepNumber;
-			if(data != null && stepNumber <= data.LastStepFinished)
-				UpdateDataSource(data, boardNumber, stepNumber, width, height);
+			CurrentStep = viewstepNumber - 1;
+			if(data != null && viewstepNumber <= data.LastStepFinished + 1)
+				UpdateDataSource(data, boardNumber, viewstepNumber, width, height);
 		}
 
 		public void CalculateHeight()
