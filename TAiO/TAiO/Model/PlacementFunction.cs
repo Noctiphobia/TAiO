@@ -13,7 +13,7 @@ namespace TAiO.Model
 	/// <param name="block">Klocek.</param>
 	/// <param name="rotation">Obrót.</param>
 	/// <returns></returns>
-	public delegate BlockInstance PlacementFunction(Board board, BlockType block, int rotation);
+	public delegate List<BlockInstance> PlacementFunction(Board board, BlockType block, int rotation);
 
 	/// <summary>
 	/// Klasa zawierająca funkcję położenia i jej nazwę.

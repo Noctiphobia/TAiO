@@ -168,39 +168,40 @@ namespace TAiO.Model
 	            bool blockPlaced = false;
 		        for (int i = 0; i < blockType.Key.Shape.Count; i++)
 		        {
-			        BlockInstance bi = placementFunction(this, blockType.Key, i);
-		            if (bi.Block == null)
-		                continue;
-		            blockPlaced = true;
-			        board.AddBlock(bi);
-			        int cost = costFunction(board);
-					board.DeleteBlock(bi);
-					
-					if (k < resultsCount)
-					{
-						solutions.Add(new PartialSolution() { Cost = cost, Move = bi });
-						k++;
-						if (cost > max)
-							max = cost;
-					}
-					else if (cost < max)
-					{
-						bool done = false;
-					    for (int j = 0; j < solutions.Count; j++) // podmiana
-					    {
-						    if (solutions[j].Cost > max)
-						    {
-							    max = solutions[j].Cost;
-						    }
-						    if (solutions[j].Cost == max && !done)
-						    {
-							    done = true;
-							    solutions[j].Cost = cost;
-							    solutions[j].Move = bi;
-						    }
-					    }
-				        
-			        }
+			        List<BlockInstance> biList = placementFunction(this, blockType.Key, i);
+		            foreach (BlockInstance bi in biList)
+		            {
+		                blockPlaced = true;
+		                board.AddBlock(bi);
+		                int cost = costFunction(board);
+		                board.DeleteBlock(bi);
+
+		                if (k < resultsCount)
+		                {
+		                    solutions.Add(new PartialSolution() {Cost = cost, Move = bi});
+		                    k++;
+		                    if (cost > max)
+		                        max = cost;
+		                }
+		                else if (cost < max)
+		                {
+		                    bool done = false;
+		                    for (int j = 0; j < solutions.Count; j++) // podmiana
+		                    {
+		                        if (solutions[j].Cost > max)
+		                        {
+		                            max = solutions[j].Cost;
+		                        }
+		                        if (solutions[j].Cost == max && !done)
+		                        {
+		                            done = true;
+		                            solutions[j].Cost = cost;
+		                            solutions[j].Move = bi;
+		                        }
+		                    }
+
+		                }
+		            }
 		        }
 	            if (!blockPlaced)
 	                throw new ArgumentException("Jeden z klocków jest szerszy niż plansza.");
