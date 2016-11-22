@@ -208,7 +208,7 @@ namespace TAiO.ViewModel
 						//vm.CurrentStep = 0;
 					}
 					//currentStep = vm.CurrentStep;
-					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep + 1, Data.BoardWidth, Data.BoardWidth);
+					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 				}
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
@@ -231,7 +231,7 @@ namespace TAiO.ViewModel
 					continue;
 				currentStep = vm.CurrentStep + vm.StepsPerChange;
 				//currentStep = vm.CurrentStep;
-				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep + 1, Data.BoardWidth, Data.BoardWidth);
+				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 			}
 			Status = StatusFactory.PausedAlgorithm(currentStep);
 		}, () =>
@@ -253,7 +253,7 @@ namespace TAiO.ViewModel
 				if (vm == null)
 					continue;
 				//vm.CurrentStep = 0;
-				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 1, Data.BoardWidth, Data.BoardWidth);
+				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
 			}
 			Status = StatusFactory.PausedAlgorithm(0);
 		}, () => _previews.Count > 0);
@@ -270,7 +270,7 @@ namespace TAiO.ViewModel
 				//vm.CurrentStep = currentStep;
 				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 			}
-            NextStep.Execute(this);
+           // NextStep.Execute(this);
 			Status = StatusFactory.PausedAlgorithm(currentStep);
 		}, () => NextStep.CanExecute(this));
 
@@ -336,7 +336,7 @@ namespace TAiO.ViewModel
 					if (vm == null) continue;
 
 					vm.StepsPerChange = Step;
-					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 1, Data.BoardWidth, Data.BoardWidth);
+					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
 				}
 				Status = StatusFactory.RunningAlgorithm((int)Data.Blocks.Sum(b => b.BlockNumber), Data.Branches);
 			}

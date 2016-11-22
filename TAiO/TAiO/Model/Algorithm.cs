@@ -63,7 +63,8 @@ namespace TAiO.Model
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
 			{
 				List<PartialSolution> solutions = (CurrentStepBoards[0].ChooseBlocks(Data.Branches, CostFunction, PlacementFunction));
-				DivideSolutionsBetweenBoards(solutions);
+                MergeSolutions(new List<List<PartialSolution>> {solutions});
+				//DivideSolutionsBetweenBoards(solutions);
 			}
 			else
 			{

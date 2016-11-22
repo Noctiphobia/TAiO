@@ -90,12 +90,13 @@ namespace TAiO.ViewModel
 		public void UpdateDataSource(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
 			Board board = Board.CreateFromStepsData(data, viewstepNumber - 1, boardNumber, width, height);
+		    board.AddBlock(data.BlockInstances[Math.Min(viewstepNumber, data.BlockInstances.GetLength(0) - 1), boardNumber]);
 			DataSource = new Array2D(board.Content);
 		}
 
 		public void SetCurrentStep(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
-			CurrentStep = viewstepNumber - 1;
+			CurrentStep = viewstepNumber;
 			if(data != null && viewstepNumber <= data.LastStepFinished + 1)
 				UpdateDataSource(data, boardNumber, viewstepNumber, width, height);
 		}
