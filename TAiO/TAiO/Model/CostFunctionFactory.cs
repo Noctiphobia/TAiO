@@ -55,6 +55,27 @@ namespace TAiO.Model
 			new NamedCostFunction((b) =>
 			{
 				int cost = 0;
+				for (int x = 0; x < b.Width; ++x)
+					for (int y = 0; y < b.Height; ++y)
+					{
+						if (b[x,y] > 0){
+							cost -= new bool[]
+							{
+								x == 0,			//po lewej ściana
+								x == b.Width-1,	//po prawej ściana
+								y == 0,			//na dole ściana
+								x > 0 && b[x-1,y] != 0 && b[x-1, y] != b[x,y],				//po lewej klocek
+								x < b.Width - 1 && b[x+1, y] != 0 && b[x+1, y] != b[x,y], 	//po prawej klocek
+								y > 0 && b[x, y-1] != 0 && b[x, y-1] != b[x,y], 			//na dole klocek
+								y < b.Height - 1 && b[x, y+1] != 0 && b[x, y+1] != b[x,y] 	//na górze klocek
+							}.Count(x=>x);
+						}			
+					}
+				return cost;
+			}, "Największa przyległość"),
+			new NamedCostFunction((b) =>
+			{
+				int cost = 0;
 				//znalezienie najwyższego punktu w każdej kolumnie
 				int[] maxHeights = new int[b.Width];
 				for (int x = 0; x < b.Width; ++x)
