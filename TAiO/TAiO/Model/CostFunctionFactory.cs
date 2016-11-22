@@ -64,11 +64,11 @@ namespace TAiO.Model
 								x == 0,			//po lewej ściana
 								x == b.Width-1,	//po prawej ściana
 								y == 0,			//na dole ściana
-								x > 0 && b[x-1,y] != 0 && b[x-1, y] != b[x,y],				//po lewej klocek
+								//x > 0 && b[x-1,y] != 0 && b[x-1, y] != b[x,y],				//po lewej klocek
 								x < b.Width - 1 && b[x+1, y] != 0 && b[x+1, y] != b[x,y], 	//po prawej klocek
-								y > 0 && b[x, y-1] != 0 && b[x, y-1] != b[x,y], 			//na dole klocek
+								//y > 0 && b[x, y-1] != 0 && b[x, y-1] != b[x,y], 			//na dole klocek
 								y < b.Height - 1 && b[x, y+1] != 0 && b[x, y+1] != b[x,y] 	//na górze klocek
-							}.Count(x=>x);
+							}.Count(t=>t);
 						}			
 					}
 				return cost;
