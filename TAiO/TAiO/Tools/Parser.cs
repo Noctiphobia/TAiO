@@ -12,6 +12,13 @@ namespace TAiO.Tools
     /// </summary>
 	public class Parser
 	{
+        /// <summary>
+        /// Parser plików wejściowych.
+        /// </summary>
+        /// <param name="filename">Nazwa pliku wejściowego.</param>
+        /// <param name="blocks">Odczytana lista klocków.</param>
+        /// <param name="width">Odczytana szerokość planszy.</param>
+        /// <returns></returns>
 		public static bool ParseFile(string filename, out List<BlockType> blocks, out int width)
 		{
 			blocks = new List<BlockType>();
