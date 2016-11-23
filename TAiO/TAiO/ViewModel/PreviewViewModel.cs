@@ -17,6 +17,7 @@ namespace TAiO.ViewModel
 		private int _currentStep;
 		private Array2D _dataSource;
 		private int _height;
+        private int _density;
 
 		/// <summary>
 		/// Kroki na jedną zmianę.
@@ -46,7 +47,7 @@ namespace TAiO.ViewModel
 			set
 			{
 				_currentStep = value;
-				CalculateHeight();
+				CalculateHeightAndDensity();
 				RaisePropertyChanged(nameof(CurrentStep));
 			}
 		}
@@ -63,7 +64,7 @@ namespace TAiO.ViewModel
 			set
 			{
 				_dataSource = value;
-				CalculateHeight();
+				CalculateHeightAndDensity();
 				RaisePropertyChanged(nameof(DataSource));
 			}
 		}
@@ -87,6 +88,34 @@ namespace TAiO.ViewModel
 		/// </summary>
 		public string HeightString => $"Wysokość: {Height}";
 
+
+        /// <summary>
+        /// Gęstość.
+        /// </summary>
+        public int Density
+        {
+            get { return _density; }
+            set
+            {
+                _density = value;
+                RaisePropertyChanged(nameof(Density));
+                RaisePropertyChanged(nameof(DensityString));
+            }
+        }
+
+        /// <summary>
+        /// Napis o gęstości.
+        /// </summary>
+        public string DensityString => $"Gęstość: {Density}%";
+
+        /// <summary>
+        /// Odświeżenie widoku na podstawie danych ze struktury.
+        /// </summary>
+        /// <param name="data">Struktura z danymi kroku.</param>
+        /// <param name="boardNumber">Numer tablicy.</param>
+        /// <param name="viewstepNumber">Numer kroku.</param>
+        /// <param name="width">Szerokość planszy.</param>
+        /// <param name="height">Wysokość planszy.</param>
 		public void UpdateDataSource(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
 			Board board = Board.CreateFromStepsData(data, viewstepNumber - 1, boardNumber, width, height);
@@ -94,6 +123,14 @@ namespace TAiO.ViewModel
 			DataSource = new Array2D(board.Content);
 		}
 
+        /// <summary>
+        /// Przestawienie obecnego kroku.
+        /// </summary>
+        /// <param name="data">Struktura z danymi kroku.</param>
+        /// <param name="boardNumber">Numer tablicy.</param>
+        /// <param name="viewstepNumber">Numer kroku.</param>
+        /// <param name="width">Szerokość planszy.</param>
+        /// <param name="height">Wysokość planszy.</param>
 		public void SetCurrentStep(StepsData data, int boardNumber, int viewstepNumber, int width, int height)
 		{
 			CurrentStep = viewstepNumber;
@@ -101,27 +138,47 @@ namespace TAiO.ViewModel
 				UpdateDataSource(data, boardNumber, viewstepNumber, width, height);
 		}
 
-		public void CalculateHeight()
+		private void CalculateHeightAndDensity()
 		{
-			if (DataSource == null)
-			{
-				Height = 0;
-				return;
-			}
-			int height = 0;
-			for (int i = 0; i<DataSource.Width; ++i)
-			{
-				for (int j=DataSource.Height - 1; j>=0; --j)
-					if (DataSource[i, j] != 0 && DataSource[i, j] <= CurrentStep)
-					{
-						if (j + 1 > height)
-							height = j + 1;
-						break;
-					}
-			}
-
-			Height = height;
+            CalculateHeight();
+            CalculateDensity();
 		}
 
+        private void CalculateHeight()
+        {
+            if (DataSource == null)
+            {
+                Height = 0;
+                return;
+            }
+            int height = 0;
+            for (int i = 0; i < DataSource.Width; ++i)
+            {
+                for (int j = DataSource.Height - 1; j >= 0; --j)
+                    if (DataSource[i, j] != 0 && DataSource[i, j] <= CurrentStep)
+                    {
+                        if (j + 1 > height)
+                            height = j + 1;
+                        break;
+                    }
+            }
+
+            Height = height;
+        }
+
+        private void CalculateDensity()
+        {
+            if (DataSource == null || Height == 0)
+            {
+                Density = 100;
+                return;
+            }
+            int count = 0;
+            for (int i = 0; i < DataSource.Width; ++i)
+                for (int j = 0; j < Height; ++j)
+                    if (DataSource[i, j] > 0)
+                        ++count;
+            Density = (int) Math.Round((double)(count) / (DataSource.Width * Height) * 100);
+        }
 	}
 }

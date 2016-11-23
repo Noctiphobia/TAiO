@@ -46,9 +46,9 @@ namespace TAiO.Model
 			{
 				int cost = 0;
 				for (int x = 0; x < b.Width; ++x)
-					for (int y = b.Height - 1; y > cost; --y)
+					for (int y = b.Height - 1; y >= cost; --y)
 						if (b[x, y] > 0)
-							cost = y;
+							cost = y + 1;
 
 				return cost;
 			}, "Najmniejsza wysokość"),

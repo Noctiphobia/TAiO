@@ -202,22 +202,6 @@ namespace TAiO.Model
 				}
 			}
 		}
-		
-
-		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
-		{
-			if (solutions.Count < 1)
-				throw new ArgumentException("Too little solutions (DivideSolutionsBetweenBoards())");
-			int j = 0;
-			for (int i = 0; i < CurrentStepBoards.Length; i++)
-			{
-				if (j == solutions.Count)
-					j = 0;
-				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[j].Move;
-				j++;
-			}
-		}
-
 
         /// <summary>
         /// Wybiera k z k^2 najlepszych rozwiązań
