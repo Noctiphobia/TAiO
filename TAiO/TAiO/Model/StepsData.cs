@@ -50,6 +50,7 @@ namespace TAiO.Model
         public StepsData(int branches, int blocksNumber)
 		{
 			BlockInstances = new BlockInstance[blocksNumber, branches];
+            LastStepFinished = -1;
 		}
 
         /// <summary>
