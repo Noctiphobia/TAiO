@@ -20,10 +20,8 @@ namespace TAiO.Model
 		private Data Data;
 		private CostFunction CostFunction;
 		private PlacementFunction PlacementFunction;
-		//private List<Board> CurrentStepBoards;
 		private Board[] CurrentStepBoards;
 		private List<List<BlockType>> CurrentStepBoardsBlocks;
-		//private List<KeyValuePair<BlockType, int>> BlocksOfTypeCount; 
 		private SortedList<BlockType, int> AvailableBlocksSorted;
 		
 
