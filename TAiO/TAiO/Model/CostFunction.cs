@@ -18,9 +18,20 @@ namespace TAiO.Model
 	/// </summary>
 	public class NamedCostFunction
 	{
+        /// <summary>
+        /// Dana funkcja kosztu
+        /// </summary>
 		public CostFunction Function { get; set; }
+        /// <summary>
+        /// Nazwa funkcji
+        /// </summary>
 		public string Name { get; set; }
 
+        /// <summary>
+        /// Konstruktor
+        /// </summary>
+        /// <param name="function">funkcja kosztu</param>
+        /// <param name="name">nazwa funkcji kosztu</param>
 		public NamedCostFunction(CostFunction function, string name)
 		{
 			Function = function;
