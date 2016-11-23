@@ -15,17 +15,43 @@ namespace TAiO.Model
 	/// </summary>
 	public class Algorithm
 	{
+        /// <summary>
+        /// Zmienna zawierająca zminimalizowane dane kroków algorytmu
+        /// </summary>
 		public StepsData StepsData { get; private set; }
+        /// <summary>
+        /// Ostatni ukończony krok
+        /// </summary>
 		public int CurrentStep => StepsData.LastStepFinished;
-		private Data Data;
+        /// <summary>
+        /// Dane algorytmu
+        /// </summary>
+        private Data Data;
+        /// <summary>
+        /// Funkcja kosztu
+        /// </summary>
 		private CostFunction CostFunction;
-		private PlacementFunction PlacementFunction;
-		private Board[] CurrentStepBoards;
-		private List<List<BlockType>> CurrentStepBoardsBlocks;
+        /// <summary>
+        /// Funkcja położenia
+        /// </summary>
+        private PlacementFunction PlacementFunction;
+        /// <summary>
+        /// Aktualne plansze, na których działa algorytm
+        /// </summary>
+        private Board[] CurrentStepBoards;
+        /// <summary>
+        /// Słownik par klocek i liczba dostępnych klocków tego typu
+        /// (kopiowanie ze słownika jest prostsze i szybsze niż kopiowanie z listy)
+        /// </summary>
 		private SortedList<BlockType, int> AvailableBlocksSorted;
 		
 
-
+        /// <summary>
+        /// Konstruktor klasy Algorithm
+        /// </summary>
+        /// <param name="data">dane algorytmu</param>
+        /// <param name="costFunction">funkcja kosztu</param>
+        /// <param name="placementFunction">funkcja położenia</param>
 		public Algorithm(Data data, CostFunction costFunction, PlacementFunction placementFunction)
 		{
 			Data = data;
@@ -44,6 +70,9 @@ namespace TAiO.Model
 			StepsData = new StepsData(Data.Branches, Data.Blocks.Sum(a => (int)a.BlockNumber));
 		}
 
+        /// <summary>
+        /// Funkcja wykonująca wszystkie kroki algorytmu
+        /// </summary>
 		public void RunAlgorithm()
 		{
 				int availableBlocks = Data.Blocks.Sum(a => (int)a.BlockNumber);
@@ -52,17 +81,18 @@ namespace TAiO.Model
 					MakeNextStep();
 				}
 		}
-
+        /// <summary>
+        /// Funkcja wykonująca kolejny krok algorytmu
+        /// </summary>
 		public void MakeNextStep()
 		{
 
-			UpdateStepBoardsNew(Data.BoardWidth, Data.BoardWidth);
+			UpdateStepBoards(Data.BoardWidth, Data.BoardWidth);
 
 			if (CurrentStep < 0 && CurrentStepBoards.Length > 0)
 			{
 				List<PartialSolution> solutions = (CurrentStepBoards[0].ChooseBlocks(Data.Branches, CostFunction, PlacementFunction));
                 MergeSolutions(new List<List<PartialSolution>> {solutions});
-				//DivideSolutionsBetweenBoards(solutions);
 			}
 			else
 			{
@@ -108,9 +138,6 @@ namespace TAiO.Model
 				}
 
 				Task.WaitAll(tasks);
-
-				//TODO: change MergeSolutions
-
 				MergeSolutions(partialSolutions.ToList());
 			}
 
@@ -119,8 +146,12 @@ namespace TAiO.Model
 
 		}
 
-
-		public void UpdateStepBoardsNew(int width, int height)
+        /// <summary>
+        /// Funkcja aktualizująca zawartość plansz na podstawie danych ze StepsData
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+		public void UpdateStepBoards(int width, int height)
 		{
 			if (CurrentStep < 0) // only creating new boards
 			{
@@ -135,9 +166,7 @@ namespace TAiO.Model
 				{
 					if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
 					{
-						throw new ArgumentException("Cannot add block! (UpdateStepBoardsNow())");
-						// TODO: delete or add exceptions
-						// and try/catch...
+						throw new ArgumentException("Cannot add block (UpdateStepBoardsNow())");
 					}
 				}
 			}
@@ -156,70 +185,12 @@ namespace TAiO.Model
 						if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i])) // if we can only add new block
 						{
 							throw new ArgumentException("Cannot add block! (UpdateStepBoardsNow())");
-							// TODO: delete or add exceptions
-							// and try/catch...
 						}
 					}
 				}
 			}
 		}
-
-
-		public void UpdateStepBoards(int width, int height)
-		{
-			CreateNewStepBoards(width, height);
-			if (CurrentStep < 0)
-				return;
-			for (int i = 0; i < Data.Branches; i++)
-			{
-				if (!CurrentStepBoards[i].AddBlock(StepsData.BlockInstances[CurrentStep, i]))
-				{
-					throw new ArgumentException("Cannot add block! (UpdateStepBoards())");
-					// TODO: delete or add exceptions
-					// and try/catch...
-				}
-			}
-		}
-
-
-		public void CreateNewStepBoards(int width, int height)
-		{
-			int currentStep = CurrentStep;
-			if (currentStep < 0)
-			{
-				for (int i = 0; i < Data.Branches; i++)
-				{
-					CurrentStepBoards[i] = new Board(width, height, new SortedList<BlockType, int>(AvailableBlocksSorted));
-				}
-			}
-			else if (currentStep > 0)
-			{
-				for (int i = 0; i < Data.Branches; i++)
-				{
-					if (StepsData.BlockInstances[currentStep, i].PreviousBlockBoardNumber != i)
-					{
-						CurrentStepBoards[i] = Board.CreateFromStepsData(StepsData, currentStep, i, 
-							CurrentStepBoards[i].Width, CurrentStepBoards[i].Height, true, new SortedList<BlockType, int>(AvailableBlocksSorted));
-					}
-				}
-			}
-		}
-		
-
-		private void DivideSolutionsBetweenBoards(List<PartialSolution> solutions)
-		{
-			if (solutions.Count < 1)
-				throw new ArgumentException("Too little solutions (DivideSolutionsBetweenBoards())");
-			int j = 0;
-			for (int i = 0; i < CurrentStepBoards.Length; i++)
-			{
-				if (j == solutions.Count)
-					j = 0;
-				StepsData.BlockInstances[StepsData.LastStepFinished + 1, i] = solutions[j].Move;
-				j++;
-			}
-		}
-
+        
 
         /// <summary>
         /// Wybiera k z k^2 najlepszych rozwiązań
