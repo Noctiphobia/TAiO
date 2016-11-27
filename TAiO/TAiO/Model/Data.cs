@@ -41,6 +41,10 @@ namespace TAiO.Model
         /// Liczba różnych klocków wybieranych jako [DifferentBlocksNumber] pierwszych z zestawu
         /// </summary>
 		public uint DifferentBlocksNumber { get; set; } = 20;
+		/// <summary>
+		/// Liczba klocków każdego typu (bierzemy po [AllBlocksNumber] klocków każdego typu)
+		/// </summary>
+		public uint EachBlockTypeNumber { get; set; } = 1;
 
 
 		/// <summary>

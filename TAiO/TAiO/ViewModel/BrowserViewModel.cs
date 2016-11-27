@@ -83,6 +83,15 @@ namespace TAiO.ViewModel
 		});
 
 
+		public ICommand GetNEachBlock => new RelayCommand(() =>
+		{
+			for (int i = 0; i < BlockTypeViewModels.Count; i++)
+			{
+				BlockTypeViewModels[i].BlockNumber = Data.EachBlockTypeNumber;
+			}
+		});
+
+
 		public void RefreshBlockTypeViewModelsList(List<BlockType> blockTypes)
 		{
 			BlockTypeViewModels = new ObservableCollection<BlockTypeViewModel>();
