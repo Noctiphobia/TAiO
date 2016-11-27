@@ -33,7 +33,10 @@ namespace TAiO.ViewModel
 		private Algorithm LastAlgorithm = null;
 		
 
-
+		/// <summary>
+		/// Tekst wpisany w pole statusu, opisuje w jakim stanie znajduje się teraz aplikacja
+		/// Statusy pobierane są z klasy StatusFactory przy zmianie stanu programu
+		/// </summary>
 		public string Status
 		{
 			get { return _status; }
@@ -121,7 +124,9 @@ namespace TAiO.ViewModel
 				}
 			}
 		}
-
+		/// <summary>
+		/// Szerokość planszy (studni)
+		/// </summary>
 		public uint BoardWidth
 		{
 			get { return _boardWidth; }
@@ -187,7 +192,9 @@ namespace TAiO.ViewModel
 			}
 		}
 
-
+		/// <summary>
+		/// Pokaż stan w poprzednim kroku algorytmu
+		/// </summary>
 		public ICommand PreviousStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
@@ -220,6 +227,9 @@ namespace TAiO.ViewModel
 			return vm?.CurrentStep > 0;
 		});
 
+		/// <summary>
+		/// Pokaż stan w kolejnym kroku algorytmu
+		/// </summary>
 		public ICommand NextStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
@@ -244,6 +254,9 @@ namespace TAiO.ViewModel
 			return vm.CurrentStep < (LastAlgorithm?.CurrentStep ?? -1) + 1;	
 		});
 
+		/// <summary>
+		/// Pokaż stan przed wykonaniem pierwszego kroku algorytmu
+		/// </summary>
 		public ICommand FirstStep => new RelayCommand(() =>
 		{
 			for (int i = 0; i < _previews.Count; i++)
@@ -258,6 +271,9 @@ namespace TAiO.ViewModel
 			Status = StatusFactory.PausedAlgorithm(0);
 		}, () => _previews.Count > 0);
 
+		/// <summary>
+		/// Pokaż stan w ostatnim kroku algorytmu
+		/// </summary>
 		public ICommand LastStep => new RelayCommand(() =>
 		{
 			int currentStep = (LastAlgorithm?.CurrentStep + 1) ?? 0;
@@ -392,11 +408,16 @@ namespace TAiO.ViewModel
 			}
 		}, () => Stopped);
 
+		/// <summary>
+		/// Odśwież widok w przeglądarce klocków
+		/// </summary>
 		private void RefreshBrowserBlocks()
 		{
 			((BrowserViewModel) _browser?.DataContext)?.RefreshBlockTypeViewModelsList(Data.Instance.Blocks);
 		}
-
+		/// <summary>
+		/// Default constructor
+		/// </summary>
 		public MainWindowViewModel()
 		{
 			_timer.Tick += (o, e) => { if (NextStep.CanExecute(this)) NextStep.Execute(this); };

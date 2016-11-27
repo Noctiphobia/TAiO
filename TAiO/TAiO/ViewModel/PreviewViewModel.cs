@@ -137,14 +137,18 @@ namespace TAiO.ViewModel
 			if(data != null && viewstepNumber <= data.LastStepFinished + 1)
 				UpdateDataSource(data, boardNumber, viewstepNumber, width, height);
 		}
-
+		/// <summary>
+		/// Oblicz gęstość oraz wysokość
+		/// </summary>
 		private void CalculateHeightAndDensity()
 		{
             CalculateHeight();
             CalculateDensity();
 		}
-
-        private void CalculateHeight()
+		/// <summary>
+		/// Oblicz wysokość
+		/// </summary>
+		private void CalculateHeight()
         {
             if (DataSource == null)
             {
@@ -165,7 +169,9 @@ namespace TAiO.ViewModel
 
             Height = height;
         }
-
+		/// <summary>
+		/// Oblicz gęstość
+		/// </summary>
         private void CalculateDensity()
         {
             if (DataSource == null || Height == 0)
