@@ -10,36 +10,62 @@ namespace TAiO.Tests
 	[TestClass]
 	public class AlgorithmTests
 	{
+		/// <summary>
+		/// Domyślna nazwa pliku z klockami
+		/// </summary>
 		const string filename = "60.blocks";
+		/// <summary>
+		/// Domyślna nazwa funkcji kosztu
+		/// </summary>
 		const string functionName = "Najmniej dziur";
+		/// <summary>
+		/// Definicja funkcji wybierającej klocki do algorytmu
+		/// </summary>
+		/// <param name="blocks"></param>
 		delegate void blockChooser(List<BlockType> blocks);
 		
-
+		/// <summary>
+		/// Sprawdzenie gęstości ułożenia klocków
+		/// Argumenty: dwie gałęzie, 20 klocków, funkcja "Najmniej dziur", klocki z pliku "60.blocks"
+		/// </summary>
 		[TestMethod]
 		public void TwoBranches()
 		{
 			double density = RunAlgorithm((blocks) => KFirstChooser(blocks, 20, 1), functionName, filename, 2);
 		}
-
+		/// <summary>
+		/// Sprawdzenie gęstości ułożenia klocków
+		/// Argumenty: trzy gałęzie, 20 klocków, funkcja "Najmniej dziur", klocki z pliku "60.blocks"
+		/// </summary>
 		[TestMethod]
 		public void ThreeBranches()
 		{
 			double density = RunAlgorithm((blocks) => KFirstChooser(blocks, 20, 1), functionName, filename, 3);
 		}
-
+		/// <summary>
+		/// Sprawdzenie gęstości ułożenia klocków
+		/// Argumenty: trzy gałęzie, 5*(liczba typów) klocków, funkcja "Najmniej dziur", klocki z pliku "60.blocks"
+		/// </summary>
 		[TestMethod]
 		public void ThreeBranchesWholeSet()
 		{
 			double density = RunAlgorithm((blocks) => WholeSetChooser(blocks, 5), functionName, filename, 3);
 		}
-		
 
+		/// <summary>
+		/// Sprawdzenie gęstości ułożenia klocków
+		/// Argumenty: 20 gałęzi, 5*(liczba typów) klocków, funkcja "Najmniej dziur", klocki z pliku "60.blocks"
+		/// </summary>
 		[TestMethod]
 		public void TwentyBranchesWholeSet()
 		{
 			double density = RunAlgorithm((blocks) => WholeSetChooser(blocks, 5), functionName, filename, 20);
 		}
-
+		/// <summary>
+		/// Funkcja pomocnicza - ustawia wybór k klocków kazdgo typu
+		/// </summary>
+		/// <param name="blocks">lista klocków</param>
+		/// <param name="k">liczba klocków do wybrania</param>
 		private void WholeSetChooser(List<BlockType> blocks, uint k)
 		{
 			int blocksNumber = 10;
@@ -53,7 +79,12 @@ namespace TAiO.Tests
 			}
 		}
 
-
+		/// <summary>
+		/// Funkcja pomocnicza ustawiająca wybór n klocków z k pierwszych typów (razem k*n klocków)
+		/// </summary>
+		/// <param name="blocks">lista klocków</param>
+		/// <param name="k">liczba typów klocków</param>
+		/// <param name="n">liczba klocków każdego typu</param>
 		private void KFirstChooser(List<BlockType> blocks, int k, uint n)
 		{
 			int blocksNumber = k;
@@ -76,7 +107,14 @@ namespace TAiO.Tests
 
 		}
 
-
+		/// <summary>
+		/// Funkcja pomocnicza uruchamiająca algorytm
+		/// </summary>
+		/// <param name="chooser">funkcja wybierająca klocki do algorytmu</param>
+		/// <param name="function">nazwa funkcji kosztu</param>
+		/// <param name="localFilename">nazwa pliku z klockami</param>
+		/// <param name="branches">liczba rozgałęzień algorytmu</param>
+		/// <returns></returns>
 		private double RunAlgorithm(blockChooser chooser, string function, string localFilename, int branches)
 		{
 			if (!File.Exists(localFilename))
@@ -109,7 +147,11 @@ namespace TAiO.Tests
 
 		}
 
-
+		/// <summary>
+		/// Funkcja wyliczająca minimalną wysokość ułożonych klocków
+		/// </summary>
+		/// <param name="DataSource">plansza</param>
+		/// <returns></returns>
 		private int CalculateHeight(Array2D DataSource)
 		{
 			int Height;
@@ -132,7 +174,11 @@ namespace TAiO.Tests
 			Height = height;
 			return Height;
 		}
-
+		/// <summary>
+		/// Funkcja wyliczająca gęstość ułożonych klocków
+		/// </summary>
+		/// <param name="DataSource">plansza</param>
+		/// <returns></returns>
 		private double CalculateDensity(Array2D DataSource)
 		{
 			if (DataSource == null)
