@@ -44,7 +44,8 @@ namespace TAiO.Model
         /// (kopiowanie ze słownika jest prostsze i szybsze niż kopiowanie z listy)
         /// </summary>
 		private SortedList<BlockType, int> AvailableBlocksSorted;
-		
+
+		public Board CurrentbestBoard => CurrentStepBoards?[0];
 
         /// <summary>
         /// Konstruktor klasy Algorithm
