@@ -185,6 +185,83 @@ W tym teście najlepsza okazała się funkcja przylegania, jednak niewiele tylko
 Warto zauważyć, że algorytm daje najlepsze wyniki dla średniej szerokości studni, co zgadza się z intuicją.
 W przypadku małej szerokości, porównywalnej z szerokością niektórych klocków trudno jest osiągnąć dobre zapełnienie dziur - w niektórych momentach konieczne jest praktycznie układanie klocków jeden na drugim.
 Z kolei przy szerokiej studni na wynik niekorzystnie wpływają górne mało zapełnione wiersze.
+
+\subsection{Zestaw klocków prostokątnych}
+W tym zadaniu największym problemem jest górna część planszy - do pewnego momentu klocki są układane prawie bez tworzenia dziur. Jednak dla dużego k jest znajdowane rozwiązanie, w którym nie pojawia się ten problem.
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 88
+
+Najlepsza gęstość dla $k=5$: 91
+
+Funkcja ta wypadła słabo ze względu na powstałą głęboką, wąską dziurę.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{prostokaty_dziury.PNG}
+\caption{Górna część wyniku dla funkcji dziur}
+\end{figure}
+
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 89
+
+Najlepsza gęstość dla $k=4$: 91
+
+Problemem w tej funkcji okazał się fakt, że na końcu nie zostały żadne wąskie klocki - wcześniej zostały wykorzystane, bo kładzenie ich poziomo pozwalało na chwilową minimalizację wysokości.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{prostokaty_wysokosc.PNG}
+\caption{Górna część wyniku dla funkcji wysokości}
+\end{figure}
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 91
+
+Najlepsza gęstość dla $k=5$: 96
+
+Rozwiązanie dla $k=5$ wydaje się być bardzo dobre - być może najlepsze, jakie można uzyskać dla tego zadania.
+\begin{figure}[H]
+\hspace*{3.5cm}
+\includegraphics[width=5.3cm]{prostokaty.PNG}
+\caption{Najlepsze rozwiązanie dla prostokątów}
+\end{figure}
+
+\end{enumerate}
+\subsection{Zestaw klocków o różnorodnych rozmiarach i kształtach (grupy Marcina Rudnika)}
+Nasz algorytm dobrze radzi sobie z tym testem. 
+Wynika to z kilku cech naszego rozwiązania.
+Po pierwsze umożliwiamy wstawianie klocków w powstałe wcześniej dziury - na rysunku poniżej można zaobserwować kilka klocków, które idealnie gdzieś się wpasowały.
+Ponadto funkcja przyległości (która okazała się najlepsza) faworyzuje duże klocki, co w tym wypadku jest korzystne - lepiej potem wypełnić powstałe dziury, niż najpierw szczelnie wypełnić dół planszy małymi klockami.
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 73
+
+Najlepsza gęstość dla $k=4$: 75
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 69
+
+Najlepsza gęstość dla $k=69$: 73
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 78
+
+Najlepsza gęstość dla $k=8$: 81
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{duze_klocki.PNG}
+\caption{Ułożenie dużych klocków dla funkcji przyległości}
+\end{figure}
+
+\end{enumerate}
+
+
 \subsection{Zestaw 120 klocków 5x4 o polu 9, z szerokością studni 10, grupy Mirona Marczuka}
 \begin{enumerate}
 
@@ -220,6 +297,7 @@ W tym teście z wcześniej wykorzystywanych funkcji zdecydowanie odstawała jedy
 Testowo została wprowadzona tu omówiona wcześniej ulepszona wersja funkcji minimalizującej dziury, która okazała się w tym przypadku być najlepszą ze wszystkich, ponieważ usprawnienie rzeczywiście wyeliminowało tworzenie się pustej kolumny.
 
 \subsection{Zestaw 124 klocków 5x4 i 6x4 o polu 9, z szerokością studni 80, grupy Anny Bekas}
+Głównym problemem tego zestawu jest nieproporcjonalnie szeroka studnia w porównaniu do liczby i wielkości klocków.
 \begin{enumerate}
 
 \item Funkcja minimalizująca dziury
@@ -258,5 +336,7 @@ Ciekawe zachowanie funkcji minimalizującej wysokość (duży przeskok z $k=3$ d
 
 
 %\subsection{zestaw drugi...}
+
+
 \section{Wnioski} %z testów
 \end{document}
