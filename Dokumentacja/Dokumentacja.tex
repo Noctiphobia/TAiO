@@ -29,6 +29,25 @@ Pierwszym ze szczególnych przypadków jest pierwszy krok - ponieważ jest tylko
 Drugi przypadek jest efektem dodatkowego usprawnienia algorytmu, który ma na celu eliminowanie identycznych rozwiązań, w celu sprawdzenia jak największej liczby możliwości. Polega ono na tym, że po każdym kroku sprawdzana jest unikalność rozwiązań -- sprawdzany jest najpierw ostatni położony klocek (współrzędne, w których został położony, obrót i identyfikator). Jeśli wykryty zostanie jakikolwiek konflikt, dokonywane jest porównanie plansz wynikowych. W przypadku, gdy plansze również są identyczne, pozostawiane jest tylko jedno z tych rozwiązań -- bo identyczne plansze dają identyczne rozwiązania, więc dopóki jakieś rozwiązanie pochodzące z tej planszy byłoby jednym z $k$ najlepszych istniejących, dwa wątki wykonywałyby dokładnie te same operacje. W ten sposób do następnego kroku może trafić zredukowana liczba plansz wejściowych, ale krok później, o ile znowu nie występowały powtórzenia, algorytm stabilizuje liczbę wątków na $k$. Koszt takiego rozwiązania jest niewielki -- porównanie wstępne jest realizowane w czasie stałym (liczba porównań jest rzędu $k^2$, gdzie $k$ to stała, a porównanie ułożenia klocka to cztery porównania liczb całkowitych), więc jeśli problem nie wystąpi, algorytm nie działa zauważalnie wolniej. Liczba sytuacji, w których trzeba wykonać dodatkowe sprawdzenie, powinna być bardzo niewielka, a eliminacja identycznych rozwiązań eliminuje jednakowe obliczenia, które mogłyby ciągnąć się nawet do samego końca -- efektywnie algorytm działałby od pewnego momentu tak, jakby wartość $k$ została zmniejszona.
 \subsection{Łączenie wyników}
 \subsection{Struktura danych}
+
+
+\subsubsection{Klasa Algorithm}
+Główną klasą naszego programu jest klasa Algorithm. Przechowuje ona wszystkie dane dotyczące algorytmu i wykonuje kolejne kroki. 
+
+\subsubsection{Klasa Board}
+Klasa Board odpowiada za przechowywanie zawartości studni (jest to tablica intów).
+
+Ważne metody:
+\begin{itemize}
+\item AddBlock(BlockType block) -- sprawdza możliwość dodania klocka na planszę (czy miejsce, w które chcemy położyć klocek, jest wolne), po czym zmniejsza o jeden liczbę dostępnych klocków tego typu i wpisuje klocek w odpowiednie miejsce na planszy.
+\item DeleteBlock(BlockType block) -- usuwa klocek ze studni. Nie ma żadnych mechanizmów weryfikacji, czy faktycznie klocek leżący w danym miejscu na planszy jest tym samym klockiem co ten, którego chcemy z planszy usunąć. Taka weryfikacja jednak nie jest potrzebna, ponieważ stosujemy algorytm zachłanny, zatem usuwanie klocków wcześniej położonych nie jest w ogóle potrzebne. W przypadku naszego programu stosowane jest to jednak przy wyborze najlepszego miejsca na kolejny klocek, gdy dodajemy i usuwamy kolejne klocki w różnych miejscach na tymczasowej planszy.
+\item 
+\end{itemize}
+
+
+
+
+
 \section{Testy}
 \subsection{Zestaw klocków 4x3, 5x3, 5x4, 6x4 o polu co najwyżej 8}
 Na tym standardowym zestawie klocków zostanie dokonana dokładna analiza własności naszego algorytmu z uwzględnieniem różnej liczby rozgałęzień, szerokości studni i wszystkich udostępnionych funkcji kosztu.

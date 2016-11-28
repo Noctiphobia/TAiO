@@ -152,7 +152,7 @@ namespace TAiO.Model
         /// </summary>
         /// <param name="width"></param>
         /// <param name="height"></param>
-		public void UpdateStepBoards(int width, int height)
+		private void UpdateStepBoards(int width, int height)
 		{
 			if (CurrentStep < 0) // only creating new boards
 			{
