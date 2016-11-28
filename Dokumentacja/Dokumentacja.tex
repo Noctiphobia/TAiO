@@ -178,11 +178,56 @@ Najlepsza gęstość dla $k=5$: 71
 
 \end{enumerate}
 \textbf{Wnioski}
+
 W tym teście najlepsza okazała się funkcja przylegania, jednak niewiele tylko wyprzedziła funkcję dziur.
 
 Warto zauważyć, że algorytm daje najlepsze wyniki dla średniej szerokości studni, co zgadza się z intuicją.
 W przypadku małej szerokości, porównywalnej z szerokością niektórych klocków trudno jest osiągnąć dobre zapełnienie dziur - w niektórych momentach konieczne jest praktycznie układanie klocków jeden na drugim.
 Z kolei przy szerokiej studni na wynik niekorzystnie wpływają górne mało zapełnione wiersze.
+
+\subsection{Zestaw klocków prostokątnych}
+W tym zadaniu największym problemem jest górna część planszy - do pewnego momentu klocki są układane prawie bez tworzenia dziur. Jednak dla dużego k jest znajdowane rozwiązanie, w którym nie pojawia się ten problem.
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 88
+
+Najlepsza gęstość dla $k=5$: 91
+
+Funkcja ta wypadła słabo ze względu na powstałą głęboką, wąską dziurę.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{prostokaty_dziury.PNG}
+\caption{Górna część wyniku dla funkcji dziur}
+\end{figure}
+
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 89
+
+Najlepsza gęstość dla $k=4$: 91
+
+Problemem w tej funkcji okazał się fakt, że na końcu nie zostały żadne wąskie klocki - wcześniej zostały wykorzystane, bo kładzenie ich poziomo pozwalało na chwilową minimalizację wysokości.
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{prostokaty_wysokosc.PNG}
+\caption{Górna część wyniku dla funkcji wysokości}
+\end{figure}
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 91
+
+Najlepsza gęstość dla $k=5$: 96
+
+Rozwiązanie dla $k=5$ wydaje się być bardzo dobre - być może najlepsze, jakie można uzyskać dla tego zadania.
+\begin{figure}[H]
+\hspace*{3.5cm}
+\includegraphics[width=5.3cm]{prostokaty.PNG}
+\caption{Najlepsze rozwiązanie dla prostokątów}
+\end{figure}
+
+\end{enumerate}
 \subsection{Zestaw klocków o różnorodnych rozmiarach i kształtach (grupy Marcina Rudnika)}
 Nasz algorytm dobrze radzi sobie z tym testem. 
 Wynika to z kilku cech naszego rozwiązania.
