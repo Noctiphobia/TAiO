@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="13.3">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>770</x>
+      <y>320</y>
+      <w>220</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>Utworzenie k' wątków</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>580</x>
+      <y>420</y>
+      <w>240</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Wybór k najlepszych ułożeń
+(sprawdzenie każdego klocka)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>670</x>
+      <y>340</y>
+      <w>170</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+Przydzielenie planszy 1</panel_attributes>
+    <additional_attributes>120.0;10.0;40.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>870</x>
+      <y>350</y>
+      <w>40</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+...</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>940</x>
+      <y>340</y>
+      <w>170</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+Przydzielenie planszy k'</panel_attributes>
+    <additional_attributes>30.0;10.0;130.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>780</x>
+      <y>540</y>
+      <w>200</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Wybór k z k'*k ułożeń</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>870</x>
+      <y>470</y>
+      <w>40</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+...</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>960</x>
+      <y>480</y>
+      <w>120</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>700</x>
+      <y>480</y>
+      <w>110</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;75.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>940</x>
+      <y>420</y>
+      <w>240</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Wybór k najlepszych ułożeń
+(sprawdzenie każdego klocka)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>870</x>
+      <y>280</y>
+      <w>390</w>
+      <h>370</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+następny
+krok</panel_attributes>
+    <additional_attributes>10.0;320.0;10.0;350.0;320.0;350.0;320.0;10.0;10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+</diagram>
