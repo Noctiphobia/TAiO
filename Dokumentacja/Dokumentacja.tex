@@ -153,6 +153,36 @@ W tym teście najlepsza okazała się funkcja przylegania, jednak niewiele tylko
 Warto zauważyć, że algorytm daje najlepsze wyniki dla średniej szerokości studni, co zgadza się z intuicją.
 W przypadku małej szerokości, porównywalnej z szerokością niektórych klocków trudno jest osiągnąć dobre zapełnienie dziur - w niektórych momentach konieczne jest praktycznie układanie klocków jeden na drugim.
 Z kolei przy szerokiej studni na wynik niekorzystnie wpływają górne mało zapełnione wiersze.
-%\subsection{zestaw drugi...}
+\subsection{Zestaw klocków o różnorodnych rozmiarach i kształtach (grupy Marcina Rudnika)}
+Nasz algorytm dobrze radzi sobie z tym testem. 
+Wynika to z kilku cech naszego rozwiązania.
+Po pierwsze umożliwiamy wstawianie klocków w powstałe wcześniej dziury - na rysunku poniżej można zaobserwować kilka klocków, które idealnie gdzieś się wpasowały.
+Ponadto funkcja przyległości (która okazała się najlepsza) faworyzuje duże klocki, co w tym wypadku jest korzystne - lepiej potem wypełnić powstałe dziury, niż najpierw szczelnie wypełnić dół planszy małymi klockami.
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 73
+
+Najlepsza gęstość dla $k=4$: 75
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 69
+
+Najlepsza gęstość dla $k=69$: 73
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 78
+
+Najlepsza gęstość dla $k=8$: 81
+
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{duze_klocki.PNG}
+\caption{Ułożenie dużych klocków dla funkcji przyległości}
+\end{figure}
+
+\end{enumerate}
 \section{Wnioski} %z testów
 \end{document}
