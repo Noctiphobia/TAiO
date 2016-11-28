@@ -42,6 +42,31 @@ namespace TAiO.Model
 				}
 				return cost;
 			}, "Najmniej dziur"), //dziura = wszystko, co jest puste i ma nad sobą klocka
+						new NamedCostFunction((b) =>
+			{
+				int cost = 0;
+				//znalezienie najwyższego punktu w każdej kolumnie
+				int[] maxHeights = new int[b.Width];
+				for (int x = 0; x < b.Width; ++x)
+					for (int y = b.Height - 1; y > 0; --y)
+						if (b[x, y] > 0)
+						{
+							maxHeights[x] = y;
+							break;
+						}
+				int avg = (int) Math.Round(maxHeights.Average());
+				for(int i=0; i<b.Width; ++i)
+					if (maxHeights[i] < avg)
+						maxHeights[i] = avg;
+				for (int x = 0; x < b.Width; ++x)
+				{
+					for (int y = 0; y < maxHeights[x]; ++y)
+					{
+						if (b[x, y] == 0) cost++;
+					}
+				}
+				return cost;
+			}, "Najmniej dziur ze średnią"), //dziura = wszystko, co jest puste i ma nad sobą klocka
 			new NamedCostFunction((b) =>
 			{
 				int cost = 0;
