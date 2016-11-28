@@ -13,19 +13,38 @@ namespace TAiO.Model
 	/// </summary>
 	public class Data
 	{
+        /// <summary>
+        /// Jedyna instancja klasy Data
+        /// </summary>
 		private static Data _instance;
-
-		public bool PreviewGoingOn { get; set; } = true;
+        
+        /// <summary>
+        /// Zestaw wczytanych klocków wraz z oryginalnymi (ustawionymi w Browserze)
+        /// wartościami BlocksNumber (liczba dostęponych klocków)
+        /// </summary>
 		public List<BlockType> Blocks { get; set; }
-		//public List<KeyValuePair<BlockType, int>> AvailableBlocks { get; set; }
 
-
+        /// <summary>
+        /// Szerokość planszy (wczytywana z pliku lub ustawiana przez użytkownika)
+        /// </summary>
 		public int BoardWidth { get; set; }
+        /// <summary>
+        /// Liczba rozgałęzień algorytmu
+        /// </summary>
 		public int Branches { get; set; }
 
-
+        /// <summary>
+        /// Liczba klocków wybieranych losowo z wczytanego zestawu
+        /// </summary>
 		public uint RandomBlocksNumber { get; set; } = 20;
+        /// <summary>
+        /// Liczba różnych klocków wybieranych jako [DifferentBlocksNumber] pierwszych z zestawu
+        /// </summary>
 		public uint DifferentBlocksNumber { get; set; } = 20;
+		/// <summary>
+		/// Liczba klocków każdego typu (bierzemy po [AllBlocksNumber] klocków każdego typu)
+		/// </summary>
+		public uint EachBlockTypeNumber { get; set; } = 1;
 
 
 		/// <summary>

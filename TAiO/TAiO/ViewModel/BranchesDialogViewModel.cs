@@ -30,6 +30,10 @@ namespace TAiO.ViewModel
 		/// Czy została wybrana funkcja kosztu?
 		/// </summary>
 		public bool IsCostFunctionSelected => CostFunction != null;
+
+		/// <summary>
+		/// Liczba rozgałęzień w algorytmie
+		/// </summary>
 		public int Branches
 		{
 			get { return Data.Branches; }

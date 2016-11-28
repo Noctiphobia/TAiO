@@ -14,29 +14,61 @@ namespace TAiO.Model
     /// </summary>
     public class Board
     {
+        /// <summary>
+        /// Szerokość planszy
+        /// </summary>
 	    public int Width
 	    {
 	        get { return Content.GetLength(0); }
 	    }
+        /// <summary>
+        /// Wysokość planszy
+        /// </summary>
 		public int Height
         {
             get { return Content.GetLength(1); }
         }
+        /// <summary>
+        /// Zawartość planszy
+        /// 0 oznacza brak klocka
+        /// >0 to numer klocka w danym miejscu
+        /// </summary>
         public int[,] Content { get; set; }
+        /// <summary>
+        /// Liczba klocków już położonych na planszy
+        /// </summary>
         public int BlocksNumber { get; set; }
+        /// <summary>
+        /// Krok wysokości - o tyle zwiększamy wysokość,
+        /// gdy następny położony klocek może wystawać poza planszę (tj. wystaje ze studni)
+        /// </summary>
 		private int StepHeight { get; set; }
+        /// <summary>
+        /// Flaga określająca, czy "śledzimy" klocki -
+        /// domyślnie jest to true, jednak w przypadku plansz tymczasowych,
+        /// na których często dokładamy i odkładamy te same klocki
+        /// lub z różnych przyczyn jesteśmy pewni, że ilość klocków jest właściwa
+        /// (vide ChooseBlocks() poniżej lub UpdateDataSource() w PreviewViewModel)
+        /// nie ma potrzeby wykonywać czasochłonnych dodawań i odejmowań elemenów w słowniku
+        /// </summary>
 		private bool KeepTrackOfBlocks { get; set; }
-	    //private List<KeyValuePair<BlockType, int>> AvailableBlocks2;
-		//private Dictionary<> AvailableBlocks;
+        /// <summary>
+        /// Słownik zawierający parę: klocek i liczba dostępnych klocków danego typu minus te obecne na planszy
+        /// </summary>
 	    private SortedList<BlockType, int> AvailableBlocks;
-
-
+        
 		public int this[int x, int y]
 	    {
 		    get { return Content[x, y]; }
 		    set { Content[x, y] = value; }
 	    }
-
+        /// <summary>
+        /// Konstruktor planszy
+        /// </summary>
+        /// <param name="w">szerokość planszy</param>
+        /// <param name="h">wysokość planszy</param>
+        /// <param name="availableBlocks">dostępne klocki (patrz opis do AvailableBlocks)</param>
+        /// <param name="keepTrackOfBlocks">czy chcemy śledzić klocki (patrz opis do KeepTrackOfBlocks)</param>
         public Board(int w, int h, SortedList<BlockType, int> availableBlocks, bool keepTrackOfBlocks = true)
         {
 			StepHeight = Math.Max(h / 2, 4);
@@ -46,6 +78,11 @@ namespace TAiO.Model
 	        KeepTrackOfBlocks = keepTrackOfBlocks;
         }
 
+        /// <summary>
+        /// Funkcja kopiująca planszę wraz z zawartością
+        /// </summary>
+        /// <param name="keepTrackOfBlocks">czy chcemy śledzić klocki (patrz opis do KeepTrackOfBlocks)</param>
+        /// <returns></returns>
 	    public Board Copy(bool keepTrackOfBlocks = true)
 	    {
 		    return new Board(Width, Height, keepTrackOfBlocks ? new SortedList<BlockType, int>(AvailableBlocks) : null, keepTrackOfBlocks)
@@ -56,7 +93,19 @@ namespace TAiO.Model
 		    };
 	    }
 
-	    public static Board CreateFromStepsData(StepsData data, int stepNumber, int boardNumber, int width, int height, bool keepTrackOfBlocks = false, SortedList<BlockType, int> availableBlockSortedList = null)
+        /// <summary>
+        /// Funkcja tworząca planszę z danych zapisanych w StepsData
+        /// </summary>
+        /// <param name="data">Dane kroków algorytmu</param>
+        /// <param name="stepNumber">numer kroku algorytmu</param>
+        /// <param name="boardNumber">numer planszy</param>
+        /// <param name="width">szerokość planszy</param>
+        /// <param name="height">wysokość planszy</param>
+        /// <param name="keepTrackOfBlocks">czy chcemy śledzić klocki (patrz opis do KeepTrackOfBlocks)</param>
+        /// <param name="availableBlockSortedList">dostępne klocki (patrz opis do AvailableBlocks)</param>
+        /// <returns></returns>
+	    public static Board CreateFromStepsData(StepsData data, int stepNumber, int boardNumber, int width, int height, 
+            bool keepTrackOfBlocks = false, SortedList<BlockType, int> availableBlockSortedList = null)
 	    {
 			Board board = new Board(width, height, availableBlockSortedList, keepTrackOfBlocks);
 			data.SetStartingPoint(stepNumber, boardNumber);
@@ -64,16 +113,15 @@ namespace TAiO.Model
 			bis.Reverse();
 		    foreach (var blockInstance in bis)
 		    {
-			    if (!board.AddBlock(blockInstance))
-			    {
-				    throw new ArgumentException("Co jest nie tak z tymi funkcjami?! (CreateFromStepsData) ");
-			    }
+                board.AddBlock(blockInstance);
 		    }
 		    return board;
 	    }
 
 
-
+        /// <summary>
+        /// Funkcja zwiększająca wysokość planszy
+        /// </summary>
 		private void Resize()
         {
 			int[,] tmp = new int[Width, Height + StepHeight];
@@ -93,18 +141,12 @@ namespace TAiO.Model
 			int h = (block.BlockVersion%2 == 0 ? block.Block.Height : block.Block.Width),
 				w = (block.BlockVersion%2 == 0 ? block.Block.Width : block.Block.Height);
 			
-
-
-
 			while (block.Y + h >= Height)
 				Resize();
             BlocksNumber++;
             for (int i = 0; i < w; i++)
                 for (int j = 0; j < h; j++)
                 {
-					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
-					//    return false;
-
 					if (block.Block.Shape[block.BlockVersion][i, j] == 0)
 						continue;
 					if (Content[i + block.X, j + block.Y] > 0)
@@ -121,6 +163,11 @@ namespace TAiO.Model
             return false;
         }
 
+        /// <summary>
+        /// Funkcja zdejmująca klocek z planszy
+        /// </summary>
+        /// <param name="block">Informacje o klocku i gdzie został położony</param>
+        /// <returns>True jeśli się udało, false wpp</returns>
 	    public bool DeleteBlock(BlockInstance block)
 	    {
 			int h = (block.BlockVersion % 2 == 0 ? block.Block.Height : block.Block.Width),
@@ -129,12 +176,8 @@ namespace TAiO.Model
 			for (int i = 0; i < w; i++)
 				for (int j = 0; j < h; j++)
 				{
-					//if ((Content[i + block.X, j + block.Y] & block.Block.Shape[block.BlockVersion][i, j]) > 0)
-					//	return false;
-					//Content[i + block.X, j + block.Y] = block.Block.Shape[block.BlockVersion][i, j] * BlocksNumber;
 					if(block.Block.Shape[block.BlockVersion][i, j] > 0)
 						Content[i + block.X, j + block.Y] = 0;
-
 				}
 			if (!KeepTrackOfBlocks)
 				return true;

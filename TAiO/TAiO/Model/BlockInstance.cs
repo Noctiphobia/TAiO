@@ -7,38 +7,36 @@ using System.Threading.Tasks;
 namespace TAiO.Model
 {
 	/// <summary>
-	/// BlockInstance is a helper class for showing every step of algorithm.
+	/// BlockInstance to klasa pomocniczna do pokazywania kroków algorytmu.
 	/// 
-	/// Since remembering steps in the way algorithm needs to see them (in arrays of ints)
-	/// is too memory greedy and gives us no other advantages,
-	/// we chose to remember previous steps in array of blocks added in a specific step.
+	/// Ponieważ zapamiętywanie kroków w taki sposób, w jaki algorytm potrzebuje je widzieć
+	/// (tzn. w postaci tablic intów) jest zbyt pamięciożerne i nie daje nam żadnych dodatkowych korzyści,
+	/// wybraliśmy zapamiętywanie poprzednich kroków w tablicy klocków dodanych w kolejnych krokach.
 	/// 
-	/// BlockInstance correspond with one block added in one specific step on one specific board.
+	/// Obiekt BlockInstance reprezentuje jeden klocek dodany w jednym konkretnym kroku na jednej konkretnej tablicy.
 	/// </summary>
+	/// 
 	public struct BlockInstance
 	{
 		/// <summary>
-		/// Type of block
+		/// Typ klocka
 		/// </summary>
 		public BlockType Block { get; set; }
 		/// <summary>
-		/// version of block (rotation)
-		/// not called "rotation", because there can be four or two or only one not duplicating rotation,
-		/// so for example "2" can easily meaning not the same rotation in two other situation -
-		/// 90 or 180 degrees
+		/// Wersja klocka (czyli obrót)
 		/// </summary>
 		public int BlockVersion { get; set; }
 		/// <summary>
-		/// X coordinate of position of left upper corner of that block
+		/// Współrzędna X lewego górnego rogu klocka
 		/// </summary>
 		public int X { get; set; }
 		/// <summary>
-		/// Y coordinate of position of left upper corner of that block
+		/// Współrzędna Y prawego górnego rogu klocka
 		/// </summary>
 		public int Y { get; set; }
 
 		/// <summary>
-		/// Id number of board of previous block in that path in algorithm
+		/// Id planszy, na której został ułożony poprzedni klocek z tej ścieżki
 		/// </summary>
 		public int PreviousBlockBoardNumber { get; set; }
 

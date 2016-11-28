@@ -33,7 +33,10 @@ namespace TAiO.ViewModel
 		private Algorithm LastAlgorithm = null;
 		
 
-
+		/// <summary>
+		/// Tekst wpisany w pole statusu, opisuje w jakim stanie znajduje się teraz aplikacja
+		/// Statusy pobierane są z klasy StatusFactory przy zmianie stanu programu
+		/// </summary>
 		public string Status
 		{
 			get { return _status; }
@@ -121,7 +124,9 @@ namespace TAiO.ViewModel
 				}
 			}
 		}
-
+		/// <summary>
+		/// Szerokość planszy (studni)
+		/// </summary>
 		public uint BoardWidth
 		{
 			get { return _boardWidth; }
@@ -187,7 +192,9 @@ namespace TAiO.ViewModel
 			}
 		}
 
-
+		/// <summary>
+		/// Pokaż stan w poprzednim kroku algorytmu
+		/// </summary>
 		public ICommand PreviousStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
@@ -220,6 +227,9 @@ namespace TAiO.ViewModel
 			return vm?.CurrentStep > 0;
 		});
 
+		/// <summary>
+		/// Pokaż stan w kolejnym kroku algorytmu
+		/// </summary>
 		public ICommand NextStep => new RelayCommand(() =>
 		{
 			int currentStep = 0;
@@ -244,6 +254,9 @@ namespace TAiO.ViewModel
 			return vm.CurrentStep < (LastAlgorithm?.CurrentStep ?? -1) + 1;	
 		});
 
+		/// <summary>
+		/// Pokaż stan przed wykonaniem pierwszego kroku algorytmu
+		/// </summary>
 		public ICommand FirstStep => new RelayCommand(() =>
 		{
 			for (int i = 0; i < _previews.Count; i++)
@@ -258,9 +271,12 @@ namespace TAiO.ViewModel
 			Status = StatusFactory.PausedAlgorithm(0);
 		}, () => _previews.Count > 0);
 
+		/// <summary>
+		/// Pokaż stan w ostatnim kroku algorytmu
+		/// </summary>
 		public ICommand LastStep => new RelayCommand(() =>
 		{
-			int currentStep = LastAlgorithm?.CurrentStep + 1 ?? 0;
+			int currentStep = (LastAlgorithm?.CurrentStep + 1) ?? 0;
 			for (int i = 0; i < _previews.Count; i++)
 			{
 				var preview = _previews[i];
@@ -270,8 +286,9 @@ namespace TAiO.ViewModel
 				//vm.CurrentStep = currentStep;
 				vm.SetCurrentStep(LastAlgorithm?.StepsData, i, currentStep, Data.BoardWidth, Data.BoardWidth);
 			}
+           // NextStep.Execute(this);
 			Status = StatusFactory.PausedAlgorithm(currentStep);
-		}, () => _previews.Count > 0);
+		}, () => NextStep.CanExecute(this));
 
 		/// <summary>
 		/// Włącz/wyłącz wizualizację.
@@ -280,6 +297,11 @@ namespace TAiO.ViewModel
 		{
 			if (Stopped)
 			{
+				if (Data.Blocks == null || Data.Blocks.Count == 0)
+				{
+					MessageBox.Show("Przed rozpoczęciem algorytmu załaduj klocki.", "Błąd");
+					return;
+				}
 				BranchesDialog dialog = new BranchesDialog();
 				if (!(dialog.ShowDialog() ?? false))
 				{
@@ -330,20 +352,7 @@ namespace TAiO.ViewModel
 					if (vm == null) continue;
 
 					vm.StepsPerChange = Step;
-
 					vm.SetCurrentStep(LastAlgorithm?.StepsData, i, 0, Data.BoardWidth, Data.BoardWidth);
-					//vm.CurrentStep = 0;
-					//vm.UpdateDataSource(a.StepsData, i, a.CurrentStep, Data.BoardWidth, Data.BoardWidth);
-					//vm.DataSource = new Array2D(
-					//	new[,]
-					//	{
-					//			{ 0, 1, 1, 3, 2 },
-					//			{ 1, 1, 3, 3, 2 },
-					//			{ 1, 1, 3, 2, 2 },
-					//			{ 0, 0, 0, 0, 2 },
-					//			{ 0, 0, 0, 2, 2 },
-					//			{ 0, 0, 0, 0, 0 }
-					//	});
 				}
 				Status = StatusFactory.RunningAlgorithm((int)Data.Blocks.Sum(b => b.BlockNumber), Data.Branches);
 			}
@@ -399,11 +408,16 @@ namespace TAiO.ViewModel
 			}
 		}, () => Stopped);
 
+		/// <summary>
+		/// Odśwież widok w przeglądarce klocków
+		/// </summary>
 		private void RefreshBrowserBlocks()
 		{
 			((BrowserViewModel) _browser?.DataContext)?.RefreshBlockTypeViewModelsList(Data.Instance.Blocks);
 		}
-
+		/// <summary>
+		/// Default constructor
+		/// </summary>
 		public MainWindowViewModel()
 		{
 			_timer.Tick += (o, e) => { if (NextStep.CanExecute(this)) NextStep.Execute(this); };

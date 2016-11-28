@@ -21,7 +21,10 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding HeightString}"></TextBlock>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="{Binding HeightString}"></TextBlock>
+            <TextBlock Text="{Binding DensityString}"></TextBlock>
+        </StackPanel>
         <view:BoardView Grid.Row="1" x:Name="DrawingArea" 
                         StepsPerChange="{Binding StepsPerChange}" 
                         CurrentStep="{Binding CurrentStep}" 

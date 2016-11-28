@@ -18,24 +18,18 @@ namespace TAiO.ViewModel
 		public ObservableCollection<BlockTypeViewModel> BlockTypeViewModels { get; set; }
 		protected Random Random = new Random();
 
-
-
-		public List<BlockType> AvailableBlocks
-			=> BlockTypeViewModels.Select(a => a.Block).ToList();
-		
-
-
+		/// <summary>
+		/// Konstruktor
+		/// </summary>
 		public BrowserViewModel()
 		{
 			RefreshBlockTypeViewModelsList(new List<BlockType>());
 		}
 
-		public BrowserViewModel(List<BlockType> blockTypes)
-		{
-			RefreshBlockTypeViewModelsList(blockTypes);
-		}
 
-
+		/// <summary>
+		/// Ustaw losowo liczby typów klocków tak, aby w sumie dawały [Data.RandomBlocksNumber]
+		/// </summary>
 		public ICommand GetRandomBlocks => new RelayCommand(() =>
 		{
 			int sum = (int)Data.RandomBlocksNumber;
@@ -53,6 +47,9 @@ namespace TAiO.ViewModel
 			}
 		});
 
+		/// <summary>
+		/// Ustaw liczbę klocków każdego typu na 1
+		/// </summary>
 		public ICommand ResetBlocksNumbers => new RelayCommand(() =>
 		{
 			for (int i = 0; i < BlockTypeViewModels.Count; i++)
@@ -60,7 +57,10 @@ namespace TAiO.ViewModel
 				BlockTypeViewModels[i].BlockNumber = 1;
 			}
 		});
-
+		/// <summary>
+		/// Ustaw liczbę klocków każdego typu tak,
+		/// aby do algorytmu wzięte było [Data.DifferentBlocksNumber] pierwszych klocków z zestawu
+		/// </summary>
 		public ICommand GetNDifferentBlocks => new RelayCommand(() =>
 		{
 			int maxBlockNumber = BlockTypeViewModels.Count;
@@ -82,7 +82,21 @@ namespace TAiO.ViewModel
 
 		});
 
+		/// <summary>
+		/// Ustaw liczbę klocków każdego typu na [Data.EachBlockTypeNumber]
+		/// </summary>
+		public ICommand GetNEachBlock => new RelayCommand(() =>
+		{
+			for (int i = 0; i < BlockTypeViewModels.Count; i++)
+			{
+				BlockTypeViewModels[i].BlockNumber = Data.EachBlockTypeNumber;
+			}
+		});
 
+		/// <summary>
+		/// Odśwież widok listy dostępnych klocków
+		/// </summary>
+		/// <param name="blockTypes">typy klocków</param>
 		public void RefreshBlockTypeViewModelsList(List<BlockType> blockTypes)
 		{
 			BlockTypeViewModels = new ObservableCollection<BlockTypeViewModel>();
