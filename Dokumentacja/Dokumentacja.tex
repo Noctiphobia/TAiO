@@ -29,6 +29,7 @@ Aplikacja umożliwia wybór funkcji kosztu, która jest wykorzystywana w trakcie
 \item \textit{Najmniejsza wysokość} -- wynik to wysokość najwyższej kolumny.
 \item \textit{Największa przyległość} -- wynik to wartość przeciwna do sumy długości fragmentów krawędzi klocków, które przylegają do innych klocków lub ścian.
 \item \textit{Najładniejsze puste pola} -- funkcja eksperymentalna, której wynik to iloraz liczby dziur, definiowanych tak jak w funkcji \textit{Najmniej dziur}, i liczby zapełnionych pól.
+\item \textit{Najmniej dziur ze średnią} -- wprowadzona pod koniec testów usprawniona wersja funkcji minimalizującej liczbę dziur. Usprawnienie polega na tym, że jako dziury liczone są również puste pola znajdujące się poniżej zaokrąglonej średniej z wysokości kolumn, co zapobiega tworzeniu ``kominów''.
 \end{itemize}
 \subsection{Wielowątkowość}
 W celu przyspieszenia działania algorytmu, do wykonywania niezależnych od siebie obliczeń wykorzystywany jest mechanizm wątków. W tym przypadku takimi obliczeniami jest szukanie $k$ najlepszych rozwiązań dla danej planszy. W każdym kroku tworzone jest $k'$ wątków, gdzie $1 \le k' \le k$, a w większości przypadków $k'=k$. 
@@ -128,7 +129,7 @@ Gęstość dla $k=3$: 72
 
 Najlepsza gęstość dla $k=10$: 76
 
-W przypadku funkcji wysokości można zauważyć ciekawy wizualny efekt - klocki wydają się być położone maksymalnie pionowo.
+W przypadku funkcji wysokości można zauważyć ciekawy wizualny efekt - klocki wydają się być położone maksymalnie poziomo.
 Wynika to z faktu, że takie położenie minimalizuje wysokość w danym ruchu - nie ma znaczenia, że za kilka ruchów może się okazać niekorzystne.
 
 \begin{figure}[H]
@@ -178,11 +179,84 @@ Najlepsza gęstość dla $k=5$: 71
 
 \end{enumerate}
 \textbf{Wnioski}
+
 W tym teście najlepsza okazała się funkcja przylegania, jednak niewiele tylko wyprzedziła funkcję dziur.
 
 Warto zauważyć, że algorytm daje najlepsze wyniki dla średniej szerokości studni, co zgadza się z intuicją.
 W przypadku małej szerokości, porównywalnej z szerokością niektórych klocków trudno jest osiągnąć dobre zapełnienie dziur - w niektórych momentach konieczne jest praktycznie układanie klocków jeden na drugim.
 Z kolei przy szerokiej studni na wynik niekorzystnie wpływają górne mało zapełnione wiersze.
+\subsection{Zestaw 120 klocków 5x4 o polu 9, z szerokością studni 10, grupy Mirona Marczuka}
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 65
+
+Najlepsza gęstość dla $k=7$: 68
+
+\item Ulepszona funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 73
+
+Najlepsza gęstość dla $k=10$: 80
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 72
+
+Najlepsza gęstość dla $k=8$: 78
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 68
+
+Najlepsza gęstość dla $k=10$: 78
+
+\end{enumerate}
+\textbf{Wnioski}
+
+W tym teście z wcześniej wykorzystywanych funkcji zdecydowanie odstawała jedynie funkcja minimalizująca dziury. Powód jest taki sam jak we wcześniej omawianym przykładzie -- algorytm pozostawia pustą kolumnę, co bardzo negatywnie wpływa na wynik. Z kolei wynik algorytmu minimalizującego wysokość jest bardzo dobry, bo wszystkie klocki mają bardzo zbliżoną wysokość i szerokość, tak więc algorytm nie próbuje po prostu położyć poziomo na spodzie wszystkich podłużnych klocków.
+
+Testowo została wprowadzona tu omówiona wcześniej ulepszona wersja funkcji minimalizującej dziury, która okazała się w tym przypadku być najlepszą ze wszystkich, ponieważ usprawnienie rzeczywiście wyeliminowało tworzenie się pustej kolumny.
+
+\subsection{Zestaw 124 klocków 5x4 i 6x4 o polu 9, z szerokością studni 80, grupy Anny Bekas}
+\begin{enumerate}
+
+\item Funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 63
+
+Najlepsza gęstość dla $k=5$: 66
+
+\item Ulepszona funkcja minimalizująca dziury
+
+Gęstość dla $k=3$: 66
+
+Najlepsza gęstość dla $k=3$: 66
+
+\item Funkcja minimalizująca wysokość
+
+Gęstość dla $k=3$: 52
+
+Najlepsza gęstość dla $k=4$: 66
+
+\item Funkcja maksymalizująca przyleganie
+
+Gęstość dla $k=3$: 63
+
+Najlepsza gęstość dla $k=10$: 73
+
+\end{enumerate}
+\textbf{Wnioski}
+
+Najlepsza okazała się funkcja maksymalizująca przyleganie. Dla funkcji minimalizującej dziury zwiększanie parametru $k$ nie poprawiało rezultatów, ze względu na bardzo szeroką studnię w stosunku do liczby klocków -- przez cały pierwszy wiersz w praktyce nie pojawiały się żadne dziury. Jej usprawniona wersja osiągnęła taki sam maksymalny wynik, ale dla trochę niższej wartości parametru $k$ -- tutaj powstawanie kolumny nie było znaczącym problemem.
+Ciekawe zachowanie funkcji minimalizującej wysokość (duży przeskok z $k=3$ do $k=4$, a następnie brak poprawy) jest bardzo łatwy do wytłumaczenia -- zwiększenie $k$ ``zmusiło" algorytm do rozważenia znacznie lepszej rotacji, która na początku nie ma znaczenia, ale później decydowała o całym ułożeniu. Opisana różnica jest przedstawiona na poniższym rysunku: 
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{wysokosc_bekas.PNG}
+\caption{Ułożenie klocków dla funkcji wysokości}
+\end{figure}
+
+
 %\subsection{zestaw drugi...}
 \section{Wnioski} %z testów
 \end{document}
