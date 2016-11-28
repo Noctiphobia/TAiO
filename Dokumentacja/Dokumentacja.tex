@@ -13,6 +13,8 @@
 \begin{document}
 \maketitle
 \section{Opis projektu}
+
+\clearpage
 \section{Opis algorytmu}
 Wykorzystany algorytm jest algorytmem zachłannym z określoną parametrem liczbą nawrotów $k$. W każdym kroku algorytmu uruchamiane jest $k'$, gdzie $1 \le k' \le k$ (w sekcji wielowątkowość znajduje się wyjaśnienie, od czego jest uzależniona ich dokładna liczba). Każdemu wątkowi odpowiada jeden z $k$ najlepszych wyników uzyskanych w poprzednim kroku, gdzie najlepszy wynik to taki, dla którego wartość funkcji kosztu jest jak najmniejsza -- każdy z nich dla swoich danych wejściowych znajduje $k$ najlepszych rozwiązań. Znalezienie rozwiązań polega na sprawdzeniu dla każdego klocka każdego jego rotacji -- najpierw wybierana jest jego pozycja, a następnie liczony koszt całej planszy. $k$ rozwiązań takich, że funkcja kosztu obliczona na planszy z położonym danym klockiem w danej rotacji jest najmniejsza, to rozwiązanie dla danego wątku. Następnie, spośród ułożeń otrzymanych przez wszystkie wątki ($1 \le k' \le k$, zatem otrzymywane jest od $k$ do $k^2$ ułożeń) wybierane jest $k$ najlepszych. Ogólny schemat działania algorytmu podsumowuje poniższy diagram:
 \begin{figure}[H]
@@ -21,6 +23,13 @@ Wykorzystany algorytm jest algorytmem zachłannym z określoną parametrem liczb
 \end{figure}
 \subsection{Wybór pozycji dla klocka}
 \subsection{Funkcje kosztu planszy}
+Aplikacja umożliwia wybór funkcji kosztu, która jest wykorzystywana w trakcie działania algorytmu. Wszystkie funkcje kosztu przyjmują jako parametr planszę i zwracają liczbę całkowitą -- im niższy wynik, tym lepsze rozwiązanie. Dostępne są następujące funkcje:
+\begin{itemize}
+\item \textit{Najmniej dziur} -- wynik to liczba dziur, przy czym dziura jest definiowana jako każde puste pole takie, że co najmniej jedno pole znajdujące się wyżej jest zajęte.
+\item \textit{Najmniejsza wysokość} -- wynik to wysokość najwyższej kolumny.
+\item \textit{Największa przyległość} -- wynik to wartość przeciwna do sumy długości fragmentów krawędzi klocków, które przylegają do innych klocków lub ścian.
+\item \textit{Najładniejsze puste pola} -- funkcja eksperymentalna, której wynik to iloraz liczby dziur, definiowanych tak jak w funkcji \textit{Najmniej dziur}, i liczby zapełnionych pól.
+\end{itemize}
 \subsection{Wielowątkowość}
 W celu przyspieszenia działania algorytmu, do wykonywania niezależnych od siebie obliczeń wykorzystywany jest mechanizm wątków. W tym przypadku takimi obliczeniami jest szukanie $k$ najlepszych rozwiązań dla danej planszy. W każdym kroku tworzone jest $k'$ wątków, gdzie $1 \le k' \le k$, a w większości przypadków $k'=k$. 
 
@@ -33,6 +42,27 @@ Wynikowe elementy są wybierane przez k-krotny wybór największego elementu z l
 Korzystamy tu z faktu, że zwrócone listy są posortowane po wartości funkcji kosztu.
 Dzięki temu wystarczy sprawdzić tylko najmniejszy niewykorzystany element z każdej listy (w czasie $k$), zamiast przeglądać wszystkie elementy wszystkich list (w czasie $k^2$).
 \subsection{Struktura danych}
+
+\clearpage
+\section{Wydajność}
+Testy wydajnościowe były wykonywane na komputerze z dość starym procesorem AMD Phenom II X4 965 BE, który jest znacznie wolniejszy od procesora Intel Core i7 2600K w komputerach laboratoryjnych, a ponadto nie posiada funkcjonalności hyperthreading, która znacząco zwiększa wydajność aplikacji wielowątkowych. Mimo tego, wykonanie algorytmu nawet dla dużych zestawów danych trwało co najwyżej kilkadziesiąt sekund.
+
+Pierwszy przeprowadzony test polegał na porównaniu wydajności funkcji kosztu dla zestawu 200, 400 i 600 klocków dla parametru $k = 4$. Rezultaty znajdują się na wykresie poniżej:
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{wydajnosc_porownanie_funkcji.png}
+\caption{Porównanie wydajności funkcji kosztu}
+\end{figure}
+Jak widać, funkcja maksymalizująca przyległość jest znacznie wolniejsza od dwóch pozostałych, których wydajność jest prawie identyczna. Był to spodziewany rezultat, ponieważ ta funkcja dla każdego pola w tablicy musi dokonać pięciu sprawdzeń (czy fragment klocka dotyka lewej ściany, prawej ściany, podłogi, fragmentu innego klocka z prawej strony i fragmentu innego klocka na górze), w przeciwieństwie do pozostałych funkcji, które dokonują tylko jednego sprawdzenia. Spodziewanym rezultatem był również duży wpływ funkcji kosztu na czas działania całego algorytmu -- funkcja kosztu jest wywoływana w każdym kroku przez każdy wątek tyle razy, ile jest możliwych do uzyskania przez ten algorytm ułożeń.
+
+Drugi test sprawdza wpływ zmiany parametru $k$ na wydajność algorytmu. Sprawdzane były wartości 1, 2, 3, 4, 6, 8 i 10 dla funkcji \textit{Najmniej dziur} oraz zestawu 200, 400 i 600 klocków. Poniższy wykres obrazuje wyniki:
+\begin{figure}[H]
+\includegraphics[width=\textwidth]{porownanie_k.png}
+\caption{Porównanie wydajności dla różnych wartości parametru}
+\end{figure}
+Również w tym teście wyniki nie zaskakują. Wyniki dla wartości $k$ równych 1, 2 i 3 są identyczne, ponieważ procesor, na którym wykonywane były testy, ma cztery rdzenie -- jeden z nich zawsze jest częściowo wykorzystywany przez inne działające aplikacje (w tym system operacyjny), a także interfejs użytkownika. Pozostałe trzy w całości mogły poświęcić się liczeniu algorytmu. Stąd też bardzo niewielki skok przy zmianie $k$ z 3 na 4. Dalszy wzrost wynika przede wszystkim z braku możliwości rzeczywistego jednoczesnego obliczania wszystkich wątków i częściowo z narzutu wynikającego z ich tworzenia.
+
+Zauważonym problemem jest znaczne spowolnienie działania interfejsu przy dużej liczbie klocków -- wynika to z ręcznego rysowania każdego fragmentu krawędzi klocka oddzielnie, co przypuszczalnie sprawia, że do karty graficznej przesyłane jest dużo małych poleceń rysowania, zamiast jednego większego. Dzięki temu jednak wizualizacja jest znacznie czytelniejsza niż w przypadku aplikacji, w których klocki oddzielane są jedynie kolorem. 
+\clearpage
 \section{Testy}
 \subsection{Zestaw 100 klocków 4x3, 5x3, 5x4, 6x4 o polu co najwyżej 8}
 Na tym standardowym zestawie klocków zostanie dokonana dokładna analiza własności naszego algorytmu z uwzględnieniem różnej liczby rozgałęzień, szerokości studni i wszystkich udostępnionych funkcji kosztu.
