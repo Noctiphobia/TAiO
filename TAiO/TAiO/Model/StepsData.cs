@@ -14,11 +14,6 @@ namespace TAiO.Model
 	public class StepsData:IEnumerable<BlockInstance>
 	{
 		/// <summary>
-		/// Array of BlockInstances
-		/// first coordinate is a step number
-		/// second coordinate is a board number
-		/// in BlockInstance there's an info about on which board there was a previous block located,
-		/// so we can draw all blocks 
         /// Tablica obiektów BlockInstance
         /// pierwsza współrzędna - numer kroku
         /// druga współrzędna - numer planszy
