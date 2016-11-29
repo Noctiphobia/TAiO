@@ -64,6 +64,25 @@ Również w tym teście wyniki nie zaskakują. Wyniki dla wartości $k$ równych
 
 Zauważonym problemem jest znaczne spowolnienie działania interfejsu przy dużej liczbie klocków -- wynika to z ręcznego rysowania każdego fragmentu krawędzi klocka oddzielnie, co przypuszczalnie sprawia, że do karty graficznej przesyłane jest dużo małych poleceń rysowania, zamiast jednego większego. Dzięki temu jednak wizualizacja jest znacznie czytelniejsza niż w przypadku aplikacji, w których klocki oddzielane są jedynie kolorem. 
 \clearpage
+
+
+\subsubsection{Klasa Algorithm}
+Główną klasą naszego programu jest klasa Algorithm. Przechowuje ona wszystkie dane dotyczące algorytmu i wykonuje kolejne kroki. 
+
+\subsubsection{Klasa Board}
+Klasa Board odpowiada za przechowywanie zawartości studni (jest to tablica intów).
+
+Ważne metody:
+\begin{itemize}
+\item \textbf{AddBlock} -- sprawdza możliwość dodania klocka na planszę (czy miejsce, w które chcemy położyć klocek, jest wolne), po czym zmniejsza o jeden liczbę dostępnych klocków tego typu i wpisuje klocek w odpowiednie miejsce na planszy.
+\item DeleteBlock(BlockType block) -- usuwa klocek ze studni. Nie ma żadnych mechanizmów weryfikacji, czy faktycznie klocek leżący w danym miejscu na planszy jest tym samym klockiem co ten, którego chcemy z planszy usunąć. Taka weryfikacja jednak nie jest potrzebna, ponieważ stosujemy algorytm zachłanny, zatem usuwanie klocków wcześniej położonych nie jest w ogóle potrzebne. W przypadku naszego programu stosowane jest to jednak przy wyborze najlepszego miejsca na kolejny klocek, gdy dodajemy i usuwamy kolejne klocki w różnych miejscach na tymczasowej planszy.
+\item ChooseBlocks
+\end{itemize}
+
+
+
+
+
 \section{Testy}
 \subsection{Zestaw 100 klocków 4x3, 5x3, 5x4, 6x4 o polu co najwyżej 8}
 Na tym standardowym zestawie klocków zostanie dokonana dokładna analiza własności naszego algorytmu z uwzględnieniem różnej liczby rozgałęzień, szerokości studni i wszystkich udostępnionych funkcji kosztu.
