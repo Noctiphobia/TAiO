@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CostFunctionTests.cs" />
     <Compile Include="BlockTypeTests.cs" />
+    <Compile Include="PartialSolutionsComparerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TAiO\TAiO.csproj">
