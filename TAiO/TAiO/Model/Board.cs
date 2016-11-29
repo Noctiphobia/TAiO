@@ -83,7 +83,7 @@ namespace TAiO.Model
         /// </summary>
         /// <param name="keepTrackOfBlocks">czy chcemy śledzić klocki (patrz opis do KeepTrackOfBlocks)</param>
         /// <returns></returns>
-	    public Board Copy(bool keepTrackOfBlocks = true)
+	    private Board Copy(bool keepTrackOfBlocks = true)
 	    {
 		    return new Board(Width, Height, keepTrackOfBlocks ? new SortedList<BlockType, int>(AvailableBlocks) : null, keepTrackOfBlocks)
 		    { 

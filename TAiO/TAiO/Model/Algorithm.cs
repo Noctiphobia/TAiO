@@ -85,7 +85,7 @@ namespace TAiO.Model
         /// <summary>
         /// Funkcja wykonująca kolejny krok algorytmu
         /// </summary>
-		public void MakeNextStep()
+		private void MakeNextStep()
 		{
 
 			UpdateStepBoards(Data.BoardWidth, Data.BoardWidth);
