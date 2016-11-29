@@ -13,15 +13,51 @@
 \begin{document}
 \maketitle
 \section{Opis projektu}
+Tematem naszego projektu jest stworzenie aplikacji przedstawiającej algorytm układania klocków na planszy (nazywanej również studnią) tak, aby ich wysokość była jak najmniejsza. Klocki nie mogą się nakładać, a szerokość studni określana jest z góry. Wykorzystanym algorytmem jest algorytm zachłanny z nawrotami.
 
-\clearpage
+
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{interfejs.png}
+\end{center}
+\vspace{-0.3cm}
+\caption{Wygląd interfejsu wraz z przykładowym wywołaniem}
+\end{figure}
+
+
+
+\subsection{Zewnętrzne biblioteki}
+
+W celu stworzenia wygodnego interfejsu posłużyliśmy się następującymi bibliotekami zewnętrznymi:
+
+
+\begin{itemize}
+\item \textbf{MicroMVVM} -- biblioteka ułatwiająca pisanie aplikacji zgodnie ze wzorcem projektowym MVVM, strona projektu: \\ \url{https://micromvvm.codeplex.com/}
+\item \textbf{MetroStyles for WPF} --biblioteka zapewniająca ładny wygląd interfejsu, strona projektu: \url{https://www.codeproject.com/articles/442856/visual-studio-metro-styles-for-wpf}
+\end{itemize}
+
+
+
+
+%\clearpage
 \section{Opis algorytmu}
 Wykorzystany algorytm jest algorytmem zachłannym z określoną parametrem liczbą nawrotów $k$. W każdym kroku algorytmu uruchamiane jest $k'$, gdzie $1 \le k' \le k$ (w sekcji wielowątkowość znajduje się wyjaśnienie, od czego jest uzależniona ich dokładna liczba). Każdemu wątkowi odpowiada jeden z $k$ najlepszych wyników uzyskanych w poprzednim kroku, gdzie najlepszy wynik to taki, dla którego wartość funkcji kosztu jest jak najmniejsza -- każdy z nich dla swoich danych wejściowych znajduje $k$ najlepszych rozwiązań. Znalezienie rozwiązań polega na sprawdzeniu dla każdego klocka każdego jego rotacji -- najpierw wybierana jest jego pozycja, a następnie liczony koszt całej planszy. $k$ rozwiązań takich, że funkcja kosztu obliczona na planszy z położonym danym klockiem w danej rotacji jest najmniejsza, to rozwiązanie dla danego wątku. Następnie, spośród ułożeń otrzymanych przez wszystkie wątki ($1 \le k' \le k$, zatem otrzymywane jest od $k$ do $k^2$ ułożeń) wybierane jest $k$ najlepszych. Ogólny schemat działania algorytmu podsumowuje poniższy diagram:
+%\vspace{-0.3cm}
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{schemat_algorytmu.png}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{schemat_algorytmu.png}
+\end{center}
 \caption{Ogólny schemat działania algorytmu}
 \end{figure}
+
 \subsection{Wybór pozycji dla klocka}
+Funkcja wyboru pozycji klocka to \textit{PlacementFunction}. Zaimplementowaliśmy jedną taką funkcję -- dla każdego klocka wraz z numerem wersji (konkretnym obrotem) wybiera pierwsze wolne miejsce. Sprawdzane są kolejne pozycje (wierszami od dołu, a następnie od lewej). Wolne miejsce oznacza, że można położyć klocek o danym obrocie w taki sposób, że każde pole zajęte przez niego było wcześniej puste.
+
+Testowaliśmy również funkcję, która zamiast zwracać jedną możliwą pozycję klocka, zwracała wszystkie możliwości. Wbrew intuicji wyniki algorytmu z jej zastosowaniem były gorsze, a ponadto nastąpił znaczny spadek wydajności, dlatego ostatecznie ją odrzuciliśmy.
+
+
+
 \subsection{Funkcje kosztu planszy}
 Aplikacja umożliwia wybór funkcji kosztu, która jest wykorzystywana w trakcie działania algorytmu. Wszystkie funkcje kosztu przyjmują jako parametr planszę i zwracają liczbę całkowitą -- im niższy wynik, tym lepsze rozwiązanie. Dostępne są następujące funkcje:
 \begin{itemize}
@@ -41,8 +77,53 @@ Drugi przypadek jest efektem dodatkowego usprawnienia algorytmu, który ma na ce
 Po zwróceniu przez każdy z $k$ wątków listy $k$ najlepszych rozwiązań trzeba wybrać k najlepszych rozwiązań z otrzymanych $k^2$.  
 Wynikowe elementy są wybierane przez k-krotny wybór największego elementu z list.
 Korzystamy tu z faktu, że zwrócone listy są posortowane po wartości funkcji kosztu.
-Dzięki temu wystarczy sprawdzić tylko najmniejszy niewykorzystany element z każdej listy (w czasie $k$), zamiast przeglądać wszystkie elementy wszystkich list (w czasie $k^2$).
+Dzięki temu wystarczy sprawdzić tylko najmniejszy niewykorzystany element z każdej listy (w czasie $k$), zamiast przeglądać wszystkie elementy wszystkich list (w~czasie~$k^2$).
 \subsection{Struktura danych}
+
+
+\subsubsection{Klasy klocków}
+\begin{itemize}
+\item \textbf{BlockType} -- najbardziej podstawowa klasa. Zawiera informację o kształcie klocka (tablica intów, 0 oznacza pole wolne, 1 pole zajęte przez klocek) oraz jego \textit{Id} (unikalne dla typu klocka). W celu ułatwienia implementacji algorytmu i optymalizacji czasowej przy tworzeniu instancji klasy tworzone są też wszystkie rotacje, a potem usuwane duplikaty. Co więcej pierwsza wersja klocka, tj. tablica na samym początku listy \textit{Shape}, jest zawsze pozioma -- tj. jej szerokość jest większa lub równa wysokości. Każda kolejna wersja jest obrócona względem poprzedniej o kąt prosty.
+\item \textbf{BlockInstance} -- struktura reprezentująca jeden konkretny klocek ułożony na planszy. Zawiera obiekt klasy \textit{BlockType}, współrzędne położenia oraz numer wersji klocka (numer obrotu, czyli indeks na liście \textit{Shape} w obiekcie \textit{BlockType}). Dodatkowo znajduje się tu również wskaźnik na poprzedni dodany klocek (por. \ref{ref:stepsdata}).
+\item \textbf{PartialSolution} -- klasa zawierająca obiekt \textit{BlockInstance} i wartość funkcji kosztu, zastosowanej do pewnej planszy, na której został ułożony dany klocek. Lista obiektów tej klasy zwracana jest przez funkcję \textit{ChooseBlocks}.
+\end{itemize}
+
+
+\subsubsection{Klasa Algorithm}
+Główną klasą naszego programu jest klasa Algorithm. Przechowuje ona wszystkie dane dotyczące algorytmu i wykonuje kolejne kroki. Zawiera tablicę obiektów klasy \textit{Board}, przechowującą stany wszystkich plansz w danym kroku algorytmu, oraz StepsData, przechowujące dane o przebiegu algorytmu. Ponadto w klasie \textit{Algorithm} znajduje się funkcja łączenia wyników (wybierania $k$ najlepszych z $k^2$ możliwych ułożeń).
+
+Klasa zawiera również funkcję kosztu i funkcję wyboru miejsca na klocek, oraz słownik dostępnych klocków (dane powtórzone z klasy \textit{Data}, jednak to powtórzenie jest przydatne -- przy tworzeniu nowych obiektów \textit{Board} potrzebny jest nowy słownik dostępności klocków, a dużo szybciej i przy mniejszej ilości kodu tworzy się go z innego słownika niż listy klocków).
+
+
+
+\subsubsection{Klasa Board}
+Klasa Board odpowiada za przechowywanie zawartości studni (jest to tablica intów). Przechowuje także słownik dostępności klocków (kluczami są typy klocków, wartościami -- liczba dostępnych klocków danego typu). Ponieważ operacje na słownikach są czasochłonne, przy tworzeniu klasy dajemy informację, czy chcemy, aby obiekt ,,śledził'' klocki -- tj. sprawdzał ich dostępność, dodawał i odejmował jeden do liczby dostępnych przy dodawaniu klocków i usuwaniu ich z planszy itd., czy nie. W przypadku plansz tymczasowych (wykorzystywanych w funkcji \textit{ChooseBlocks}) oraz przy tworzeniu widoku śledzenie dostępności klocków nie jest potrzebne, ponieważ mamy pewność, że dodajemy właściwe klocki.
+
+
+
+Ważne metody:
+\begin{itemize}
+\item \textbf{AddBlock} -- sprawdza możliwość dodania klocka na planszę (czy miejsce, w które chcemy położyć klocek, jest wolne, oraz czy w ogóle mamy dostępny taki klocek), po czym zmniejsza o jeden liczbę dostępnych klocków tego typu i wpisuje klocek w odpowiednie miejsce na planszy.
+\item \textbf{DeleteBlock} -- usuwa klocek ze studni. Nie ma żadnych mechanizmów weryfikacji, czy faktycznie klocek leżący w danym miejscu na planszy jest tym samym klockiem co ten, którego chcemy z planszy usunąć. Taka weryfikacja jednak nie jest potrzebna, ponieważ stosujemy algorytm zachłanny, zatem usuwanie klocków wcześniej położonych nie jest w ogóle potrzebne. W przypadku naszego programu stosowane jest to jednak przy wyborze najlepszego miejsca na kolejny klocek, gdy dodajemy i usuwamy kolejne klocki w różnych miejscach na tymczasowej planszy.
+\item \textbf{ChooseBlocks} -- wybiera $k$ najlepszych ułożeń, gdzie ,,ułożenie'' to trójka: typ klocka, obrót i współrzędne miejsca, w które wkładamy klocek (współrzędne lewego dolnego rogu). Wszystkie te informacje znajdują się w obiektach klasy \textit{PartialSolution}. $k$ jest przekazywane jako parametr i może być dowolne, jednak w naszym programie zawsze jest to liczba rozgałęzień algorytmu.
+\end{itemize}
+
+\subsubsection{Klasa StepsData}
+\label{ref:stepsdata}
+Klasa ta zawiera zminimalizowane informacje o przebiegu algorytmu. Dzięki niej możemy łatwo odzwierciedlić stan algorytmu w danym kroku bez wykonywania dodatkowych obliczeń czy uruchamiania algorytmu ponownie.
+
+Główną częścią klasy jest tablica struktur BlockInstance. Wiersze odpowiadają kolejnym krokom algorytmu, kolumny -- kolejnym studniom. Liczba wierszy jest równa liczbie klocków, a liczba kolumn -- liczbie rozgałęzień algorytmu.
+
+W pierwszym kroku algorytmu wypełniany jest pierwszy wiersz tablicy. Każde kolejne pole to pierwszy klocek na danej planszy.
+
+W kolejnym kroku algorytmu wypełniany jest kolejny wiersz tablicy. Ze wszystkich możliwości algorytm wybrał $k$ najlepszych ułożeń klocków na różnych planszach. Nie ma jednak pewności, że chcemy dołożyć klocek na każdą planszę z poprzednich $k$ plansz. Przeciwnie, kilka z tych $k$ najlepszych ułożeń może dotyczyć tej samej (poprzednio) planszy, a z kolei inna plansza zostanie całkowicie odrzucona. Rozwiązaniem tego problemu jest zapisanie $k$ ułożeń w kolejnym wierszu, oraz zapisanie tam informacji, jak odtworzyć planszę, na której chcemy położyć ten klocek. Wystarczy zapamiętać ,,wskaźnik'' do poprzedniego klocka. W tym przypadku -- numer kolumny, w której będziemy szukać poprzedniego klocka. Oczywiście poprzedni klocek dodaliśmy w poprzednim wierszu, więc numer wiersza jest znany.
+
+W ten sposób powstaje pewna struktura drzewiasta, mająca na każdym poziomie dokładnie $k$ węzłów. Odtworzenie $i$-tego kroku algorytmu na $j$-tej planszy polega na dodawaniu kolejno klocka z $(i, j)$-tego elementu tablicy, klocka z $(i-1, BlockInstances[i, j].PreviousBlockBoardNumber)$-tego elementu tablicy itd. (\textit{BlockInstances} -- tablica struktur \textit{BlockInstance}, \textit{PreviousBlockBoardNumber} -- numer kolumny (numer planszy), w której znajduje się poprzedni klocek).
+
+W celu ułatwienia korzystania z klasy, StepsData implementuje interfejs IEnumerable. Jest to jednak niestandardowy sposób implementacji. Przed użyciem polecenia \textit{foreach} należało użyć funkcji \textit{SetStartingPoint}, która ustawia współrzędne węzła, od którego zaczynamy przechodzić po drzewie. Kolejne węzły wybierane są w sposób opisany wyżej (jak przy odtwarzaniu planszy). Przy większym projekcie byłoby to złą praktyką, jednak przy tak małym ryzyko jest dużo mniejsze i wygoda tego rozwiązania przeważa.
+%zastosowanie to nie jest obarczone dużym ryzykiem, 
+
+
 
 \clearpage
 \section{Wydajność}
@@ -64,22 +145,6 @@ Również w tym teście wyniki nie zaskakują. Wyniki dla wartości $k$ równych
 
 Zauważonym problemem jest znaczne spowolnienie działania interfejsu przy dużej liczbie klocków -- wynika to z ręcznego rysowania każdego fragmentu krawędzi klocka oddzielnie, co przypuszczalnie sprawia, że do karty graficznej przesyłane jest dużo małych poleceń rysowania, zamiast jednego większego. Dzięki temu jednak wizualizacja jest znacznie czytelniejsza niż w przypadku aplikacji, w których klocki oddzielane są jedynie kolorem. 
 \clearpage
-
-
-\subsubsection{Klasa Algorithm}
-Główną klasą naszego programu jest klasa Algorithm. Przechowuje ona wszystkie dane dotyczące algorytmu i wykonuje kolejne kroki. 
-
-\subsubsection{Klasa Board}
-Klasa Board odpowiada za przechowywanie zawartości studni (jest to tablica intów).
-
-Ważne metody:
-\begin{itemize}
-\item \textbf{AddBlock} -- sprawdza możliwość dodania klocka na planszę (czy miejsce, w które chcemy położyć klocek, jest wolne), po czym zmniejsza o jeden liczbę dostępnych klocków tego typu i wpisuje klocek w odpowiednie miejsce na planszy.
-\item DeleteBlock(BlockType block) -- usuwa klocek ze studni. Nie ma żadnych mechanizmów weryfikacji, czy faktycznie klocek leżący w danym miejscu na planszy jest tym samym klockiem co ten, którego chcemy z planszy usunąć. Taka weryfikacja jednak nie jest potrzebna, ponieważ stosujemy algorytm zachłanny, zatem usuwanie klocków wcześniej położonych nie jest w ogóle potrzebne. W przypadku naszego programu stosowane jest to jednak przy wyborze najlepszego miejsca na kolejny klocek, gdy dodajemy i usuwamy kolejne klocki w różnych miejscach na tymczasowej planszy.
-\item ChooseBlocks
-\end{itemize}
-
-
 
 
 
