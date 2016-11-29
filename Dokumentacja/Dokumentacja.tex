@@ -357,5 +357,14 @@ Ciekawe zachowanie funkcji minimalizującej wysokość (duży przeskok z $k=3$ d
 %\subsection{zestaw drugi...}
 
 
-\section{Wnioski} %z testów
+\section{Podsumowanie testów} 
+W testach prawie zawsze, nawet dla bardzo niestandardowych danych, najlepszą funkcją kosztu okazała się funkcja maksymalizująca przyleganie. Przy odpowiednio dużych, ale jednocześnie rozsądnych, wartościach parametru $k$ (nie większych niż 10) nawet dla najtrudniejszych przypadków gęstość nie spadała poniżej 70\%. Ceną za najwyższą skuteczność jest najdłuższy czas działania algorytmu w przypadku wyboru tej funkcji -- nie jest to jednak znaczący problem ze względu na ogólną wysoką wydajność algorytmu.
+
+Funkcja minimalizująca wysokość zawsze zachowywała się w bardzo przewidywalny sposób -- kładąc wszystkie klocki poziomo, zaczynając od tych najbardziej podłużnych, co zwykle nie dawało optymalnego położenia. Często klocki były położone płaską stroną do góry, co znacznie pogarszało jakość rozwiązania, i dopiero po zwiększeniu wartości parametru $k$ rozważane były warianty z poprawnym obrotem. Rozwiązania funkcji minimalizującej wysokość były dobre głównie w sytuacji, gdy wszystkie klocki miały bardzo zbliżoną wysokość i szerokość (np. 5x4). Jej czas wykonania był szybki, ale porównywalny ze zwykle lepszą funkcją minimalizującą liczbę dziur.
+
+Funkcja minimalizująca liczbę dziur często osiągała wyniki niewiele gorsze, a czasem nawet lepsze, niż funkcja maksymalizująca przyleganie. Jej główną wadą były tworzące się puste kolumny -- nie były uznawane za dziury. Jej ulepszona wersja, która jako dziury dodatkowo uznawała wszystkie puste pola poniżej średniego poziomu, rozwiązała ten problem i znacząco poprawiła jakość rozwiązania, które wcześniej było ograniczone tym mankamentem. Poprawka ta jednak nie wpływa na drugie ograniczenie tej funkcji -- bardzo szerokie plansze, na których dziury przez długi czas w ogóle nie występują, a jak zaczynają występować, jest już za późno, żeby to naprawić. Dużą zaletą tej funkcji była kilkukrotnie większa szybkość, niż funkcji maksymalizującej przyleganie, mimo dawania niewiele gorszych rezultatów.
+
+Wartym zauważenia jest fakt, że zwiększanie parametru $k$ nie zawsze poprawia jakość otrzymanego rozwiązania. W niektórych przypadkach od pewnego momentu jakość już nie wzrasta, a w niektórych nawet się pogarsza. Oczywiście dla odpowiednio dużego $k$ rozwiązanie musi być lepsze (bo dla odpowiednio dużej wartości $k$ sprawdzane jest każde rozwiązanie), ale dla ``rozsądnych" wartości (do 10) można zauważyć taki efekt, co, jak zostało wcześniej wyjaśnione, wynika z zachłannej natury algorytmu.
+
+
 \end{document}
