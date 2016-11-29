@@ -168,7 +168,8 @@ Na przykład dla $k=4$ w trakcie obliczeń mogło pojawić się ułożenie, któ
 Podobny efekt można zaobserwować dla pozostałych funkcji.
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{k_plot.png}
+\centering
+\includegraphics[width=0.90\textwidth]{k_plot.png}
 \caption{Wykres gęstości od liczby rozgałęzień}
 \end{figure}
 
@@ -217,7 +218,8 @@ W przypadku funkcji wysokości można zauważyć ciekawy wizualny efekt - klocki
 Wynika to z faktu, że takie położenie minimalizuje wysokość w danym ruchu - nie ma znaczenia, że za kilka ruchów może się okazać niekorzystne.
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{wysokosc.PNG}
+\centering
+\includegraphics[width=0.72\textwidth]{wysokosc.PNG}
 \caption{Ułożenie klocków dla funkcji wysokości}
 \end{figure}
 
@@ -230,7 +232,8 @@ Najlepsza gęstość dla $k=8$: 83
 Funkcja przylegania sprawdziła się w tym przypadku najlepiej.
 
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{przyleglosc.PNG}
+\centering
+\includegraphics[width=0.8\textwidth]{przyleglosc.PNG}
 \caption{Ułożenie klocków dla funkcji przyległości}
 \end{figure}
 
@@ -269,7 +272,7 @@ W tym teście najlepsza okazała się funkcja przylegania, jednak niewiele tylko
 Warto zauważyć, że algorytm daje najlepsze wyniki dla średniej szerokości studni, co zgadza się z intuicją.
 W przypadku małej szerokości, porównywalnej z szerokością niektórych klocków trudno jest osiągnąć dobre zapełnienie dziur - w niektórych momentach konieczne jest praktycznie układanie klocków jeden na drugim.
 Z kolei przy szerokiej studni na wynik niekorzystnie wpływają górne mało zapełnione wiersze.
-
+\clearpage
 \subsection{Zestaw klocków prostokątnych}
 W tym zadaniu największym problemem jest górna część planszy - do pewnego momentu klocki są układane prawie bez tworzenia dziur. Jednak dla dużego k jest znajdowane rozwiązanie, w którym nie pojawia się ten problem.
 \begin{enumerate}
@@ -282,7 +285,8 @@ Najlepsza gęstość dla $k=5$: 91
 
 Funkcja ta wypadła słabo ze względu na powstałą głęboką, wąską dziurę.
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{prostokaty_dziury.PNG}
+\centering
+\includegraphics[width=0.7\textwidth]{prostokaty_dziury.PNG}
 \caption{Górna część wyniku dla funkcji dziur}
 \end{figure}
 
@@ -295,7 +299,8 @@ Najlepsza gęstość dla $k=4$: 91
 
 Problemem w tej funkcji okazał się fakt, że na końcu nie zostały żadne wąskie klocki - wcześniej zostały wykorzystane, bo kładzenie ich poziomo pozwalało na chwilową minimalizację wysokości.
 \begin{figure}[H]
-\includegraphics[width=\textwidth]{prostokaty_wysokosc.PNG}
+\centering
+\includegraphics[width=0.75\textwidth]{prostokaty_wysokosc.PNG}
 \caption{Górna część wyniku dla funkcji wysokości}
 \end{figure}
 
@@ -307,8 +312,8 @@ Najlepsza gęstość dla $k=5$: 96
 
 Rozwiązanie dla $k=5$ wydaje się być bardzo dobre - być może najlepsze, jakie można uzyskać dla tego zadania.
 \begin{figure}[H]
-\hspace*{3.5cm}
-\includegraphics[width=5.3cm]{prostokaty.PNG}
+\centering
+\includegraphics[width=0.35\textwidth]{prostokaty.PNG}
 \caption{Najlepsze rozwiązanie dla prostokątów}
 \end{figure}
 
@@ -402,6 +407,14 @@ Gęstość dla $k=3$: 52
 
 Najlepsza gęstość dla $k=4$: 66
 
+Dla funkcji minimalizującej wysokość warto zwrócić uwagę na różnicę rozwiązań przy bardzo niewielkiej zmianie parametru $k$, a także fakt, że dalszy wzrost parametru $k$ nie miał już znaczenia.
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{wysokosc_bekas.PNG}
+\caption{Ułożenie klocków dla funkcji wysokości}
+\end{figure}
+
+
 \item Funkcja maksymalizująca przyleganie
 
 Gęstość dla $k=3$: 63
@@ -412,15 +425,10 @@ Najlepsza gęstość dla $k=10$: 73
 \textbf{Wnioski}
 
 Najlepsza okazała się funkcja maksymalizująca przyleganie. Dla funkcji minimalizującej dziury zwiększanie parametru $k$ nie poprawiało rezultatów, ze względu na bardzo szeroką studnię w stosunku do liczby klocków -- przez cały pierwszy wiersz w praktyce nie pojawiały się żadne dziury. Jej usprawniona wersja osiągnęła taki sam maksymalny wynik, ale dla trochę niższej wartości parametru $k$ -- tutaj powstawanie kolumny nie było znaczącym problemem.
-Ciekawe zachowanie funkcji minimalizującej wysokość (duży przeskok z $k=3$ do $k=4$, a następnie brak poprawy) jest bardzo łatwy do wytłumaczenia -- zwiększenie $k$ ``zmusiło" algorytm do rozważenia znacznie lepszej rotacji, która na początku nie ma znaczenia, ale później decydowała o całym ułożeniu. Opisana różnica jest przedstawiona na poniższym rysunku: 
-\begin{figure}[H]
-\includegraphics[width=\textwidth]{wysokosc_bekas.PNG}
-\caption{Ułożenie klocków dla funkcji wysokości}
-\end{figure}
+Ciekawe zachowanie funkcji minimalizującej wysokość (duży przeskok z $k=3$ do $k=4$, a następnie brak poprawy) jest bardzo łatwy do wytłumaczenia -- zwiększenie $k$ ``zmusiło" algorytm do rozważenia znacznie lepszej rotacji, która na początku nie ma znaczenia, ale później decydowała o całym ułożeniu. 
 
 
-%\subsection{zestaw drugi...}
-
+\clearpage
 
 \section{Podsumowanie testów} 
 W testach prawie zawsze, nawet dla bardzo niestandardowych danych, najlepszą funkcją kosztu okazała się funkcja maksymalizująca przyleganie. Przy odpowiednio dużych, ale jednocześnie rozsądnych, wartościach parametru $k$ (nie większych niż 10) nawet dla najtrudniejszych przypadków gęstość nie spadała poniżej 70\%. Ceną za najwyższą skuteczność jest najdłuższy czas działania algorytmu w przypadku wyboru tej funkcji -- nie jest to jednak znaczący problem ze względu na ogólną wysoką wydajność algorytmu.
@@ -429,7 +437,11 @@ Funkcja minimalizująca wysokość zawsze zachowywała się w bardzo przewidywal
 
 Funkcja minimalizująca liczbę dziur często osiągała wyniki niewiele gorsze, a czasem nawet lepsze, niż funkcja maksymalizująca przyleganie. Jej główną wadą były tworzące się puste kolumny -- nie były uznawane za dziury. Jej ulepszona wersja, która jako dziury dodatkowo uznawała wszystkie puste pola poniżej średniego poziomu, rozwiązała ten problem i znacząco poprawiła jakość rozwiązania, które wcześniej było ograniczone tym mankamentem. Poprawka ta jednak nie wpływa na drugie ograniczenie tej funkcji -- bardzo szerokie plansze, na których dziury przez długi czas w ogóle nie występują, a jak zaczynają występować, jest już za późno, żeby to naprawić. Dużą zaletą tej funkcji była kilkukrotnie większa szybkość, niż funkcji maksymalizującej przyleganie, mimo dawania niewiele gorszych rezultatów.
 
+Jednym z czynników, który wpływa na dobre wyniki algorytmu nawet dla granicznych przypadków, jest brak zależności od jakichkolwiek ukrytych stałych. W miejscach, w których można było rozważyć wykorzystanie ich (jak na przykład w ulepszonym wariancie funkcji minimalizującej liczbę dziur), wykorzystane zamiast tego były wartości zależące od rozwiązania (np. średnia wysokość kolumn w planszy). Dzięki temu również powinno być zachowane identyczne działanie algorytmu po przeskalowaniu planszy i klocków (na przykład dwukrotnym powiększeniu lub pomniejszeniu).
+
 Wartym zauważenia jest fakt, że zwiększanie parametru $k$ nie zawsze poprawia jakość otrzymanego rozwiązania. W niektórych przypadkach od pewnego momentu jakość już nie wzrasta, a w niektórych nawet się pogarsza. Oczywiście dla odpowiednio dużego $k$ rozwiązanie musi być lepsze (bo dla odpowiednio dużej wartości $k$ sprawdzane jest każde rozwiązanie), ale dla ``rozsądnych" wartości (do 10) można zauważyć taki efekt, co, jak zostało wcześniej wyjaśnione, wynika z zachłannej natury algorytmu.
+
+
 
 
 \end{document}
