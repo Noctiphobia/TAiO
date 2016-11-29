@@ -59,6 +59,7 @@
     <Compile Include="CostFunctionTests.cs" />
     <Compile Include="BlockTypeTests.cs" />
     <Compile Include="PartialSolutionsComparerTests.cs" />
+    <Compile Include="ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TAiO\TAiO.csproj">
