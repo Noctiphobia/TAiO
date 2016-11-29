@@ -9,7 +9,7 @@ namespace TAiO.Model
     /// <summary>
     /// Klasa porównujaca dwa obiekty klasy PartialSolution
     /// </summary>
-	class PartialSolutionsComparer:IComparer<PartialSolution>
+	public class PartialSolutionsComparer:IComparer<PartialSolution>
 	{
 		public int Compare(PartialSolution x, PartialSolution y)
 		{

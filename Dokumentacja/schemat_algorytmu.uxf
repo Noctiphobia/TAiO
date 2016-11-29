@@ -21,7 +21,8 @@
       <h>70</h>
     </coordinates>
     <panel_attributes>Wybór k najlepszych ułożeń
-(sprawdzenie każdego klocka)</panel_attributes>
+(sprawdzenie każdego klocka 
+wraz z obrotem)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -114,7 +115,8 @@ Przydzielenie planszy k'</panel_attributes>
       <h>70</h>
     </coordinates>
     <panel_attributes>Wybór k najlepszych ułożeń
-(sprawdzenie każdego klocka)</panel_attributes>
+(sprawdzenie każdego klocka
+wraz z obrotem)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
